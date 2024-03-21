@@ -1,7 +1,7 @@
 import { Readability } from '@mozilla/readability';
 
 export default defineContentScript({
-  matches: ['*://*.google.com/*'],
+  matches: ['*://*/*'],
   main() {
     // document.body.style.background = 'red';
 

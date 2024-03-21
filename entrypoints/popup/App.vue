@@ -29,7 +29,9 @@ async function getHtmlContent() {
   console.log(data)
 }
 
-getHtmlContent()
+onMounted(() => {
+  getHtmlContent()
+})
 
 </script>
 
