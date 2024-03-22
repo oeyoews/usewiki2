@@ -65,6 +65,24 @@ function getArticle() {
 
 getArticle()
 
+// save a markdown file to user computer
+
+
+function saveMarkdownFile() {
+
+  const blob = new Blob([md.value], { type: 'text/markdown' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `${article.value.title}.md`
+
+  document.body.appendChild(link);
+  link.click();
+
+  URL.revokeObjectURL(link.href);
+
+}
+
+
 function togglePreview() {
 
 }
@@ -80,6 +98,7 @@ function togglePreview() {
     <button @click="togglePreview">切换模式</button> -->
     <!-- <textarea auto :value="md" class="textarea"></textarea> -->
     <!-- <p v-html="md"></p> -->
+    <button @click="saveMarkdownFile">save markdown</button>
     <div v-if="article.title">
       <div class="flex items-center justify-center gap-2">
         <h2>
