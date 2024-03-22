@@ -8,7 +8,7 @@ export default defineBackground(() => {
     });
   });
 
-  chrome.runtime.onInstalled.addListener(function () {
+  /*   chrome.runtime.onInstalled.addListener(function () {
     chrome.contextMenus.create({
       id: 'tiddlywiki',
       title: '添加到 TiddlyWiki(WIP)',
@@ -26,5 +26,5 @@ export default defineBackground(() => {
     if (info.menuItemId === 'tiddlywiki') {
       // 处理右键菜单点击事件的逻辑
     }
-  });
+  }); */
 });

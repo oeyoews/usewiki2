@@ -27,7 +27,13 @@ const link = ref('')
 const faviconUrl = ref('')
 const title = ref('')
 const username = ref('oeyoews')
-const port = ref('8000')
+
+const port = ref('')
+
+chrome.storage.local.get(['port'], function (result) {
+  port.value = result.port || '8080'
+});
+
 
 chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
   const tab = tabs[0]
@@ -43,10 +49,6 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
 })
 
 
-watch(md, async () => {
-  html.value = (await md2html(md.value))
-})
-
 const status = ref<{
   username: string, tiddlywiki_version: string
 }>({
@@ -54,17 +56,45 @@ const status = ref<{
   tiddlywiki_version: ''
 })
 
-fetch(`http://localhost:${port.value}/status`).then((res) => {
-  return res.json()
-}).then((data) => {
-  status.value = data;
-  if (!data.tiddlywiki_version) {
+function checkStatus() {
+
+  fetch(`http://localhost:${port.value}/status`).then((res) => {
+    return res.json()
+  }).then((data) => {
+    if (!data) {
+      return
+    }
+    status.value = data
+
+    if (!data.tiddlywiki_version) {
+      ElMessage({
+        message: 'TiddlyWiki 未连接',
+        type: 'error'
+      })
+    } else {
+      // ElMessage({
+      //   message: 'TiddlyWiki 连接成功',
+      //   type: 'success'
+      // })
+    }
+  }).catch((e) => {
     ElMessage({
-      message: 'TiddlyWiki 未连接',
+      message: "TiddlyWiki 未成功连接" + e,
       type: 'error'
     })
-  }
+  })
+
+}
+
+watch(md, async () => {
+  html.value = (await md2html(md.value))
 })
+
+watch(port, () => {
+  chrome.storage.local.set({ port: port.value })
+  checkStatus()
+})
+
 
 
 const save2TiddlyWiki = async (title: string, text: string, port: string, url: string) => {
@@ -95,6 +125,11 @@ const save2TiddlyWiki = async (title: string, text: string, port: string, url: s
         type: 'success'
       })
     }
+  }).catch((e) => {
+    ElMessage({
+      message: '保存失败' + e,
+      type: 'error'
+    })
   })
 }
 
@@ -163,7 +198,7 @@ const save2TiddlyWiki = async (title: string, text: string, port: string, url: s
           <div>
             端口
           </div>
-          <ElInput v-model="port" />
+          <ElInput v-model.trim.number="port" />
         </div>
 
 
