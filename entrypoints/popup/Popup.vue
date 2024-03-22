@@ -3,7 +3,8 @@ import 'element-plus/es/components/message/style/css'
 import dayjs from 'dayjs'
 import utc from "dayjs/plugin/utc"
 
-
+// @ts-ignore
+import MaterialSymbolsDownload from '~icons/material-symbols/download';
 // @ts-ignore
 import FaRegularEdit from '~icons/fa-regular/edit';
 // @ts-ignore
@@ -109,12 +110,12 @@ const save2TiddlyWiki = async (title: string, text: string, port: string) => {
         <!-- <ElBacktop :right="100" :bottom="100" /> -->
         <ElButton @click="saveMarkdown(md, title!)">
           <ElIcon>
-            <FaRegularSave />
+            <MaterialSymbolsDownload />
           </ElIcon>
         </ElButton>
 
         <ElButton @click="save2TiddlyWiki(title, md, port)">
-          save tiddlywiki
+          <FaRegularSave />
         </ElButton>
       </div>
     </div>
