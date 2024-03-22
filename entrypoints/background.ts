@@ -9,4 +9,25 @@ export default defineBackground(() => {
       active: true,
     });
   });
+
+  chrome.runtime.onInstalled.addListener(function () {
+    chrome.contextMenus.create({
+      id: 'tiddlywiki',
+      title: '添加到 TiddlyWiki(Ctrl+Shift+F)',
+      contexts: ['all'],
+    });
+  });
+
+  chrome.commands.onCommand.addListener(function (command) {
+    if (command === 'addtiddlywiki') {
+      console.log('yu ');
+      // 处理快捷键被触发时的逻辑
+    }
+  });
+
+  chrome.contextMenus.onClicked.addListener(function (info, tab) {
+    if (info.menuItemId === 'tiddlywiki') {
+      // 处理右键菜单点击事件的逻辑
+    }
+  });
 });

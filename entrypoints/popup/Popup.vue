@@ -7,7 +7,6 @@ import FaRegularEdit from '~icons/fa-regular/edit';
 import FaFileTextO from '~icons/fa/file-text-o';
 // @ts-ignore
 import FaRegularSave from '~icons/fa-regular/save';
-import { ElMessage, ElNotification } from 'element-plus'
 import { ref, } from 'vue';
 import saveMarkdown from '@/utils/saveMarkdown'
 import { html2md, md2html } from '@/utils/parser'
@@ -87,7 +86,6 @@ watch(md, async () => {
         <el-input placeholder="写点什么吧 ..." v-model="md" :autosize="{ minRows: 4, maxRows: 20 }" type="textarea"
           spellcheck="false" class="w-full" />
       </ElTabPane>
-
 
     </ElTabs>
 

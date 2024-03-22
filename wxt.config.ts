@@ -30,7 +30,17 @@ export default defineConfig({
     ],
   }),
   manifest: {
+    commands: {
+      addtiddlywiki: {
+        suggested_key: {
+          default: 'Ctrl+Shift+F',
+          mac: 'MacCtrl+Shift+F',
+        },
+        description: '执行我的命令',
+      },
+    },
     permissions: [
+      'contextMenus',
       'alarms',
       'activeTab',
       'contextMenus',
