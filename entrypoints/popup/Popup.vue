@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import 'element-plus/es/components/message/style/css'
+
+import FaRegularEdit from '~icons/fa-regular/edit';
+import FaFileTextO from '~icons/fa/file-text-o';
+import FaRegularSave from '~icons/fa-regular/save';
 import { ElMessage, ElNotification } from 'element-plus'
 import { unified } from 'unified'
 import { ref, } from 'vue';
@@ -137,29 +141,61 @@ const open2 = () => {
 <template>
   <div class="app">
     <!-- <div>version 1.0</div> -->
-    <div>
-      <el-button @click="saveMarkdownFile">保存为 Markdown</el-button>
-    </div>
-    <div v-if="article.title">
-      <div class="flex items-center justify-center gap-2">
-        <h2>
-          <a :href="link" target="_blank" v-if="link">
-            <img :src="faviconUrl" class="rounded-full size-4" />
-          </a>
-          {{ article.title }}
-        </h2>
-      </div>
-      <hr>
-      <article class="prose prose-gray max-w-none prose-sm dark:prose-invert">
-        <h2>摘要</h2>
-        <div v-html="article.excerpt"></div>
-        <h2>内容</h2>
-        <div v-html="article.content"></div>
-      </article>
-    </div>
-    <div v-else>
-      <h2>暂无内容</h2>
-    </div>
+    <el-tabs type="border-card">
+      <el-tab-pane>
+        <template #label>
+          <el-icon>
+            <FaFileTextO />
+          </el-icon>
+        </template>
+        <div class="flex justify-end">
+          <el-button @click="saveMarkdownFile">
+            <el-icon>
+              <FaRegularSave />
+            </el-icon>
+          </el-button>
+        </div>
+        <div v-if="article.title">
+          <div class="flex items-center justify-center gap-2">
+            <h2>
+              <a :href="link" target="_blank" v-if="link">
+                <img :src="faviconUrl" class="rounded-full size-4" />
+              </a>
+              {{ article.title }}
+            </h2>
+          </div>
+          <hr>
+          <article class="prose prose-gray max-w-none prose-sm dark:prose-invert">
+            <h2>摘要</h2>
+            <div v-html="article.excerpt"></div>
+            <h2>内容</h2>
+            <div v-html="article.content"></div>
+          </article>
+        </div>
+        <div v-else>
+          <h2>暂无内容</h2>
+        </div>
+      </el-tab-pane>
+
+      <el-tab-pane>
+        <template #label>
+          <FaRegularEdit />
+        </template>
+        <!-- <div class="flex justify-end">
+          <el-popconfirm title="Are you sure to delete this?">
+            <template #reference>
+              <el-button>编辑</el-button>
+            </template>
+          </el-popconfirm>
+        </div> -->
+
+        <el-input v-model="md" :autosize="{ minRows: 2, maxRows: 18 }" type="textarea" placeholder="Please input"
+          class="w-full" />
+      </el-tab-pane>
+
+
+    </el-tabs>
+
   </div>
 </template>
 

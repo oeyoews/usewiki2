@@ -1,5 +1,6 @@
 import { defineConfig } from 'wxt';
 import vue from '@vitejs/plugin-vue';
+import Icons from 'unplugin-icons/vite';
 
 // @ts-ignore
 import AutoImport from 'unplugin-auto-import/vite';
@@ -17,6 +18,9 @@ export default defineConfig({
   vite: () => ({
     plugins: [
       vue(),
+      Icons({
+        autoInstall: true,
+      }),
       AutoImport({
         resolvers: [ElementPlusResolver()],
       }),
