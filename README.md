@@ -10,6 +10,8 @@ This template should help get you started developing with Vue 3 in WXT.
 
 ## TODO
 
+* tag
+* port 改变检测
 * extension icon
 * 统计大小
 * darkmode

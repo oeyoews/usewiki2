@@ -6,6 +6,7 @@ import utc from "dayjs/plugin/utc"
 
 // @ts-ignore
 import FaRegularEdit from '~icons/fa-regular/edit';
+import TdesignSetting from '~icons/tdesign/setting';
 // @ts-ignore
 import MaterialSymbolsInfoOutline from '~icons/material-symbols/info-outline';
 // @ts-ignore
@@ -104,7 +105,6 @@ const save2TiddlyWiki = async (title: string, text: string, port: string) => {
     <div class="sticky top-0 backdrop-blur-sm mb-2">
       <div class="flex justify-end">
 
-        <!-- // TODO -->
         <!-- <ElBacktop :right="100" :bottom="100" /> -->
         <ElButton @click="saveMarkdown(md, title!)">
           <ElIcon>
@@ -134,13 +134,14 @@ const save2TiddlyWiki = async (title: string, text: string, port: string) => {
               {{ title }}
             </h2>
           </div>
-          <hr>
+          <el-divider border-style="dashed" />
           <article class="prose prose-gray max-w-none prose-sm dark:prose-invert">
             <div v-html="html"></div>
           </article>
         </div>
       </ElTabPane>
 
+      <!-- edit -->
       <ElTabPane>
         <template #label>
           <FaRegularEdit />
@@ -150,6 +151,24 @@ const save2TiddlyWiki = async (title: string, text: string, port: string) => {
         <el-input placeholder="写点什么吧 ..." v-model="md" :autosize="{ minRows: 4, maxRows: 20 }" type="textarea"
           spellcheck="false" class="w-full" />
       </ElTabPane>
+
+      <!-- setup -->
+      <ElTabPane>
+        <template #label>
+          <TdesignSetting />
+        </template>
+
+        <div class="flex items-center">
+          <div>
+            端口
+          </div>
+          <ElInput v-model="port" />
+        </div>
+
+
+      </ElTabPane>
+
+      <!-- info -->
       <ElTabPane>
         <template #label>
           <MaterialSymbolsInfoOutline />
@@ -163,16 +182,6 @@ const save2TiddlyWiki = async (title: string, text: string, port: string) => {
         <ElButton>
           {{ status.tiddlywiki_version }}
         </ElButton>
-
-        <h2>配置</h2>
-
-        <div class="flex items-center">
-          <div>
-            端口
-          </div>
-          <ElInput v-model="port" />
-        </div>
-
       </ElTabPane>
 
 
