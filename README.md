@@ -19,6 +19,7 @@
 * codemirror6
 * 代码拆分组件
 * i18n
+* 支持多条 journal 合并
 
 ## Roadmap
 
