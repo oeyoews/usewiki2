@@ -82,23 +82,52 @@ function saveMarkdownFile() {
 
 }
 
+function saveMarkdownFile2() {
+  // 创建一个 Blob 对象，包含新的 Markdown 内容
+  const blob = new Blob([md.value], { type: 'text/markdown' });
 
-function togglePreview() {
+  async function saveFile(blob: Blob) {
+    try {
+      const options = {
+        suggestedName: article.value.title + '.md',// 设置默认文件名
+        types: [
+          {
+            description: 'Markdown 文件 (.md)',
+            accept: {
+              'text/markdown': ['.md']
+            }
+          }
+        ]
+      };
+      // @ts-ignore
+      const handle = await window.showSaveFilePicker(options);
+      const writable = await handle.createWritable();
+      await writable.write(blob);
+      await writable.close();
+      console.log('文件已保存');
+    } catch (err) {
+      console.error('保存文件时出错：', err);
+    }
+  }
+
+  // 调用 saveFile 函数并传入 Blob 对象
+  saveFile(blob);
 
 }
 
+function save2TiddlyWiki() {
+
+}
 
 </script>
 
 <template>
   <div class="app">
-    <!-- <button @click="getArticle">
-      getArticle
-    </button>
-    <button @click="togglePreview">切换模式</button> -->
-    <!-- <textarea auto :value="md" class="textarea"></textarea> -->
-    <!-- <p v-html="md"></p> -->
-    <button @click="saveMarkdownFile">save markdown</button>
+    <div>version 1.0</div>
+    <div>
+      <button @click="saveMarkdownFile">save markdown</button>
+      <button @click="save2TiddlyWiki">save to tiddlywiki</button>
+    </div>
     <div v-if="article.title">
       <div class="flex items-center justify-center gap-2">
         <h2>
@@ -117,7 +146,7 @@ function togglePreview() {
       </article>
     </div>
     <div v-else>
-      <h2>没有找到文章</h2>
+      <h2>暂无内容</h2>
     </div>
   </div>
 </template>

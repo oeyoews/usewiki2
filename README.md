@@ -8,6 +8,8 @@ This template should help get you started developing with Vue 3 in WXT.
 
 ## TODO
 
+* i18n
+
 ## Doc
 
 * https://developer.chrome.com/docs/extensions/develop/concepts/messaging?hl=zh-cn
