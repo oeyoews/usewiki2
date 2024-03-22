@@ -1,6 +1,4 @@
 import { createApp } from 'vue';
-import './style.css';
-// @ts-expect-error
-import App from './App.vue';
+import Popup from './Popup.vue';
 
-createApp(App).mount('#app');
+createApp(Popup).mount('#app');
