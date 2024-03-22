@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import 'element-plus/es/components/message/style/css'
 
+// @ts-ignore
 import FaRegularEdit from '~icons/fa-regular/edit';
+// @ts-ignore
 import FaFileTextO from '~icons/fa/file-text-o';
+// @ts-ignore
 import FaRegularSave from '~icons/fa-regular/save';
 import { ElMessage, ElNotification } from 'element-plus'
 import { unified } from 'unified'
