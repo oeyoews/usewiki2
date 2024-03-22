@@ -67,7 +67,7 @@ fetch(`http://localhost:${port.value}/status`).then((res) => {
 })
 
 
-const save2TiddlyWiki = async (title: string, text: string, port: string) => {
+const save2TiddlyWiki = async (title: string, text: string, port: string, url: string) => {
   if (!status.value.tiddlywiki_version) {
     ElMessage({
       message: '请先连接 TiddlyWiki',
@@ -85,6 +85,7 @@ const save2TiddlyWiki = async (title: string, text: string, port: string) => {
     body: JSON.stringify({
       text, creator: username.value,
       type: 'text/markdown',
+      url,
       created: dayjs(new Date()).utc().format('YYYYMMDDHHmmss')
     })
   }).then((res) => {
@@ -96,8 +97,6 @@ const save2TiddlyWiki = async (title: string, text: string, port: string) => {
     }
   })
 }
-
-
 
 </script>
 
@@ -114,7 +113,7 @@ const save2TiddlyWiki = async (title: string, text: string, port: string) => {
           </ElIcon>
         </ElButton>
 
-        <ElButton @click="save2TiddlyWiki(title, md, port)">
+        <ElButton @click="save2TiddlyWiki(title, md, port, link)">
           <FaRegularSave />
         </ElButton>
       </div>
