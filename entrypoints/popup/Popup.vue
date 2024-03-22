@@ -8,43 +8,8 @@ import FaFileTextO from '~icons/fa/file-text-o';
 // @ts-ignore
 import FaRegularSave from '~icons/fa-regular/save';
 import { ElMessage, ElNotification } from 'element-plus'
-import { unified } from 'unified'
 import { ref, } from 'vue';
-// @ts-ignore
-import rehypeParse from 'rehype-parse';
-import rehypeRemark from 'rehype-remark';
-// @ts-ignore
-import remarkGfm from 'remark-gfm';
-// @ts-ignore
-import remarkPangu from 'remark-pangu';
-// @ts-ignore
-import remarkStringify from 'remark-stringify';
-
-// import markdownit from 'markdown-it'
-
-interface IArticle {
-  title: string;
-  content: string;
-  textContent: string;
-  length: number;
-  excerpt: string;
-  byline: string;
-  dir: string;
-  siteName: string;
-  lang: string;
-  publishedTime: string;
-}
-
-// const mdParser = markdownit()
-
-const html2mdParser = unified()
-  .use(rehypeParse)
-  .use(remarkGfm)
-  .use(rehypeRemark)
-  .use(remarkStringify)
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  .use(remarkPangu);
-
+import { html2md, md2html } from '@/composables/parser';
 
 
 const article = ref<Partial<IArticle>>({
@@ -65,7 +30,7 @@ function getArticle() {
     // @ts-ignore
     chrome.tabs.sendMessage(tab.id, '', async function (response) {
       article.value = response
-      const content = await html2mdParser.process(response.content);
+      const content = await html2md(response.content);
       md.value = content.toString()
     })
 
@@ -74,11 +39,12 @@ function getArticle() {
 
 getArticle()
 
-watch(md, () => {
-
-})
-
-// save a markdown file to user computer
+// watch(md, () => {
+//   ElMessage({
+//     message: '修改成功'
+//   })
+//   article.value.content = md.value
+// })
 
 
 function saveMarkdownFile() {

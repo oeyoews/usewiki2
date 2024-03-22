@@ -17,6 +17,7 @@ This template should help get you started developing with Vue 3 in WXT.
 * 右键菜单
 * 日记模式
 * codemirror6
+* 代码拆分组件
 
 * i18n
 

@@ -9,6 +9,12 @@
     // "types": [
     // "element-plus/global"
     // ], // "types": ["unplugin-icons/types/vue"],
-    "verbatimModuleSyntax": true
-  }
+    "verbatimModuleSyntax": true,
+    "baseUrl": ".",
+    "paths": {
+      "@*": [
+        "./*"
+      ]
+    }
+  },
 }
