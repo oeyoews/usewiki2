@@ -1,47 +1,51 @@
 <script setup lang="ts">
-import { storage } from 'wxt/storage';
-import HelloWorld from '@/components/HelloWorld.vue';
 import { ref, onMounted } from 'vue';
-// var article = new Readability(document).parse();
 
-const htmlContent = ref<{
-  title: string,
-  content: string
-  excerpt: string
-}>({
+interface IArticle {
+  title: string;
+  content: string;
+  textContent: string;
+  length: number;
+  excerpt: string;
+  byline: string;
+  dir: string;
+  siteName: string;
+  lang: string;
+  publishedTime: string;
+
+
+}
+
+const article = ref<Partial<IArticle>>({
   title: '',
   content: '',
   excerpt: ''
 })
 
-// 在弹出窗口的脚本中接收来自内容脚本的消息
-chrome.runtime.onMessage.addListener(async function (message, sender, sendResponse) {
-  console.log('收到来自 ' + sender.tab?.url + ' 的消息：')
-  await storage.setItem('local:data', message)
-  const data = await storage.getItem('local:data')
-  // alert('收到来自 ' + sender.tab?.url + ' 的消息：')
-  // 在这里处理收到的消息
+chrome.storage.local.get(['article'], function (result) {
+  if (chrome.runtime.lastError) {
+    console.error(chrome.runtime.lastError, '[ERROE]');
+    return;
+  }
+  if (result) {
+    article.value = result.article
+  }
 });
-
-async function getHtmlContent() {
-  const data = await storage.getItem('local:data')
-  htmlContent.value = data
-  console.log(data)
-  // alert(JSON.stringify(data))
-}
-
-onMounted(() => {
-  getHtmlContent()
-})
 
 </script>
 
 <template>
   <div class="app">
-    <div v-if="!htmlContent">no conent</div>
-    <h2> {{ htmlContent.title }}</h2>
-    <div v-html="htmlContent.content"></div>
-    <div v-html="htmlContent.excerpt"></div>
+    <div v-if="article.title">
+      <h2> {{ article.title }}</h2>
+      <hr>
+      <div v-html="article.excerpt"></div>
+      <hr>
+      <div v-html="article.content"></div>
+    </div>
+    <div v-else>
+      <h2>没有找到文章</h2>
+    </div>
   </div>
 </template>
 
@@ -49,5 +53,6 @@ onMounted(() => {
 .app {
   width: 400px;
   height: 250px;
+  overflow-y: auto;
 }
 </style>

@@ -1,20 +1,22 @@
-import { Readability } from '@mozilla/readability';
+import { isProbablyReaderable, Readability } from '@mozilla/readability';
 
 export default defineContentScript({
-  // matches: ['*://*/*'],
   matches: ['<all_urls>'],
   main() {
-    // document.body.style.background = 'red';
+    // 发送文章信息到后台
+    function sendArticle() {
+      const documentClone = document.cloneNode(true) as Document;
+      const reader = new Readability(documentClone);
+      const article = reader.parse();
 
-    const documentClone = document.cloneNode(true) as Document;
-    const reader = new Readability(documentClone);
-    const article = reader.parse();
-
-    setInterval(() => {
+      // TODO: 路由变化似乎不会更新
       chrome.runtime.sendMessage(article);
-      console.log('update');
-    }, 1000);
+      console.log(new Date(), article);
+      browser.storage.local.set({
+        article,
+      });
+    }
 
-    var port = chrome.runtime.connect();
+    sendArticle();
   },
 });
