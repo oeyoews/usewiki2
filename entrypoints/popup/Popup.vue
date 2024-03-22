@@ -95,8 +95,7 @@ watch(port, () => {
   checkStatus()
 })
 
-
-
+const currentTime = dayjs(new Date()).utc().format('YYYYMMDDHHmmss')
 const save2TiddlyWiki = async (title: string, text: string, port: string, url: string) => {
   if (!status.value.tiddlywiki_version) {
     ElMessage({
@@ -116,7 +115,8 @@ const save2TiddlyWiki = async (title: string, text: string, port: string, url: s
       text, creator: username.value,
       type: 'text/markdown',
       url,
-      created: dayjs(new Date()).utc().format('YYYYMMDDHHmmss')
+      created: currentTime,
+      modified: currentTime
     })
   }).then((res) => {
     if (res.ok) {
