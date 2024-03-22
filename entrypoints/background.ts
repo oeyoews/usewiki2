@@ -1,6 +1,4 @@
 export default defineBackground(() => {
-  console.log('Hello background!', { id: browser.runtime.id });
-
   browser.runtime.onInstalled.addListener(async ({ reason }) => {
     if (reason !== 'install') return;
 
@@ -13,14 +11,13 @@ export default defineBackground(() => {
   chrome.runtime.onInstalled.addListener(function () {
     chrome.contextMenus.create({
       id: 'tiddlywiki',
-      title: '添加到 TiddlyWiki(Ctrl+Shift+F)',
+      title: '添加到 TiddlyWiki(WIP)',
       contexts: ['all'],
     });
   });
 
   chrome.commands.onCommand.addListener(function (command) {
     if (command === 'addtiddlywiki') {
-      console.log('yu ');
       // 处理快捷键被触发时的逻辑
     }
   });

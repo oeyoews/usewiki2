@@ -11,7 +11,6 @@ export default defineContentScript({
     }
 
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      console.log(request.info);
       sendResponse(getDoc());
     });
   },

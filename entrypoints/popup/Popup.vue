@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import 'element-plus/es/components/message/style/css'
+import dayjs from 'dayjs'
+import utc from "dayjs/plugin/utc"
+
 
 // @ts-ignore
 import FaRegularEdit from '~icons/fa-regular/edit';
+// @ts-ignore
+import MaterialSymbolsInfoOutline from '~icons/material-symbols/info-outline';
 // @ts-ignore
 import FaFileTextO from '~icons/fa/file-text-o';
 // @ts-ignore
@@ -10,12 +15,16 @@ import FaRegularSave from '~icons/fa-regular/save';
 import { ref, } from 'vue';
 import saveMarkdown from '@/utils/saveMarkdown'
 import { html2md, md2html } from '@/utils/parser'
+import { ElMessage } from 'element-plus';
+dayjs.extend(utc)
 
 const html = ref('')
 const md = ref('')
 const link = ref('')
 const faviconUrl = ref('')
 const title = ref('')
+const username = ref('oeyoews')
+const port = ref('8000')
 
 chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
   const tab = tabs[0]
@@ -30,9 +39,62 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
 
 })
 
+
 watch(md, async () => {
   html.value = (await md2html(md.value))
 })
+
+const status = ref<{
+  username: string, tiddlywiki_version: string
+}>({
+  username: '',
+  tiddlywiki_version: ''
+})
+
+fetch(`http://localhost:${port.value}/status`).then((res) => {
+  return res.json()
+}).then((data) => {
+  status.value = data;
+  if (!data.tiddlywiki_version) {
+    ElMessage({
+      message: 'TiddlyWiki 未连接',
+      type: 'error'
+    })
+  }
+})
+
+
+const save2TiddlyWiki = async (title: string, text: string, port: string) => {
+  if (!status.value.tiddlywiki_version) {
+    ElMessage({
+      message: '请先连接 TiddlyWiki',
+      type: 'error'
+    })
+    return
+  }
+
+  fetch(`http://localhost:${port}/recipes/default/tiddlers/${title}`, {
+    method: 'PUT',
+    headers: {
+      "Content-Type": "application/json",
+      "x-requested-with": "TiddlyWiki"
+    },
+    body: JSON.stringify({
+      text, creator: username.value,
+      type: 'text/markdown',
+      created: dayjs(new Date()).utc().format('YYYYMMDDHHmmss')
+    })
+  }).then((res) => {
+    if (res.ok) {
+      ElMessage({
+        message: '保存成功',
+        type: 'success'
+      })
+    }
+  })
+}
+
+
 
 </script>
 
@@ -42,11 +104,16 @@ watch(md, async () => {
     <div class="sticky top-0 backdrop-blur-sm mb-2">
       <div class="flex justify-end">
 
-        <ElBacktop :right="100" :bottom="100" />
+        <!-- // TODO -->
+        <!-- <ElBacktop :right="100" :bottom="100" /> -->
         <ElButton @click="saveMarkdown(md, title!)">
           <ElIcon>
             <FaRegularSave />
           </ElIcon>
+        </ElButton>
+
+        <ElButton @click="save2TiddlyWiki(title, md, port)">
+          save tiddlywiki
         </ElButton>
       </div>
     </div>
@@ -72,9 +139,6 @@ watch(md, async () => {
             <div v-html="html"></div>
           </article>
         </div>
-        <!-- <div v-else>
-          <h2>暂无内容</h2>
-        </div> -->
       </ElTabPane>
 
       <ElTabPane>
@@ -86,6 +150,31 @@ watch(md, async () => {
         <el-input placeholder="写点什么吧 ..." v-model="md" :autosize="{ minRows: 4, maxRows: 20 }" type="textarea"
           spellcheck="false" class="w-full" />
       </ElTabPane>
+      <ElTabPane>
+        <template #label>
+          <MaterialSymbolsInfoOutline />
+        </template>
+
+        Username:
+        <ElButton>
+          {{ status.username }}
+        </ElButton>
+        TiddlyWiki:
+        <ElButton>
+          {{ status.tiddlywiki_version }}
+        </ElButton>
+
+        <h2>配置</h2>
+
+        <div class="flex items-center">
+          <div>
+            端口
+          </div>
+          <ElInput v-model="port" />
+        </div>
+
+      </ElTabPane>
+
 
     </ElTabs>
 

@@ -20,6 +20,8 @@
     "@tailwindcss/typography": "^0.5.10",
     "@types/chrome": "^0.0.263",
     "autoprefixer": "^10.4.19",
+    "axios": "^1.6.8",
+    "dayjs": "^1.11.10",
     "element-plus": "^2.6.1",
     "postcss": "^8.4.38",
     "rehype-document": "^7.0.3",
@@ -43,6 +45,7 @@
   "devDependencies": {
     "@iconify-json/fa": "^1.1.8",
     "@iconify-json/fa-regular": "^1.1.8",
+    "@iconify-json/material-symbols": "^1.1.76",
     "@vitejs/plugin-vue": "^5.0.1",
     "typescript": "^5.3.3",
     "vue-tsc": "^2.0.6",
