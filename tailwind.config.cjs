@@ -40,6 +40,6 @@ module.exports = {
       }),
     },
   },
-  darkMode: 'media',
+  darkMode: 'light',
   plugins: [typography],
 };

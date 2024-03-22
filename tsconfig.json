@@ -6,7 +6,9 @@
       "DOM"
     ],
     "isolatedModules": true,
-    // "types": ["unplugin-icons/types/vue"],
+    // "types": [
+    // "element-plus/global"
+    // ], // "types": ["unplugin-icons/types/vue"],
     "verbatimModuleSyntax": true
   }
 }

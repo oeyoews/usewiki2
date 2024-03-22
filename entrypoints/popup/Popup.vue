@@ -123,10 +123,9 @@ function save2TiddlyWiki() {
 
 <template>
   <div class="app">
-    <div>version 1.0</div>
+    <!-- <div>version 1.0</div> -->
     <div>
-      <button @click="saveMarkdownFile">save markdown</button>
-      <button @click="save2TiddlyWiki">save to tiddlywiki</button>
+      <el-button @click="saveMarkdownFile">保存为 Markdown</el-button>
     </div>
     <div v-if="article.title">
       <div class="flex items-center justify-center gap-2">
