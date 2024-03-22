@@ -10,6 +10,7 @@ This template should help get you started developing with Vue 3 in WXT.
 
 ## TODO
 
+* tour: https://element-plus.org/zh-CN/component/tour.html
 * tag
 * port 改变检测
 * extension icon
