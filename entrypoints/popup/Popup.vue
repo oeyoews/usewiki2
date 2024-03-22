@@ -6,6 +6,7 @@ import utc from "dayjs/plugin/utc"
 
 // @ts-ignore
 import FaRegularEdit from '~icons/fa-regular/edit';
+// @ts-ignore
 import TdesignSetting from '~icons/tdesign/setting';
 // @ts-ignore
 import MaterialSymbolsInfoOutline from '~icons/material-symbols/info-outline';
