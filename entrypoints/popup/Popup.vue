@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import 'element-plus/es/components/message/style/css'
+import { ElMessage, ElNotification } from 'element-plus'
 import { unified } from 'unified'
 import { ref, } from 'vue';
 // @ts-ignore
@@ -78,7 +80,13 @@ function saveMarkdownFile() {
   document.body.appendChild(link);
   link.click();
 
+
   URL.revokeObjectURL(link.href);
+
+  ElMessage({
+    message: '保存成功',
+    type: 'success'
+  })
 
 }
 
@@ -118,7 +126,12 @@ function saveMarkdownFile2() {
 function save2TiddlyWiki() {
 
 }
-
+const open2 = () => {
+  ElMessage({
+    message: 'Congrats, this is a success message.',
+    type: 'success',
+  })
+}
 </script>
 
 <template>
