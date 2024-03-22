@@ -1,7 +1,8 @@
 import { Readability } from '@mozilla/readability';
 
 export default defineContentScript({
-  matches: ['*://*/*'],
+  // matches: ['*://*/*'],
+  matches: ['<all_urls>'],
   main() {
     // document.body.style.background = 'red';
 
@@ -9,7 +10,10 @@ export default defineContentScript({
     const reader = new Readability(documentClone);
     const article = reader.parse();
 
-    chrome.runtime.sendMessage(article);
+    setInterval(() => {
+      chrome.runtime.sendMessage(article);
+      console.log('update');
+    }, 1000);
 
     var port = chrome.runtime.connect();
   },

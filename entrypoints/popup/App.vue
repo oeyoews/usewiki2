@@ -19,7 +19,7 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
   console.log('收到来自 ' + sender.tab?.url + ' 的消息：')
   await storage.setItem('local:data', message)
   const data = await storage.getItem('local:data')
-  console.log(data)
+  // alert('收到来自 ' + sender.tab?.url + ' 的消息：')
   // 在这里处理收到的消息
 });
 
@@ -27,6 +27,7 @@ async function getHtmlContent() {
   const data = await storage.getItem('local:data')
   htmlContent.value = data
   console.log(data)
+  // alert(JSON.stringify(data))
 }
 
 onMounted(() => {
@@ -37,6 +38,7 @@ onMounted(() => {
 
 <template>
   <div class="app">
+    <div v-if="!htmlContent">no conent</div>
     <h2> {{ htmlContent.title }}</h2>
     <div v-html="htmlContent.content"></div>
     <div v-html="htmlContent.excerpt"></div>
