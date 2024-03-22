@@ -18,30 +18,22 @@ const link = ref('')
 const faviconUrl = ref('')
 const title = ref('')
 
-function getArticle() {
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    const tab = tabs[0]
-    link.value = tab.url!;
-    faviconUrl.value = tab.favIconUrl!
-    // @ts-ignore
-    chrome.tabs.sendMessage(tab.id, '', async function (response: IArticle) {
-      html.value = response.content
-      title.value = response.title
-      md.value = await html2md(response.content);
-    })
-
+chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+  const tab = tabs[0]
+  link.value = tab.url!;
+  faviconUrl.value = tab.favIconUrl!
+  // @ts-ignore
+  chrome.tabs.sendMessage(tab.id, '', async function (response: IArticle) {
+    html.value = response.content
+    md.value = await html2md(html.value);
+    title.value = response.title
   })
-}
 
-getArticle()
-
-watch(md, async () => {
-  // ElMessage({
-  //   message: '修改成功'
-  // })
-  html.value = (await md2html(md.value))
 })
 
+watch(md, async () => {
+  html.value = (await md2html(md.value))
+})
 
 </script>
 
@@ -50,23 +42,22 @@ watch(md, async () => {
     <!-- version -->
     <div class="sticky top-0 backdrop-blur-sm mb-2">
       <div class="flex justify-end">
-        <ElButton>
-          Home
-        </ElButton>
-        <el-button @click="saveMarkdown(md, title!)">
-          <el-icon>
+
+        <ElBacktop :right="100" :bottom="100" />
+        <ElButton @click="saveMarkdown(md, title!)">
+          <ElIcon>
             <FaRegularSave />
-          </el-icon>
-        </el-button>
+          </ElIcon>
+        </ElButton>
       </div>
     </div>
-    <el-tabs type="border-card">
+    <ElTabs type="border-card">
 
-      <el-tab-pane>
+      <ElTabPane>
         <template #label>
-          <el-icon>
+          <ElIcon>
             <FaFileTextO />
-          </el-icon>
+          </ElIcon>
         </template>
         <div v-if="title">
           <div class="flex items-center justify-center gap-2">
@@ -82,10 +73,10 @@ watch(md, async () => {
             <div v-html="html"></div>
           </article>
         </div>
-        <div v-else>
+        <!-- <div v-else>
           <h2>暂无内容</h2>
-        </div>
-      </el-tab-pane>
+        </div> -->
+      </ElTabPane>
 
       <ElTabPane>
         <template #label>
@@ -98,7 +89,7 @@ watch(md, async () => {
       </ElTabPane>
 
 
-    </el-tabs>
+    </ElTabs>
 
   </div>
 </template>
