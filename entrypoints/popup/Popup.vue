@@ -74,6 +74,10 @@ function getArticle() {
 
 getArticle()
 
+watch(md, () => {
+
+})
+
 // save a markdown file to user computer
 
 
@@ -130,34 +134,42 @@ function saveMarkdownFile2() {
 
 }
 
-function save2TiddlyWiki() {
+// function save2TiddlyWiki() { }
 
-}
-const open2 = () => {
-  ElMessage({
-    message: 'Congrats, this is a success message.',
-    type: 'success',
-  })
-}
 </script>
 
 <template>
   <div class="app">
-    <!-- <div>version 1.0</div> -->
+    <!-- version -->
+    <div class="fixedright0 top2 sticky top-0">
+      <div class="flex justify-end">
+        <ElButton>
+          Home
+        </ElButton>
+        <el-button @click="saveMarkdownFile">
+          <el-icon>
+            <FaRegularSave />
+          </el-icon>
+        </el-button>
+      </div>
+    </div>
     <el-tabs type="border-card">
+
+      <el-tab-pane>
+        <template #label>
+          <FaRegularEdit />
+        </template>
+
+        <el-input placeholder="写点什么吧 ..." v-model="md" :autosize="{ minRows: 4, maxRows: 20 }" type="textarea"
+          spellcheck="false" class="w-full" />
+      </el-tab-pane>
+
       <el-tab-pane>
         <template #label>
           <el-icon>
             <FaFileTextO />
           </el-icon>
         </template>
-        <div class="flex justify-end">
-          <el-button @click="saveMarkdownFile">
-            <el-icon>
-              <FaRegularSave />
-            </el-icon>
-          </el-button>
-        </div>
         <div v-if="article.title">
           <div class="flex items-center justify-center gap-2">
             <h2>
@@ -180,22 +192,6 @@ const open2 = () => {
         </div>
       </el-tab-pane>
 
-      <el-tab-pane>
-        <template #label>
-          <FaRegularEdit />
-        </template>
-        <!-- <div class="flex justify-end">
-          <el-popconfirm title="Are you sure to delete this?">
-            <template #reference>
-              <el-button>编辑</el-button>
-            </template>
-          </el-popconfirm>
-        </div> -->
-
-        <el-input v-model="md" :autosize="{ minRows: 2, maxRows: 18 }" type="textarea" placeholder="Please input"
-          class="w-full" />
-      </el-tab-pane>
-
 
     </el-tabs>
 
@@ -211,8 +207,8 @@ const open2 = () => {
 }
 
 .app {
-  width: 400px;
-  height: 450px;
+  width: 600px;
+  height: 550px;
   overflow-y: auto;
 }
 </style>

@@ -15,6 +15,8 @@ This template should help get you started developing with Vue 3 in WXT.
 * 支持保存到 tiddlywiki
 * 支持保存到 github
 * 右键菜单
+* 日记模式
+* codemirror6
 
 * i18n
 
