@@ -11,7 +11,6 @@ This template should help get you started developing with Vue 3 in WXT.
 ## TODO
 
 * darkmode
-* 支持编辑
 * 支持保存到 tiddlywiki
 * 支持保存到 github
 * 右键菜单

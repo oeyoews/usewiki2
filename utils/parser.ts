@@ -20,7 +20,7 @@ async function md2html(markdown: string) {
     .use(rehypeSanitize)
     .use(rehypeStringify);
 
-  return await md2htmlParser.process(markdown);
+  return (await md2htmlParser.process(markdown)).toString();
 }
 
 async function html2md(html: string) {
@@ -31,7 +31,7 @@ async function html2md(html: string) {
     .use(remarkStringify)
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     .use(remarkPangu);
-  return await html2mdParser.process(html);
+  return (await html2mdParser.process(html)).toString();
 }
 
 export { md2html, html2md };
