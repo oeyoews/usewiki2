@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import 'element-plus/es/components/message/style/css'
 
+import AI from '@/utils/ai'
+
 import json from '../../package.json'
 
+// @ts-ignore
+import EosIconsAi from '~icons/eos-icons/ai?width=16px&height=16px';
 // @ts-ignore
 import CharmGithub from '~icons/charm/github?width=16px&height=16px';
 // @ts-ignore
@@ -20,9 +24,9 @@ import FaRegularSave from '~icons/fa-regular/save';
 
 import saveMarkdown from '@/utils/saveMarkdown';
 import save2TiddlyWiki from '@/utils/save2TiddlyWiki';
-import { html2md, md2html } from '@/utils/parser'
+import { html2md, md2html } from '@/utils/parser';
 
-
+const aimd = ref('')
 const html = ref('')
 const md = ref('')
 const link = ref('')
@@ -169,8 +173,14 @@ function checkStatus() {
 
 watch(md, async () => {
   html.value = (await md2html(md.value))
+
+  // TODO: Debounce
+  // const chatCompletion = await AI(md.value);
+  // const mes = chatCompletion!.choices[0].message;
+  // aimd.value = mes.content;
 })
-watch(port, (newValue, oldValue) => {
+
+watch(port, (newValue) => {
   chrome.storage.local.set({ port: newValue })
   if (isCheckTw5.value) {
     checkStatus()
@@ -196,14 +206,15 @@ watch(port, (newValue, oldValue) => {
         </ElButton>
       </div>
     </div>
-    <ElTabs type="border-card">
 
+    <ElTabs type="border-card">
       <ElTabPane>
         <template #label>
           <ElIcon>
             <FaFileTextO />
           </ElIcon>
         </template>
+        <!-- preview -->
         <div v-if="title">
           <div class="flex items-center justify-center gap-2">
             <h2>
@@ -227,9 +238,23 @@ watch(port, (newValue, oldValue) => {
         </template>
 
         <el-input type="text" v-model="title" class="mb-1" />
+
         <el-input placeholder="写点什么吧 ..." v-model="md" :autosize="{ minRows: 4, maxRows: 20 }" type="textarea"
-          spellcheck="false" class="w-full" />
+          spellcheck="false" class="w-full" resize="none" />
+
       </ElTabPane>
+
+      <!-- <ElTabPane>
+        <template #label>
+          <EosIconsAi />
+        </template>
+
+        <el-input type="text" v-model="title" class="mb-1" />
+
+        <el-input placeholder="写点什么吧 ..." v-model="aimd" :autosize="{ minRows: 4, maxRows: 20 }" type="textarea"
+          spellcheck="false" class="w-full" resize="none" />
+
+      </ElTabPane> -->
 
       <!-- setup -->
       <ElTabPane>
@@ -261,7 +286,6 @@ watch(port, (newValue, oldValue) => {
           </div>
         </div>
 
-
       </ElTabPane>
 
       <!-- info -->
@@ -287,13 +311,9 @@ watch(port, (newValue, oldValue) => {
           </ElLink>
         </div>
 
-
       </ElTabPane>
-
 
     </ElTabs>
 
   </div>
 </template>
-
-<style scoped></style>
