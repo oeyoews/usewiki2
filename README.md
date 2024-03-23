@@ -5,6 +5,8 @@
 
 > 将当前网页文章转换成 Markdown 文件，支持保存到本地，TiddlyWiki5, GitHub(wip)
 
+![](./banner.png)
+
 <!-- * element plus, tailwindcss, wxt, vue, axios -->
 
 ## Install
@@ -13,7 +15,6 @@
 
 <!-- ## TODO
 
-* banner
 * welcome page
 * tour: https://element-plus.org/zh-CN/component/tour.html
 * port 通知优化
