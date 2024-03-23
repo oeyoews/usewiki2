@@ -111,7 +111,10 @@ watch(isCheckTw5, (newValue, oldValue) => {
     //   message: '检测到 TiddlyWiki 5.x',
     //   type: 'success'
     // })
+    checkStatus()
   } else {
+    // @ts-ignore
+    status.value = ''
     // ElMessage({
     //   message: '关闭 TiddlyWiki 5.x 检测',
     //   type: 'info'
@@ -120,10 +123,6 @@ watch(isCheckTw5, (newValue, oldValue) => {
 })
 
 function checkStatus() {
-
-  if (!isCheckTw5.value) {
-    return
-  }
 
   fetch(`http://localhost:${port.value}/status`).then((res) => {
     return res.json()
@@ -159,9 +158,9 @@ watch(md, async () => {
 
 watch(port, () => {
   chrome.storage.local.set({ port: port.value })
-  setTimeout(() => {
+  if (isCheckTw5.value) {
     checkStatus()
-  }, 1000);
+  }
 })
 
 const currentTime = dayjs(new Date()).utc().format('YYYYMMDDHHmmss')
@@ -277,7 +276,7 @@ const save2TiddlyWiki = async (title: string, text: string, port: number, url: s
 
         <div class="items-center">
 
-          <h2>启动时检查 TiddlyWiki5 状态</h2>
+          <h2>连接 TiddlyWiki5</h2>
           <el-switch v-model="isCheckTw5" />
 
           <div>
