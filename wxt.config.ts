@@ -30,18 +30,24 @@ export default defineConfig({
     ],
   }),
   manifest: {
-    commands: {
-      addtiddlywiki: {
-        suggested_key: {
-          default: 'Ctrl+Shift+F',
-          mac: 'MacCtrl+Shift+F',
-        },
-        description: '执行我的命令',
+    web_accessible_resources: [
+      {
+        resources: ['injected.js'],
+        matches: ['<all_urls>'],
       },
-    },
+    ],
+    // commands: {
+    //   addtiddlywiki: {
+    //     suggested_key: {
+    //       default: 'Ctrl+Shift+F',
+    //       mac: 'MacCtrl+Shift+F',
+    //     },
+    //     description: '执行我的命令',
+    //   },
+    // },
     permissions: [
       'contextMenus',
-      'alarms',
+      // 'alarms',
       'activeTab',
       'contextMenus',
       'storage',
@@ -49,7 +55,11 @@ export default defineConfig({
       'tabs',
       'scripting',
     ],
+    content_security_policy: {
+      extension_pages: "script-src 'self'; object-src 'self'",
+    },
     host_permissions: ['<all_urls>'],
+
     browser_action: {
       default_popup: 'popup.html',
     },

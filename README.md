@@ -1,11 +1,14 @@
 ## Usewiki2
 
+> usewiki2: usewiki 的 vue 版本，但是带来了更多功能
+
 * 将当前网页转换成 Markdown 文件，支持保存到本地，TiddlyWiki, GitHub(wip)
 
 <!-- * element plus, tailwindcss, wxt, vue, axios -->
 
 ## TODO
 
+<!-- * 如何设置访问$tw -->
 * 完成 welcome page
 * tour: https://element-plus.org/zh-CN/component/tour.html
 * tag
@@ -20,6 +23,10 @@
 * 代码拆分组件
 * i18n
 * 支持多条 journal 合并
+
+## Install
+
+* https://github.com/oeyoews/usewiki2/releases
 
 ## Roadmap
 

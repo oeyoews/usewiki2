@@ -40,13 +40,24 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
   link.value = tab.url!;
   faviconUrl.value = tab.favIconUrl!
   // @ts-ignore
-  chrome.tabs.sendMessage(tab.id, '', async function (response: IArticle) {
+  chrome.tabs.sendMessage(tab.id, {
+    info: 'get-doc', message: '获取文章'
+  }, async function (response: IArticle) {
+    // if (!response) {
+    //   html.value = '不支持当前页面'
+    // } else {
+    // }
     html.value = response.content
     md.value = await html2md(html.value);
     title.value = response.title
   })
-
 })
+
+// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+//   if (request.info === 'tiddlywiki-send-message') {
+//     console.log(request.message)
+//   }
+// })
 
 
 const status = ref<{
