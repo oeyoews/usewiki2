@@ -114,6 +114,7 @@ watch(isCheckTw5, (newValue, oldValue) => {
     checkStatus()
   } else {
     // @ts-ignore
+    // 清空 status
     status.value = ''
     // ElMessage({
     //   message: '关闭 TiddlyWiki 5.x 检测',
@@ -122,7 +123,16 @@ watch(isCheckTw5, (newValue, oldValue) => {
   }
 })
 
+const isChecking = ref(false)
 function checkStatus() {
+
+  if (isChecking.value) {
+    ElMessage({
+      message: "正在检测中 ..."
+    })
+
+    return
+  }
 
   fetch(`http://localhost:${port.value}/status`).then((res) => {
     return res.json()
@@ -138,16 +148,19 @@ function checkStatus() {
         type: 'error'
       })
     } else {
-      // ElMessage({
-      //   message: 'TiddlyWiki 连接成功',
-      //   type: 'success'
-      // })
+      ElMessage({
+        message: 'TiddlyWiki 连接成功',
+        type: 'success'
+      })
     }
   }).catch((e) => {
-    ElMessage({
-      message: "TiddlyWiki 未成功连接" + e,
-      type: 'error'
-    })
+    // TODO: 这里总会提示报错，但是实际已经连接成功了
+    // ElMessage({
+    //   message: "TiddlyWiki 未成功连接" + e,
+    //   type: 'error'
+    // })
+  }).finally(() => {
+    isChecking.value = false
   })
 
 }
@@ -317,11 +330,11 @@ const save2TiddlyWiki = async (title: string, text: string, port: number, url: s
           <ElTag>
             {{ json.name.toUpperCase() }}: {{ json.version }}
           </ElTag>
-          <ElButton>
-            <ElLink href="https://github.com/oeyoews/usewiki2" target="_blank">
+          <ElLink href="https://github.com/oeyoews/usewiki2" target="_blank">
+            <ElButton>
               <CharmGithub />
-            </ElLink>
-          </ElButton>
+            </ElButton>
+          </ElLink>
         </div>
 
 
