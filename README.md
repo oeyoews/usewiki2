@@ -12,16 +12,9 @@
 * 完成 welcome page
 * tour: https://element-plus.org/zh-CN/component/tour.html
 * port 通知优化
-* extension icon
-* 统计大小
-* darkmode
 * 支持保存到 tiddlywiki
 * 右键菜单实现功能，快捷键提示
-* 日记模式
-* codemirror6
-* 代码拆分组件
-* i18n
-* 支持多条 journal 合并
+* 日记模式 支持多条 journal 合并
 
 ## Install
 
@@ -30,6 +23,12 @@
 ## Roadmap
 
 * 支持保存到 github, such as issues, discussion
+* i18n
+* codemirror6
+* 代码拆分组件
+* darkmode
+* 统计大小
+* extension icon
 
 ## Doc
 
