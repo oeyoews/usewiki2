@@ -4,6 +4,8 @@ import dayjs from 'dayjs'
 import utc from "dayjs/plugin/utc"
 
 // @ts-ignore
+import CharmGithub from '~icons/charm/github?width=16px&height=16px';
+// @ts-ignore
 import MaterialSymbolsDownload from '~icons/material-symbols/download';
 // @ts-ignore
 import FaRegularEdit from '~icons/fa-regular/edit';
@@ -18,6 +20,7 @@ import FaRegularSave from '~icons/fa-regular/save';
 import { ref, } from 'vue';
 import saveMarkdown from '@/utils/saveMarkdown'
 import { html2md, md2html } from '@/utils/parser'
+import json from '../../package.json'
 dayjs.extend(utc)
 
 const html = ref('')
@@ -29,15 +32,14 @@ const username = ref('oeyoews')
 
 const isCheckTw5 = ref(false)
 
-chrome.storage.sync.get('isCheckTw5', function (result) {
+chrome.storage.local.get('isCheckTw5', function (result) {
   isCheckTw5.value = result.isCheckTw5
 })
 
 const inputValue = ref()
-
 const dynamicTags = ref()
 
-chrome.storage.sync.get(['tags'], function (result) {
+chrome.storage.local.get(['tags'], function (result) {
   if (result.tags) {
     dynamicTags.value = Object.values(result.tags)
   } else {
@@ -61,18 +63,17 @@ const showInput = () => {
 const handleInputConfirm = () => {
   if (inputValue.value) {
     dynamicTags.value.push(inputValue.value.trim())
-    chrome.storage.sync.set({ tags: toRaw(dynamicTags.value) })
+    chrome.storage.local.set({ tags: toRaw(dynamicTags.value) })
   }
   inputVisible.value = false
   inputValue.value = ''
 }
 
-const port = ref('')
+const port = ref(8080)
 
-chrome.storage.sync.get(['port'], function (result) {
+chrome.storage.local.get('port', function (result) {
   port.value = result.port || '8080'
 });
-
 
 chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
   const tab = tabs[0]
@@ -103,7 +104,7 @@ const status = ref<{
 })
 
 watch(isCheckTw5, (newValue, oldValue) => {
-  chrome.storage.sync.set({ isCheckTw5: newValue })
+  chrome.storage.local.set({ isCheckTw5: newValue })
 
   if (newValue) {
     // ElMessage({
@@ -164,7 +165,7 @@ watch(port, () => {
 })
 
 const currentTime = dayjs(new Date()).utc().format('YYYYMMDDHHmmss')
-const save2TiddlyWiki = async (title: string, text: string, port: string, url: string, tag: string[]) => {
+const save2TiddlyWiki = async (title: string, text: string, port: number, url: string, tag: string[]) => {
   const tags = tag.map(function (tag) {
     if (tag.includes(' ')) {
       return '[[' + tag + ']]';
@@ -214,7 +215,10 @@ const save2TiddlyWiki = async (title: string, text: string, port: string, url: s
 
 <template>
   <div class="app">
-    <!-- version -->
+
+    <!-- <div v-if="!html">
+      <el-skeleton :rows="5" animated />
+    </div> -->
     <div class="sticky top-0 backdrop-blur-sm mb-2">
       <div class="flex justify-end">
 
@@ -304,14 +308,24 @@ const save2TiddlyWiki = async (title: string, text: string, port: string, url: s
           <MaterialSymbolsInfoOutline />
         </template>
 
-        Username:
-        <ElButton>
-          {{ status.username }}
-        </ElButton>
-        TiddlyWiki:
-        <ElButton>
-          {{ status.tiddlywiki_version }}
-        </ElButton>
+        <div class="flex items-center gap-2">
+          <ElTag>
+            TiddlyWiki5: {{ status.tiddlywiki_version }}
+          </ElTag>
+          <ElTag type="success">
+            Username: {{ status.username }}
+          </ElTag>
+          <ElTag>
+            {{ json.name.toUpperCase() }}: {{ json.version }}
+          </ElTag>
+          <ElButton>
+            <ElLink href="https://github.com/oeyoews/usewiki2" target="_blank">
+              <CharmGithub />
+            </ElLink>
+          </ElButton>
+        </div>
+
+
       </ElTabPane>
 
 
