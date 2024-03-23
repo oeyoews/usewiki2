@@ -20,6 +20,7 @@ const ai = (question: string, options?: ClientOptions) => {
       },
       {
         role: 'user',
+        // TODO: hack prompt
         content: question + '\n 美化上面的 markdown 排版，翻译成中文',
       },
     ],
