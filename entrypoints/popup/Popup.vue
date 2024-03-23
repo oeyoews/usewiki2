@@ -29,16 +29,15 @@ const username = ref('oeyoews')
 
 const isCheckTw5 = ref(false)
 
-chrome.storage.local.get('isCheckTw5', function (result) {
+chrome.storage.sync.get('isCheckTw5', function (result) {
   isCheckTw5.value = result.isCheckTw5
 })
-
 
 const inputValue = ref()
 
 const dynamicTags = ref()
 
-chrome.storage.local.get(['tags'], function (result) {
+chrome.storage.sync.get(['tags'], function (result) {
   if (result.tags) {
     dynamicTags.value = Object.values(result.tags)
   } else {
@@ -62,7 +61,7 @@ const showInput = () => {
 const handleInputConfirm = () => {
   if (inputValue.value) {
     dynamicTags.value.push(inputValue.value.trim())
-    chrome.storage.local.set({ tags: toRaw(dynamicTags.value) })
+    chrome.storage.sync.set({ tags: toRaw(dynamicTags.value) })
   }
   inputVisible.value = false
   inputValue.value = ''
@@ -70,7 +69,7 @@ const handleInputConfirm = () => {
 
 const port = ref('')
 
-chrome.storage.local.get(['port'], function (result) {
+chrome.storage.sync.get(['port'], function (result) {
   port.value = result.port || '8080'
 });
 
@@ -104,7 +103,7 @@ const status = ref<{
 })
 
 watch(isCheckTw5, (newValue, oldValue) => {
-  chrome.storage.local.set({ isCheckTw5: newValue })
+  chrome.storage.sync.set({ isCheckTw5: newValue })
 
   if (newValue) {
     // ElMessage({
@@ -112,10 +111,10 @@ watch(isCheckTw5, (newValue, oldValue) => {
     //   type: 'success'
     // })
   } else {
-    ElMessage({
-      message: '关闭 TiddlyWiki 5.x 检测',
-      type: 'info'
-    })
+    // ElMessage({
+    //   message: '关闭 TiddlyWiki 5.x 检测',
+    //   type: 'info'
+    // })
   }
 })
 
