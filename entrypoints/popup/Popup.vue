@@ -27,6 +27,13 @@ const faviconUrl = ref('')
 const title = ref('')
 const username = ref('oeyoews')
 
+const isCheckTw5 = ref(false)
+
+chrome.storage.local.get('isCheckTw5', function (result) {
+  isCheckTw5.value = result.isCheckTw5
+})
+
+
 const inputValue = ref()
 
 const dynamicTags = ref()
@@ -41,7 +48,6 @@ chrome.storage.local.get(['tags'], function (result) {
 
 const inputVisible = ref(false)
 const InputRef = ref()
-
 
 const handleClose = (tag: string) => {
   dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
@@ -97,7 +103,27 @@ const status = ref<{
   tiddlywiki_version: ''
 })
 
+watch(isCheckTw5, (newValue, oldValue) => {
+  chrome.storage.local.set({ isCheckTw5: newValue })
+
+  if (newValue) {
+    // ElMessage({
+    //   message: '检测到 TiddlyWiki 5.x',
+    //   type: 'success'
+    // })
+  } else {
+    ElMessage({
+      message: '关闭 TiddlyWiki 5.x 检测',
+      type: 'info'
+    })
+  }
+})
+
 function checkStatus() {
+
+  if (!isCheckTw5.value) {
+    return
+  }
 
   fetch(`http://localhost:${port.value}/status`).then((res) => {
     return res.json()
@@ -247,6 +273,10 @@ const save2TiddlyWiki = async (title: string, text: string, port: string, url: s
         </template>
 
         <div class="items-center">
+
+          <h2>启动时检查 TiddlyWiki5 状态</h2>
+          <el-switch v-model="isCheckTw5" />
+
           <div>
             <h2>
               端口
