@@ -2,23 +2,23 @@
 
 > usewiki2: usewiki 的 vue 版本，但是带来了更多功能
 
-* 将当前网页转换成 Markdown 文件，支持保存到本地，TiddlyWiki, GitHub(wip)
+将当前网页转换成 Markdown 文件，支持保存到本地，TiddlyWiki, GitHub(wip)
 
 <!-- * element plus, tailwindcss, wxt, vue, axios -->
 
-## TODO
+## Install
 
-<!-- * 如何设置访问$tw -->
+* https://github.com/oeyoews/usewiki2/releases
+
+<!-- ## TODO
+
+* banner
 * 完成 welcome page
 * tour: https://element-plus.org/zh-CN/component/tour.html
 * port 通知优化
 * 支持保存到 tiddlywiki
 * 右键菜单实现功能，快捷键提示
 * 日记模式 支持多条 journal 合并
-
-## Install
-
-* https://github.com/oeyoews/usewiki2/releases
 
 ## Roadmap
 
@@ -28,7 +28,7 @@
 * 代码拆分组件
 * darkmode
 * 统计大小
-* extension icon
+* extension icon -->
 
 ## Doc
 
