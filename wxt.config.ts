@@ -62,6 +62,7 @@ export default defineConfig({
 
     browser_action: {
       default_popup: 'popup.html',
+      // default_title: 'hi',
     },
   },
 });

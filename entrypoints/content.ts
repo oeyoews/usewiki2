@@ -6,12 +6,9 @@ export default defineContentScript({
   main() {
     function getDoc() {
       const documentClone = document.cloneNode(true) as Document;
-      // const readerable = isProbablyReaderable(documentClone);
-      // if (!readerable) {
-      //   return readerable;
-      // }
       const reader = new Readability(documentClone);
       const article = reader.parse();
+      console.log(article);
       return article;
     }
 
@@ -20,6 +17,22 @@ export default defineContentScript({
         sendResponse(getDoc());
       }
     });
+
+    // chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
+    //   chrome.declarativeContent.onPageChanged.addRules([
+    //     {
+    //       conditions: [
+    //         new chrome.declarativeContent.PageStateMatcher({
+    //           // pageUrl: { schemes: ['https//'] },
+    //           pageUrl: {
+    //             hostEquals: 'www.tiddlywiki.com',
+    //           },
+    //         }),
+    //       ],
+    //       actions: [new chrome.declarativeContent.ShowPageAction()],
+    //     },
+    //   ]);
+    // });
 
     // or use execsripting
     // scripting

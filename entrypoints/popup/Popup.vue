@@ -43,10 +43,6 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
   chrome.tabs.sendMessage(tab.id, {
     info: 'get-doc', message: '获取文章'
   }, async function (response: IArticle) {
-    // if (!response) {
-    //   html.value = '不支持当前页面'
-    // } else {
-    // }
     html.value = response.content
     md.value = await html2md(html.value);
     title.value = response.title
@@ -216,7 +212,7 @@ const save2TiddlyWiki = async (title: string, text: string, port: string, url: s
       </ElTabPane>
 
       <!-- info -->
-      <ElTabPane>
+      <ElTabPane v-if="status.tiddlywiki_version">
         <template #label>
           <MaterialSymbolsInfoOutline />
         </template>

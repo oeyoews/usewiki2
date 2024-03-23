@@ -8,6 +8,13 @@ export default defineBackground(() => {
     });
   });
 
+  // browser.browserAction.setTitle({ title: 'Usewiki2' });
+  // browser.browserAction.setBadgeText({ text: 'Usewiki2' });
+
+  // chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  //   chrome.action.setBadgeText({ text: 'on' });
+  // });
+
   /*   chrome.runtime.onInstalled.addListener(function () {
     chrome.contextMenus.create({
       id: 'tiddlywiki',
