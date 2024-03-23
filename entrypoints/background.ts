@@ -1,20 +1,16 @@
 export default defineBackground(() => {
-  browser.runtime.onInstalled.addListener(async ({ reason }) => {
-    if (reason !== 'install') return;
-
-    await browser.tabs.create({
-      url: browser.runtime.getURL('/welcome.html'),
-      active: true,
-    });
-  });
-
+  // browser.runtime.onInstalled.addListener(async ({ reason }) => {
+  //   if (reason !== 'install') return;
+  //   await browser.tabs.create({
+  //     url: browser.runtime.getURL('/welcome.html'),
+  //     active: true,
+  //   });
+  // });
   // browser.browserAction.setTitle({ title: 'Usewiki2' });
   // browser.browserAction.setBadgeText({ text: 'Usewiki2' });
-
   // chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   //   chrome.action.setBadgeText({ text: 'on' });
   // });
-
   /*   chrome.runtime.onInstalled.addListener(function () {
     chrome.contextMenus.create({
       id: 'tiddlywiki',
