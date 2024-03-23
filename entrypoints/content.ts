@@ -8,7 +8,6 @@ export default defineContentScript({
       const documentClone = document.cloneNode(true) as Document;
       const reader = new Readability(documentClone);
       const article = reader.parse();
-      console.log(article);
       return article;
     }
 

@@ -11,7 +11,6 @@
 <!-- * 如何设置访问$tw -->
 * 完成 welcome page
 * tour: https://element-plus.org/zh-CN/component/tour.html
-* tag
 * port 通知优化
 * extension icon
 * 统计大小

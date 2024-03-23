@@ -18,7 +18,6 @@ import FaRegularSave from '~icons/fa-regular/save';
 import { ref, } from 'vue';
 import saveMarkdown from '@/utils/saveMarkdown'
 import { html2md, md2html } from '@/utils/parser'
-import { ElMessage } from 'element-plus';
 dayjs.extend(utc)
 
 const html = ref('')
@@ -27,6 +26,37 @@ const link = ref('')
 const faviconUrl = ref('')
 const title = ref('')
 const username = ref('oeyoews')
+
+const inputValue = ref()
+
+const dynamicTags = ref()
+
+chrome.storage.local.get(['tags'], function (result) {
+  dynamicTags.value = Object.values(result.tags) || ['剪藏']
+});
+
+const inputVisible = ref(false)
+const InputRef = ref()
+
+
+const handleClose = (tag: string) => {
+  dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
+}
+
+const showInput = () => {
+  inputVisible.value = true
+  nextTick(() => {
+    InputRef.value!.input!.focus()
+  })
+}
+const handleInputConfirm = () => {
+  if (inputValue.value) {
+    dynamicTags.value.push(inputValue.value.trim())
+    chrome.storage.local.set({ tags: toRaw(dynamicTags.value) })
+  }
+  inputVisible.value = false
+  inputValue.value = ''
+}
 
 const port = ref('')
 
@@ -103,7 +133,15 @@ watch(port, () => {
 })
 
 const currentTime = dayjs(new Date()).utc().format('YYYYMMDDHHmmss')
-const save2TiddlyWiki = async (title: string, text: string, port: string, url: string) => {
+const save2TiddlyWiki = async (title: string, text: string, port: string, url: string, tag: string[]) => {
+  const tags = tag.map(function (tag) {
+    if (tag.includes(' ')) {
+      return '[[' + tag + ']]';
+    } else {
+      return tag;
+    }
+  }).join(' ');
+
   if (!status.value.tiddlywiki_version) {
     ElMessage({
       message: '请先连接 TiddlyWiki',
@@ -123,7 +161,8 @@ const save2TiddlyWiki = async (title: string, text: string, port: string, url: s
       type: 'text/markdown',
       url,
       created: currentTime,
-      modified: currentTime
+      modified: currentTime,
+      tags
     })
   }).then((res) => {
     if (res.ok) {
@@ -155,7 +194,7 @@ const save2TiddlyWiki = async (title: string, text: string, port: string, url: s
           </ElIcon>
         </ElButton>
 
-        <ElButton @click="save2TiddlyWiki(title, md, port, link)">
+        <ElButton @click="save2TiddlyWiki(title, md, port, link, dynamicTags)">
           <FaRegularSave />
         </ElButton>
       </div>
@@ -201,11 +240,24 @@ const save2TiddlyWiki = async (title: string, text: string, port: string, url: s
           <TdesignSetting />
         </template>
 
-        <div class="flex items-center">
+        <div class="items-center">
           <div>
-            端口
+            <h2>
+              端口
+            </h2>
+            <ElInput v-model.trim.number="port" />
           </div>
-          <ElInput v-model.trim.number="port" />
+          <h2>标签</h2>
+          <!-- tag -->
+          <div class="flex gap-2">
+            <ElTag v-for="tag in dynamicTags" :key="tag" closable :disable-transitions="false" @close="handleClose(tag)">
+              {{ tag }}
+            </ElTag>
+            <ElInput v-if="inputVisible" ref="InputRef" v-model="inputValue" class="w-20" size="small"
+              @keyup.enter="handleInputConfirm" @blur="handleInputConfirm" />
+
+            <ElButton v-else class="button-new-tag" size="small" @click="showInput"> + </ElButton>
+          </div>
         </div>
 
 
