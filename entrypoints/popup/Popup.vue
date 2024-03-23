@@ -69,7 +69,7 @@ const handleInputConfirm = () => {
   inputValue.value = ''
 }
 
-const port = ref(8080)
+const port = ref<number | undefined>()
 
 chrome.storage.local.get('port', function (result) {
   port.value = result.port || '8080'
@@ -130,11 +130,18 @@ function checkStatus() {
     ElMessage({
       message: "正在检测中 ..."
     })
-
+    return
+  } else if (!port.value) {
+    // ElMessage({
+    //   message: "加载中 ..."
+    // })
     return
   }
 
-  fetch(`http://localhost:${port.value}/status`).then((res) => {
+  isChecking.value = true
+
+  const url = `http://localhost:${port.value}/status`
+  fetch(url).then((res) => {
     return res.json()
   }).then((data) => {
     if (!data) {
@@ -154,11 +161,10 @@ function checkStatus() {
       })
     }
   }).catch((e) => {
-    // TODO: 这里总会提示报错，但是实际已经连接成功了
-    // ElMessage({
-    //   message: "TiddlyWiki 未成功连接" + e,
-    //   type: 'error'
-    // })
+    ElMessage({
+      message: "TiddlyWiki 未成功连接" + e,
+      type: 'error'
+    })
   }).finally(() => {
     isChecking.value = false
   })
@@ -168,9 +174,8 @@ function checkStatus() {
 watch(md, async () => {
   html.value = (await md2html(md.value))
 })
-
-watch(port, () => {
-  chrome.storage.local.set({ port: port.value })
+watch(port, (newValue, oldValue) => {
+  chrome.storage.local.set({ port: newValue })
   if (isCheckTw5.value) {
     checkStatus()
   }
@@ -241,7 +246,7 @@ const save2TiddlyWiki = async (title: string, text: string, port: number, url: s
           </ElIcon>
         </ElButton>
 
-        <ElButton @click="save2TiddlyWiki(title, md, port, link, dynamicTags)">
+        <ElButton @click="save2TiddlyWiki(title, md, port!, link, dynamicTags)">
           <FaRegularSave />
         </ElButton>
       </div>

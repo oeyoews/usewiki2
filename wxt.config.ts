@@ -52,9 +52,10 @@ export default defineConfig({
       '128': 'icons/icon128.png',
     },
     name: 'Usewiki2',
+    description: 'Usewiki2: usewiki 的 vue 版本',
     permissions: [
       'contextMenus',
-      // 'alarms',
+      'alarms',
       'activeTab',
       'contextMenus',
       'storage',
@@ -69,7 +70,7 @@ export default defineConfig({
 
     browser_action: {
       default_popup: 'popup.html',
-      // default_title: 'hi',
+      default_title: 'Usewiki2',
     },
   },
 });
