@@ -133,7 +133,9 @@ watch(md, async () => {
 
 watch(port, () => {
   chrome.storage.local.set({ port: port.value })
-  checkStatus()
+  setTimeout(() => {
+    checkStatus()
+  }, 1000);
 })
 
 const currentTime = dayjs(new Date()).utc().format('YYYYMMDDHHmmss')
