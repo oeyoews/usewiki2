@@ -13,7 +13,7 @@
 <!-- ## TODO
 
 * banner
-* 完成 welcome page
+* welcome page
 * tour: https://element-plus.org/zh-CN/component/tour.html
 * port 通知优化
 * 支持保存到 tiddlywiki
@@ -30,7 +30,12 @@
 * 统计大小
 * extension icon -->
 
-## Doc
+## Credits
+
+* icon: https://iconduck.com/icons/14145/markdown
+* icons generator: https://alexleybourne.github.io/chrome-extension-icon-generator/
+
+<!-- ## Doc
 
 * https://developer.chrome.com/docs/extensions/develop/concepts/messaging?hl=zh-cn
-* https://wxt.dev/guide/storage.html
+* https://wxt.dev/guide/storage.html -->
