@@ -32,7 +32,11 @@ const inputValue = ref()
 const dynamicTags = ref()
 
 chrome.storage.local.get(['tags'], function (result) {
-  dynamicTags.value = Object.values(result.tags) || ['剪藏']
+  if (result.tags) {
+    dynamicTags.value = Object.values(result.tags)
+  } else {
+    dynamicTags.value = ['剪藏']
+  }
 });
 
 const inputVisible = ref(false)
