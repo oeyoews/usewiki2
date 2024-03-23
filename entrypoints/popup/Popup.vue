@@ -26,6 +26,7 @@ import saveMarkdown from '@/utils/saveMarkdown';
 import save2TiddlyWiki from '@/utils/save2TiddlyWiki';
 import { html2md, md2html } from '@/utils/parser';
 
+const isAI = ref();
 const aimd = ref('')
 const html = ref('')
 const md = ref('')
@@ -175,8 +176,23 @@ watch(md, async () => {
   html.value = (await md2html(md.value))
 
   // TODO: Debounce
+  // ElMessage({
+  //   message: '润色中 ...',
+  //   type: 'info'
+  // })
   // const chatCompletion = await AI(md.value);
+  // if (!chatCompletion) {
+  //   ElMessage({
+  //     message: '润色失败',
+  //     type: 'error'
+  //   })
+  //   return
+  // }
   // const mes = chatCompletion!.choices[0].message;
+  // ElMessage({
+  //   message: 'GROQ 润色成功',
+  //   type: 'success'
+  // })
   // aimd.value = mes.content;
 })
 
@@ -244,7 +260,7 @@ watch(port, (newValue) => {
 
       </ElTabPane>
 
-      <!-- <ElTabPane>
+      <ElTabPane v-if="aimd">
         <template #label>
           <EosIconsAi />
         </template>
@@ -254,8 +270,7 @@ watch(port, (newValue) => {
         <el-input placeholder="写点什么吧 ..." v-model="aimd" :autosize="{ minRows: 4, maxRows: 20 }" type="textarea"
           spellcheck="false" class="w-full" resize="none" />
 
-      </ElTabPane> -->
-
+      </ElTabPane>
       <!-- setup -->
       <ElTabPane>
         <template #label>
@@ -284,6 +299,10 @@ watch(port, (newValue) => {
 
             <ElButton v-else class="button-new-tag" size="small" @click="showInput"> + </ElButton>
           </div>
+
+          <h2>AI</h2>
+          <ElSwitch v-model="isAI" disabled title="WIP"></ElSwitch>
+
         </div>
 
       </ElTabPane>

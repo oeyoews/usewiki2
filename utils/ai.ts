@@ -5,9 +5,18 @@ import { type ClientOptions } from 'groq-sdk';
  * @see: https://github.com/groq/groq-typescript
  */
 const ai = (question: string, options?: ClientOptions) => {
+  // apiKey: options?.apiKey || process.env.GROQ_APIKEY,
+  const apiKey = '';
+  if (!apiKey) {
+    ElMessage({
+      message: '请先配置 GROQ_APIKEY',
+      type: 'warning',
+    });
+    return;
+  }
   const groq = new Groq({
     dangerouslyAllowBrowser: true,
-    apiKey: options?.apiKey || process.env.GROQ_APIKEY,
+    apiKey,
     maxRetries: 2, // default is 2
     timeout: 9 * 1000, //
   });
@@ -16,12 +25,13 @@ const ai = (question: string, options?: ClientOptions) => {
     messages: [
       {
         role: 'system',
-        content: '你是一个擅长写文章的 ai 助手',
+        content:
+          '我想让你充当中文翻译者，我会用任何语言与你交谈，你会检测语言，翻译成中文，保持相同的意思，我要你只回复更正、改进，不要写任何解释。不要删减文章，仅仅做 markdown 语法修正，适当加上 markdown 的标题段落',
       },
       {
         role: 'user',
         // TODO: hack prompt
-        content: question + '\n 美化上面的 markdown 排版，翻译成中文',
+        content: question,
       },
     ],
     model: 'mixtral-8x7b-32768',
@@ -31,11 +41,9 @@ const ai = (question: string, options?: ClientOptions) => {
 
   const res = completions.create(params).catch(async (err) => {
     if (err instanceof Groq.APIError) {
-      console.log(err.status); // 400
-      console.log(err.name); // BadRequestError
-      console.log(err.headers); // {server: 'nginx', ...}
+      console.error(err.status); // 400
       ElMessage({
-        message: err.status?.toString(),
+        message: '[GROQ]: ' + err.status?.toString(),
         type: 'error',
       });
     } else {
