@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import 'element-plus/es/components/message/style/css'
-import dayjs from 'dayjs'
-import utc from "dayjs/plugin/utc"
+
+import json from '../../package.json'
 
 // @ts-ignore
 import CharmGithub from '~icons/charm/github?width=16px&height=16px';
@@ -17,27 +17,28 @@ import MaterialSymbolsInfoOutline from '~icons/material-symbols/info-outline';
 import FaFileTextO from '~icons/fa/file-text-o';
 // @ts-ignore
 import FaRegularSave from '~icons/fa-regular/save';
-import { ref, } from 'vue';
-import saveMarkdown from '@/utils/saveMarkdown'
+
+import saveMarkdown from '@/utils/saveMarkdown';
+import save2TiddlyWiki from '@/utils/save2TiddlyWiki';
 import { html2md, md2html } from '@/utils/parser'
-import json from '../../package.json'
-dayjs.extend(utc)
+
 
 const html = ref('')
 const md = ref('')
 const link = ref('')
 const faviconUrl = ref('')
 const title = ref('')
-const username = ref('oeyoews')
 
 const isCheckTw5 = ref(false)
+const inputVisible = ref(false)
+const InputRef = ref()
+const inputValue = ref()
+const dynamicTags = ref()
+const port = ref<number | undefined>()
 
 chrome.storage.local.get('isCheckTw5', function (result) {
   isCheckTw5.value = result.isCheckTw5
 })
-
-const inputValue = ref()
-const dynamicTags = ref()
 
 chrome.storage.local.get(['tags'], function (result) {
   if (result.tags) {
@@ -46,9 +47,6 @@ chrome.storage.local.get(['tags'], function (result) {
     dynamicTags.value = ['剪藏']
   }
 });
-
-const inputVisible = ref(false)
-const InputRef = ref()
 
 const handleClose = (tag: string) => {
   dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
@@ -69,7 +67,6 @@ const handleInputConfirm = () => {
   inputValue.value = ''
 }
 
-const port = ref<number | undefined>()
 
 chrome.storage.local.get('port', function (result) {
   port.value = result.port || '8080'
@@ -94,7 +91,6 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
 //     console.log(request.message)
 //   }
 // })
-
 
 const status = ref<{
   username: string, tiddlywiki_version: string
@@ -181,62 +177,10 @@ watch(port, (newValue, oldValue) => {
   }
 })
 
-const currentTime = dayjs(new Date()).utc().format('YYYYMMDDHHmmss')
-
-const save2TiddlyWiki = async (title: string, text: string, port: number, url: string, tag: string[],) => {
-  const tags = tag.map(function (tag) {
-    if (tag.includes(' ')) {
-      return '[[' + tag + ']]';
-    } else {
-      return tag;
-    }
-  }).join(' ');
-
-  if (!status.value.tiddlywiki_version) {
-    ElMessage({
-      message: '请先连接 TiddlyWiki',
-      type: 'error'
-    })
-    return
-  }
-
-  fetch(`http://localhost:${port}/recipes/default/tiddlers/${title}`, {
-    method: 'PUT',
-    headers: {
-      "Content-Type": "application/json",
-      "x-requested-with": "TiddlyWiki"
-    },
-    body: JSON.stringify({
-      text, creator: username.value,
-      type: 'text/markdown',
-      url,
-      created: currentTime,
-      modified: currentTime,
-      tags
-    })
-  }).then((res) => {
-    if (res.ok) {
-      ElMessage({
-        message: '保存成功',
-        type: 'success'
-      })
-    }
-  }).catch((e) => {
-    ElMessage({
-      message: '保存失败' + e,
-      type: 'error'
-    })
-  })
-}
-
 </script>
 
 <template>
-  <div class="app">
-
-    <!-- <div v-if="!html">
-      <el-skeleton :rows="5" animated />
-    </div> -->
+  <div class="overflow-y-auto w-[600px] h-[550px]">
     <div class="sticky top-0 backdrop-blur-sm mb-2">
       <div class="flex justify-end">
 
@@ -247,7 +191,7 @@ const save2TiddlyWiki = async (title: string, text: string, port: number, url: s
           </ElIcon>
         </ElButton>
 
-        <ElButton @click="save2TiddlyWiki(title, md, port!, link, dynamicTags)">
+        <ElButton @click="save2TiddlyWiki(title, md, port!, link, dynamicTags, status)">
           <FaRegularSave />
         </ElButton>
       </div>
@@ -352,17 +296,4 @@ const save2TiddlyWiki = async (title: string, text: string, port: number, url: s
   </div>
 </template>
 
-<style scoped>
-.textarea {
-  border-radius: 4px;
-  resize: none;
-  width: 100%;
-  height: 400px;
-}
-
-.app {
-  width: 600px;
-  height: 550px;
-  overflow-y: auto;
-}
-</style>
+<style scoped></style>

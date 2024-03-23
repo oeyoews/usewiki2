@@ -15,6 +15,7 @@
 
 <!-- ## TODO
 
+* ai prettier
 * welcome page
 * tour: https://element-plus.org/zh-CN/component/tour.html
 * port 通知优化
