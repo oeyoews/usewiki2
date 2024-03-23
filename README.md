@@ -1,8 +1,9 @@
 ## Usewiki2
 
 > [!TIP]
-> usewiki2: usewiki 的 vue 版本，但是带来了更多功能
-> 将当前网页转换成 Markdown 文件，支持保存到本地，TiddlyWiki, GitHub(wip)
+> UseWiki2: usewiki 的 vue 版本，但是带来了更多功能。
+
+> 将当前网页文章转换成 Markdown 文件，支持保存到本地，TiddlyWiki5, GitHub(wip)
 
 <!-- * element plus, tailwindcss, wxt, vue, axios -->
 
