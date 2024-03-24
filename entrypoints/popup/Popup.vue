@@ -6,6 +6,7 @@ import { formattime } from '@/utils/formattime';
 import AI from '@/utils/ai';
 
 import json from '../../package.json';
+import { debounce } from '@/utils/debounce';
 
 import BiJournals from '~icons/bi/journals?width=16px&height=16px';
 import StreamlineAiEditSparkSolid from '~icons/streamline/ai-edit-spark-solid';
@@ -232,9 +233,9 @@ function checkStatus() {
     });
 }
 
-watch(md, async (newValue) => {
-  html.value = await md2html(newValue);
-});
+const debounceEdit = debounce(async function () {
+  html.value = await md2html(md.value);
+}, 300);
 
 async function ai2md() {
   if (isAIChecking.value) {
@@ -341,10 +342,12 @@ watch(port, (newValue) => {
 
         <ElInput type="text" v-model="title" class="mb-1" />
 
+        <!-- @input="debounce(handleEdit, 500)" -->
         <ElInput
           ref="editRef"
           placeholder="写点什么吧 ..."
           v-model="md"
+          @input="debounceEdit"
           :autosize="{ minRows: 4, maxRows: 20 }"
           type="textarea"
           spellcheck="false"

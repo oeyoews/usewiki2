@@ -18,19 +18,14 @@
 * welcome page
 * tour: https://element-plus.org/zh-CN/component/tour.html
 * port 通知优化
-* 支持保存到 tiddlywiki
 * 右键菜单实现功能，快捷键提示
 * 支持多条 journal 合并，支持配置默认日记 tag
 
 ## Roadmap
 
-* 支持更改 prompt
-* 支持保存到 github, such as issues, discussion
 * i18n
-* codemirror6
 * 代码拆分组件
 * darkmode
-* 统计大小
 * extension icon -->
 
 ## Credits
