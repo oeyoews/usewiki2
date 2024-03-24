@@ -11,6 +11,7 @@ import saveMarkdown from '@/utils/saveMarkdown';
 import save2TiddlyWiki from '@/utils/save2TiddlyWiki';
 import { html2md, md2html } from '@/utils/parser';
 import { ElMessage as notify } from 'element-plus';
+import { checkStatus } from '@/utils/checkStatus';
 
 const editRef = ref<HTMLInputElement>();
 const isChecking = ref(false);
@@ -31,6 +32,10 @@ const dynamicTags = ref();
 const port = ref<number | undefined>();
 const aihtml = ref('');
 
+chrome.storage.local.get('port', function (result) {
+  port.value = result.port || '8080';
+});
+
 chrome.storage.local.get('isCheckTw5', function (result) {
   isCheckTw5.value = result.isCheckTw5;
 });
@@ -41,6 +46,25 @@ chrome.storage.local.get(['tags'], function (result) {
   } else {
     dynamicTags.value = ['剪藏'];
   }
+});
+
+chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+  const tab = tabs[0];
+  link.value = tab.url!;
+  faviconUrl.value = tab.favIconUrl!;
+  chrome.tabs.sendMessage(
+    // @ts-ignore
+    tab.id,
+    {
+      info: 'get-doc',
+      message: '获取文章',
+    },
+    async function (response: IArticle) {
+      html.value = response.content;
+      md.value = await html2md(html.value);
+      title.value = response.title;
+    }
+  );
 });
 
 const handleSave = () =>
@@ -88,29 +112,6 @@ const handleInputConfirm = () => {
   inputValue.value = '';
 };
 
-chrome.storage.local.get('port', function (result) {
-  port.value = result.port || '8080';
-});
-
-chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-  const tab = tabs[0];
-  link.value = tab.url!;
-  faviconUrl.value = tab.favIconUrl!;
-  chrome.tabs.sendMessage(
-    // @ts-ignore
-    tab.id,
-    {
-      info: 'get-doc',
-      message: '获取文章',
-    },
-    async function (response: IArticle) {
-      html.value = response.content;
-      md.value = await html2md(html.value);
-      title.value = response.title;
-    }
-  );
-});
-
 // chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 //   if (request.info === 'tiddlywiki-send-message') {
 //     console.log(request.message)
@@ -127,57 +128,11 @@ const status = ref<IStatus>(vanillaStatus);
 watch(isCheckTw5, (newValue) => {
   chrome.storage.local.set({ isCheckTw5: newValue });
   if (newValue) {
-    checkStatus();
+    checkStatus(port.value!, status, isChecking);
   } else {
     status.value = vanillaStatus;
   }
 });
-
-function checkStatus() {
-  if (isChecking.value) {
-    notify({
-      message: '正在检测中 ...',
-    });
-    return;
-  } else if (!port.value) {
-    return;
-  }
-
-  isChecking.value = true;
-
-  const url = `http://localhost:${port.value}/status`;
-  fetch(url)
-    .then((res) => {
-      return res.json();
-    })
-    .then((data) => {
-      if (!data) {
-        return;
-      }
-      status.value = data;
-
-      if (!data.tiddlywiki_version) {
-        notify({
-          message: 'TiddlyWiki 未连接',
-          type: 'error',
-        });
-      } else {
-        notify({
-          message: 'TiddlyWiki 连接成功',
-          type: 'success',
-        });
-      }
-    })
-    .catch((e) => {
-      notify({
-        message: 'TiddlyWiki 未成功连接' + e,
-        type: 'error',
-      });
-    })
-    .finally(() => {
-      isChecking.value = false;
-    });
-}
 
 const debounceEdit = debounce(async function () {
   html.value = await md2html(md.value);
@@ -213,7 +168,7 @@ async function ai2md() {
 function savePort(port: number) {
   chrome.storage.local.set({ port });
   if (isCheckTw5.value) {
-    checkStatus();
+    checkStatus(port, status, isChecking);
   }
 }
 </script>
@@ -349,7 +304,6 @@ function savePort(port: number) {
 
         <div class="items-center">
           <h2>连接到 Nodejs TiddlyWiki5</h2>
-          <!-- 首次配置弹窗提示配置端口 -->
           <el-switch v-model="isCheckTw5" />
 
           <div>
