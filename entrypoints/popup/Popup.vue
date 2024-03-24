@@ -270,7 +270,9 @@ watch(port, (newValue) => {
           <IconoirSpark :class="{ 'animate-spin': isAIChecking }" />
         </ElButton>
 
+        <!-- save to tiddlywiki -->
         <ElButton
+          v-show="isCheckTw5"
           @click="save2TiddlyWiki(title, md, port!, link, dynamicTags, status)">
           <FaRegularSave />
         </ElButton>
@@ -373,6 +375,7 @@ watch(port, (newValue) => {
 
         <div class="items-center">
           <h2>连接 TiddlyWiki5</h2>
+          <!-- 首次配置弹窗提示配置端口 -->
           <el-switch v-model="isCheckTw5" />
 
           <div>
