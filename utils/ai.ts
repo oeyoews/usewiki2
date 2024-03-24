@@ -2,6 +2,8 @@ import Groq from 'groq-sdk';
 import { type ClientOptions } from 'groq-sdk';
 import { type ChatCompletionCreateParams } from 'groq-sdk/resources/chat/completions';
 
+import { ElMessage as notify } from 'element-plus';
+
 /**
  * @see: https://github.com/groq/groq-typescript
  */
@@ -9,7 +11,7 @@ const ai = async (question: string, options?: ClientOptions) => {
   let apiKey = (await storage.getItem('local:GROQ_APIKEY')) as string;
 
   if (!apiKey) {
-    ElMessage({
+    notify({
       message: '请先配置 GROQ_APIKEY',
       type: 'warning',
     });
@@ -24,7 +26,7 @@ const ai = async (question: string, options?: ClientOptions) => {
   }
 
   if (apiKey) {
-    ElMessage({
+    notify({
       message: '开始润色',
       type: 'success',
     });
@@ -71,7 +73,7 @@ const ai = async (question: string, options?: ClientOptions) => {
   const res = completions.create(params).catch(async (err) => {
     if (err instanceof Groq.APIError) {
       console.error(err.status); // 400
-      ElMessage({
+      notify({
         message: '[GROQ]: ' + err.status?.toString(),
         type: 'error',
       });
@@ -81,7 +83,7 @@ const ai = async (question: string, options?: ClientOptions) => {
   });
 
   if (!res) {
-    ElMessage({
+    notify({
       message: '润色失败',
       type: 'error',
     });

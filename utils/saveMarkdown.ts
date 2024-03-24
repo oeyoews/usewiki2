@@ -1,4 +1,4 @@
-import { ElMessage } from 'element-plus';
+import { ElMessage as notify } from 'element-plus';
 
 function saveMarkdown(markdown: string, title: string) {
   const blob = new Blob([markdown], { type: 'text/markdown' });
@@ -11,7 +11,7 @@ function saveMarkdown(markdown: string, title: string) {
 
   URL.revokeObjectURL(link.href);
 
-  ElMessage({
+  notify({
     message: '保存成功',
     type: 'success',
   });

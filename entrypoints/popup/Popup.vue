@@ -10,6 +10,7 @@ import * as WI from '@/utils/icons';
 import saveMarkdown from '@/utils/saveMarkdown';
 import save2TiddlyWiki from '@/utils/save2TiddlyWiki';
 import { html2md, md2html } from '@/utils/parser';
+import { ElMessage as notify } from 'element-plus';
 
 const editRef = ref<HTMLInputElement>();
 const isChecking = ref(false);
@@ -134,7 +135,7 @@ watch(isCheckTw5, (newValue) => {
 
 function checkStatus() {
   if (isChecking.value) {
-    ElMessage({
+    notify({
       message: '正在检测中 ...',
     });
     return;
@@ -156,19 +157,19 @@ function checkStatus() {
       status.value = data;
 
       if (!data.tiddlywiki_version) {
-        ElMessage({
+        notify({
           message: 'TiddlyWiki 未连接',
           type: 'error',
         });
       } else {
-        ElMessage({
+        notify({
           message: 'TiddlyWiki 连接成功',
           type: 'success',
         });
       }
     })
     .catch((e) => {
-      ElMessage({
+      notify({
         message: 'TiddlyWiki 未成功连接' + e,
         type: 'error',
       });
@@ -184,7 +185,7 @@ const debounceEdit = debounce(async function () {
 
 async function ai2md() {
   if (isAIChecking.value) {
-    ElMessage({
+    notify({
       message: '正在润色中 ...',
       type: 'warning',
     });
@@ -197,7 +198,7 @@ async function ai2md() {
     isAIChecking.value = false;
   }
   const mes = chatCompletion!.choices[0].message;
-  ElMessage({
+  notify({
     message: 'GROQ 润色成功',
     type: 'success',
   });

@@ -19,7 +19,7 @@ const save2TiddlyWiki = async (
     .join(' ');
 
   if (!status.tiddlywiki_version) {
-    ElMessage({
+    notify({
       message: '请先连接 TiddlyWiki',
       type: 'error',
     });
@@ -46,14 +46,14 @@ const save2TiddlyWiki = async (
   })
     .then((res) => {
       if (res.ok) {
-        ElMessage({
+        notify({
           message: '保存成功',
           type: 'success',
         });
       }
     })
     .catch((e) => {
-      ElMessage({
+      notify({
         message: '保存失败' + e,
         type: 'error',
       });
