@@ -15,7 +15,6 @@
 
 <!-- ## TODO
 
-* ai prettier
 * welcome page
 * tour: https://element-plus.org/zh-CN/component/tour.html
 * port 通知优化
@@ -25,6 +24,7 @@
 
 ## Roadmap
 
+* 支持更改 prompt
 * 支持保存到 github, such as issues, discussion
 * i18n
 * codemirror6
