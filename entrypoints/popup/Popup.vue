@@ -193,16 +193,9 @@ function savePort(port: number) {
         </ElButton>
 
         <!-- journal -->
-        <el-popconfirm
-          title="确定清空当前页面内容并新建日志吗"
-          @confirm="addJournal"
-          trigger="click">
-          <template #reference>
-            <ElButton>
-              <WI.BiJournals />
-            </ElButton>
-          </template>
-        </el-popconfirm>
+        <ElButton @click="addJournal">
+          <WI.BiJournals />
+        </ElButton>
 
         <!-- save to tiddlywiki -->
         <ElButton v-show="isCheckTw5" @click="handleSave">
@@ -356,6 +349,7 @@ function savePort(port: number) {
               placeholder="**************"
               type="password" />
             <ElButton @click="utils.saveGROQAPIKEY(GROQ_APIKEY)">保存</ElButton>
+
             <el-popconfirm
               title="你确定要重置API吗 ?"
               @confirm="utils.resetGROQAPIKEY">
