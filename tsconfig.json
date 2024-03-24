@@ -6,9 +6,6 @@
       "DOM"
     ],
     "isolatedModules": true,
-    // "types": [
-    // "element-plus/global"
-    // ],
     "types": [
       "unplugin-icons/types/vue",
       "chrome"
