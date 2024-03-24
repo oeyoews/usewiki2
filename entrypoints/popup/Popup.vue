@@ -196,6 +196,7 @@ async function ai2md() {
   const chatCompletion = await AI(md.value);
   if (!chatCompletion) {
     isAIChecking.value = false;
+    return;
   }
   const mes = chatCompletion!.choices[0].message;
   notify({

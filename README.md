@@ -24,7 +24,6 @@
 ## Roadmap
 
 * i18n
-* 代码拆分组件
 * darkmode
 * extension icon -->
 

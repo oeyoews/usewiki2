@@ -35,12 +35,10 @@ const ai = async (question: string, options?: ClientOptions) => {
   const groq = new Groq({
     dangerouslyAllowBrowser: true,
     apiKey,
-    maxRetries: 2, // default is 2
-    timeout: 9 * 1000, //
+    maxRetries: 2,
+    timeout: 10 * 1000,
   });
 
-  // TODO: 上下文压缩
-  // Groq.Chat.CompletionCreateParams
   const params: ChatCompletionCreateParams = {
     messages: [
       {
@@ -48,21 +46,14 @@ const ai = async (question: string, options?: ClientOptions) => {
         content:
           '我想让你充当中文翻译者，我会用任何语言与你交谈，你会检测语言，翻译成中文，保持相同的意思，我要你只回复更正、改进，不要写任何解释。不要删减文章，仅仅做 markdown 语法修正，适当加上 markdown 的标题段落',
       },
-      // {
-      //   role: 'assistant',
-      //   content: '',
-      // },
+      // { role: 'assistant', content: '', },
       {
         role: 'user',
-        // TODO: hack prompt
         content: question,
       },
     ],
-    // TODO: 支持选择模型
-    // @see: https://console.groq.com/docs/models
-    model: 'mixtral-8x7b-32768',
-    // model: 'gemma-7b-it',
-    // model: 'llama2-70b-4096',
+    model:
+      'mixtral-8x7b-32768' /** @see: https://console.groq.com/docs/models */,
     // seed: question.length,
     temperature: 0.5,
     stream: false,
@@ -72,9 +63,8 @@ const ai = async (question: string, options?: ClientOptions) => {
 
   const res = completions.create(params).catch(async (err) => {
     if (err instanceof Groq.APIError) {
-      console.error(err.status); // 400
       notify({
-        message: '[GROQ]: ' + err.status?.toString(),
+        message: '[GROQ]: ' + err.message,
         type: 'error',
       });
     } else {
@@ -87,7 +77,7 @@ const ai = async (question: string, options?: ClientOptions) => {
       message: '润色失败',
       type: 'error',
     });
-    return;
+    return false;
   }
 
   return res;
