@@ -37,6 +37,7 @@ const md = ref('')
 const link = ref('')
 const faviconUrl = ref('')
 const title = ref('')
+const isAIChecking = ref(false)
 
 const GROQ_APIKEY = ref('')
 const isCheckTw5 = ref(false)
@@ -214,7 +215,15 @@ watch(md, async () => {
 })
 
 async function ai2md() {
-  // TODO: Debounce
+  if (isAIChecking.value) {
+    ElMessage({
+      message: "正在润色中 ...",
+      type: 'warning'
+    })
+    return;
+  }
+  isAIChecking.value = true
+
   const chatCompletion = await AI(md.value);
   const mes = chatCompletion!.choices[0].message;
   ElMessage({
@@ -223,6 +232,8 @@ async function ai2md() {
   })
   currentTab.value = 'ai'
   aimd.value = mes.content;
+
+  isAIChecking.value = false;
 }
 
 watch(port, (newValue) => {
@@ -254,7 +265,7 @@ watch(port, (newValue) => {
         </ElButton>
 
         <ElButton @click="ai2md">
-          <MdiSparklesOutline />
+          <MdiSparklesOutline :class="{ 'animate-spin': isAIChecking }" />
         </ElButton>
 
         <ElButton @click="save2TiddlyWiki(title, md, port!, link, dynamicTags, status)">
