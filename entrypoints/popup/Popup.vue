@@ -8,6 +8,8 @@ import json from '../../package.json'
 // @ts-ignore
 import MdiSparklesOutline from '~icons/mdi/sparkles-outline?width=16px&height=16px';
 // @ts-ignore
+import MdiContentCopy from '~icons/mdi/content-copy?width=16px&height=16px';
+// @ts-ignore
 import EosIconsAi from '~icons/eos-icons/ai?width=16px&height=16px';
 // @ts-ignore
 import CharmGithub from '~icons/charm/github?width=16px&height=16px';
@@ -55,6 +57,14 @@ chrome.storage.local.get(['tags'], function (result) {
     dynamicTags.value = ['剪藏']
   }
 });
+
+function copyMd() {
+  navigator.clipboard.writeText(md.value)
+  ElMessage({
+    message: '复制成功',
+    type: "success"
+  })
+}
 
 function saveGROQAPIKEY() {
   if (!GROQ_APIKEY.value) {
@@ -234,6 +244,13 @@ watch(port, (newValue) => {
           <ElIcon>
             <MaterialSymbolsDownload />
           </ElIcon>
+        </ElButton>
+
+        <ElButton @click="copyMd">
+          <ElIcon>
+            <MdiContentCopy />
+          </ElIcon>
+
         </ElButton>
 
         <ElButton @click="ai2md">
