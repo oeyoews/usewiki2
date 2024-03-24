@@ -12,6 +12,12 @@ import save2TiddlyWiki from '@/utils/save2TiddlyWiki';
 import { html2md, md2html } from '@/utils/parser';
 import { ElMessage as notify } from 'element-plus';
 import { checkStatus } from '@/utils/checkStatus';
+import { type ButtonInstance } from 'element-plus';
+
+const isTour = ref(false);
+const ref1 = ref<ButtonInstance>();
+const ref2 = ref<ButtonInstance>();
+const ref3 = ref<ButtonInstance>();
 
 const editRef = ref<HTMLInputElement>();
 const isChecking = ref(false);
@@ -171,12 +177,17 @@ function savePort(port: number) {
     checkStatus(port, status, isChecking);
   }
 }
+
+function startTour() {
+  isTour.value = true;
+}
 </script>
 
 <template>
   <div class="overflow-y-auto w-[600px] h-[550px]">
     <div class="sticky inset-x-0 top-0 backdrop-blur-sm rounded-md mb-2 z-10">
       <div class="flex justify-end">
+        <ElButton @click="startTour">tour</ElButton>
         <!-- <ElBacktop :right="100" :bottom="100" /> -->
         <ElButton @click="saveMarkdown(md, title!)">
           <WI.MaterialSymbolsDownload />
@@ -210,6 +221,20 @@ function savePort(port: number) {
         </ElButton>
       </div>
     </div>
+
+    <el-tour v-model="isTour">
+      <el-tour-step :target="ref1?.$el" title="Upload File">
+        <div>Put you files here.</div>
+      </el-tour-step>
+      <el-tour-step
+        :target="ref2?.$el"
+        title="Save"
+        description="Save your changes" />
+      <el-tour-step
+        :target="ref3?.$el"
+        title="Other Actions"
+        description="Click to see other" />
+    </el-tour>
 
     <ElTabs type="border-card" :model-value="currentTab">
       <!-- preview -->
@@ -256,7 +281,7 @@ function savePort(port: number) {
       </ElTabPane>
 
       <!-- aimd preview -->
-      <ElTabPane name="aipreview" v-if="aihtml">
+      <ElTabPane name="aipreview" v-if="aihtml" ref="ref1">
         <template #label>
           <WI.MdiSparklesOutline />
         </template>
@@ -278,7 +303,7 @@ function savePort(port: number) {
       </ElTabPane>
 
       <!-- AI edit MD -->
-      <ElTabPane v-if="aimd" name="aiedit">
+      <ElTabPane v-if="aimd" name="aiedit" ref="ref2">
         <template #label>
           <WI.StreamlineAiEditSparkSolid />
         </template>
@@ -297,7 +322,7 @@ function savePort(port: number) {
       </ElTabPane>
 
       <!-- setup -->
-      <ElTabPane>
+      <ElTabPane ref="ref3">
         <template #label>
           <WI.TdesignSetting />
         </template>
