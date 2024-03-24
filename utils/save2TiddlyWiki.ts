@@ -1,8 +1,4 @@
-import dayjs from 'dayjs';
-
-import utc from 'dayjs/plugin/utc';
-
-dayjs.extend(utc);
+import { formattime } from './formattime';
 
 const save2TiddlyWiki = async (
   title: string,
@@ -30,7 +26,7 @@ const save2TiddlyWiki = async (
     return;
   }
 
-  const currentTime = dayjs(new Date()).utc().format('YYYYMMDDHHmmss');
+  const currentTime = formattime(new Date());
 
   fetch(`http://localhost:${port}/recipes/default/tiddlers/${title}`, {
     method: 'PUT',

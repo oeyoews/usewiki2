@@ -20,7 +20,7 @@
 * port 通知优化
 * 支持保存到 tiddlywiki
 * 右键菜单实现功能，快捷键提示
-* 日记模式 支持多条 journal 合并
+* 支持多条 journal 合并，支持配置默认日记 tag
 
 ## Roadmap
 

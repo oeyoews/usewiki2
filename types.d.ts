@@ -15,3 +15,5 @@ interface IArticle {
   lang: string;
   publishedTime: string;
 }
+
+type ITabs = 'edit' | 'preview' | 'aiedit' | 'aipreview';

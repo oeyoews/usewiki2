@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import 'element-plus/es/components/message/style/css';
 
+import { formattime } from '@/utils/formattime';
+
 import AI from '@/utils/ai';
 
 import json from '../../package.json';
 
+import BiJournals from '~icons/bi/journals?width=16px&height=16px';
 import StreamlineAiEditSparkSolid from '~icons/streamline/ai-edit-spark-solid';
 import MdiSparklesOutline from '~icons/mdi/sparkles-outline';
 import MdiContentCopy from '~icons/mdi/content-copy';
@@ -21,7 +24,7 @@ import saveMarkdown from '@/utils/saveMarkdown';
 import save2TiddlyWiki from '@/utils/save2TiddlyWiki';
 import { html2md, md2html } from '@/utils/parser';
 
-const currentTab = ref('preview');
+const currentTab = ref<ITabs>('preview');
 const aimd = ref('');
 const html = ref('');
 const md = ref('');
@@ -81,6 +84,26 @@ function resetGROQAPIKEY() {
     type: 'success',
     message: '已成功重置 GROQ API KEY',
   });
+}
+
+const editRef = ref<HTMLInputElement>();
+
+function addJournal() {
+  // Debounce
+  md.value = '';
+  isCheckTw5.value = true;
+  title.value = formattime(new Date(), 'YYYY/MM/DD');
+  dynamicTags.value = ['Journal'];
+  currentTab.value = 'edit';
+
+  // nextTick(() => {
+  //   editRef.value?.focus();
+  // });
+
+  // HACK: 由于弹出框的问题，导致 focus 后，unfocus
+  setTimeout(() => {
+    if (editRef.value) editRef.value.focus();
+  }, 500);
 }
 
 const handleClose = (tag: string) => {
@@ -209,8 +232,8 @@ function checkStatus() {
     });
 }
 
-watch(md, async () => {
-  html.value = await md2html(md.value);
+watch(md, async (newValue) => {
+  html.value = await md2html(newValue);
 });
 
 async function ai2md() {
@@ -253,22 +276,30 @@ watch(port, (newValue) => {
       <div class="flex justify-end">
         <!-- <ElBacktop :right="100" :bottom="100" /> -->
         <ElButton @click="saveMarkdown(md, title!)">
-          <ElIcon>
-            <MaterialSymbolsDownload />
-          </ElIcon>
+          <MaterialSymbolsDownload />
         </ElButton>
 
         <!-- copy -->
         <ElButton @click="copyMd(md)">
-          <ElIcon>
-            <MdiContentCopy />
-          </ElIcon>
+          <MdiContentCopy />
         </ElButton>
 
         <!-- ai -->
         <ElButton @click="ai2md">
           <IconoirSpark :class="{ 'animate-spin': isAIChecking }" />
         </ElButton>
+
+        <!-- journal -->
+        <el-popconfirm
+          title="确定清空当前页面内容并新建日志吗"
+          @confirm="addJournal"
+          trigger="click">
+          <template #reference>
+            <ElButton>
+              <BiJournals />
+            </ElButton>
+          </template>
+        </el-popconfirm>
 
         <!-- save to tiddlywiki -->
         <ElButton
@@ -283,9 +314,7 @@ watch(port, (newValue) => {
       <!-- preview -->
       <ElTabPane name="preview">
         <template #label>
-          <ElIcon>
-            <FaFileTextO />
-          </ElIcon>
+          <FaFileTextO />
         </template>
         <div v-if="title">
           <div class="flex items-center justify-center gap-2">
@@ -310,9 +339,10 @@ watch(port, (newValue) => {
           <FaRegularEdit />
         </template>
 
-        <el-input type="text" v-model="title" class="mb-1" />
+        <ElInput type="text" v-model="title" class="mb-1" />
 
-        <el-input
+        <ElInput
+          ref="editRef"
           placeholder="写点什么吧 ..."
           v-model="md"
           :autosize="{ minRows: 4, maxRows: 20 }"
@@ -325,9 +355,7 @@ watch(port, (newValue) => {
       <!-- aimd preview -->
       <ElTabPane name="aipreview" v-if="aihtml">
         <template #label>
-          <ElIcon>
-            <MdiSparklesOutline />
-          </ElIcon>
+          <MdiSparklesOutline />
         </template>
         <div v-if="title">
           <div class="flex items-center justify-center gap-2">
@@ -360,9 +388,7 @@ watch(port, (newValue) => {
           resize="none" />
         <div class="flex gap-2 items-center justify-end">
           <ElButton @click="copyMd(aimd)" class="mt-1">
-            <ElIcon>
-              <MdiContentCopy />
-            </ElIcon>
+            <MdiContentCopy />
           </ElButton>
         </div>
       </ElTabPane>
