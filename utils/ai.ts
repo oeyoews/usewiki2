@@ -24,8 +24,8 @@ const ai = async (question: string, options?: ClientOptions) => {
 
   if (apiKey) {
     ElMessage({
-      message: '润色中 ...',
-      type: 'info',
+      message: '开始润色',
+      type: 'success',
     });
   }
 
