@@ -1,8 +1,8 @@
 {
   "name": "usewiki2",
-  "description": "manifest.json description",
+  "description": "Convert HTML to Markdown, and save to your computer, support nodejs tiddlywiki",
   "private": true,
-  "version": "1.5.0",
+  "version": "1.5.1",
   "type": "module",
   "scripts": {
     "dev": "wxt",

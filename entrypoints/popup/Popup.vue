@@ -74,7 +74,7 @@ const handleSave = () =>
     port.value!,
     link.value,
     dynamicTags.value,
-    status.value
+    status
   );
 
 function addJournal() {

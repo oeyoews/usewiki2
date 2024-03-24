@@ -12,7 +12,7 @@ function saveMarkdown(markdown: string, title: string) {
   URL.revokeObjectURL(link.href);
 
   notify({
-    message: '保存成功',
+    message: '下载成功',
     type: 'success',
   });
 }

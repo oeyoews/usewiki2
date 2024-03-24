@@ -1,6 +1,10 @@
 import { ElMessage as notify } from 'element-plus';
 
-export function checkStatus(port: number, status: any, isChecking: any) {
+export function checkStatus(
+  port: number,
+  status: Ref<IStatus>,
+  isChecking: Ref<boolean>
+) {
   isChecking.value = true;
   const url = `http://localhost:${port}/status`;
   fetch(url)

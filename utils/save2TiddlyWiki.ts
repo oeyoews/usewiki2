@@ -1,4 +1,5 @@
 import { formattime } from './formattime';
+import { ElMessage as notify } from 'element-plus';
 
 const save2TiddlyWiki = async (
   title: string,
@@ -6,7 +7,7 @@ const save2TiddlyWiki = async (
   port: number,
   url: string,
   tag: string[],
-  status: any
+  status: Ref<IStatus>
 ) => {
   const tags = tag
     .map(function (tag) {
@@ -18,7 +19,7 @@ const save2TiddlyWiki = async (
     })
     .join(' ');
 
-  if (!status.tiddlywiki_version) {
+  if (!status.value.tiddlywiki_version) {
     notify({
       message: '请先连接 TiddlyWiki',
       type: 'error',
@@ -36,7 +37,7 @@ const save2TiddlyWiki = async (
     },
     body: JSON.stringify({
       text,
-      creator: status.username,
+      creator: status.value.username,
       type: 'text/markdown',
       url,
       created: currentTime,
