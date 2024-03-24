@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import 'element-plus/es/components/message/style/css';
+import hljs from 'highlight.js/lib/core';
+import markdownL from 'highlight.js/lib/languages/markdown';
+import 'highlight.js/styles/github.css';
+hljs.registerLanguage('markdown', markdownL);
 
 import AI from '@/utils/ai';
 
@@ -20,6 +24,10 @@ import FaRegularSave from '~icons/fa-regular/save';
 import saveMarkdown from '@/utils/saveMarkdown';
 import save2TiddlyWiki from '@/utils/save2TiddlyWiki';
 import { html2md, md2html } from '@/utils/parser';
+
+const highlightedCode = hljs.highlight('## demo', {
+  language: 'markdown',
+}).value;
 
 const currentTab = ref('preview');
 const aimd = ref('');
@@ -312,6 +320,7 @@ watch(port, (newValue) => {
 
         <el-input type="text" v-model="title" class="mb-1" />
 
+        {{ highlightedCode }}
         <el-input
           placeholder="写点什么吧 ..."
           v-model="md"
