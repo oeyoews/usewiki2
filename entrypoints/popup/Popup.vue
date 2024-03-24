@@ -1,17 +1,12 @@
 <script setup lang="ts">
 import 'element-plus/es/components/message/style/css';
-
 import { formattime } from '@/utils/formattime';
-
 import * as utils from '@/utils/utils';
 import AI from '@/utils/ai';
 import { copyMd } from '@/utils/copyMd';
-
 import json from '../../package.json';
 import { debounce } from '@/utils/debounce';
-
 import * as WI from '@/utils/icons';
-
 import saveMarkdown from '@/utils/saveMarkdown';
 import save2TiddlyWiki from '@/utils/save2TiddlyWiki';
 import { html2md, md2html } from '@/utils/parser';
@@ -26,7 +21,6 @@ const link = ref('');
 const faviconUrl = ref('');
 const title = ref('');
 const isAIChecking = ref(false);
-
 const GROQ_APIKEY = ref('');
 const isCheckTw5 = ref(false);
 const inputVisible = ref(false);
@@ -34,7 +28,6 @@ const InputRef = ref();
 const inputValue = ref();
 const dynamicTags = ref();
 const port = ref<number | undefined>();
-
 const aihtml = ref('');
 
 chrome.storage.local.get('isCheckTw5', function (result) {
@@ -68,7 +61,6 @@ function addJournal() {
   link.value = `#${title.value}`;
 
   // nextTick(() => { //   editRef.value?.focus(); // });
-
   // HACK: 由于弹出框的问题，导致 focus 后，unfocus
   setTimeout(() => {
     if (editRef.value) editRef.value.focus();
