@@ -79,6 +79,18 @@ function saveGROQAPIKEY() {
   });
 }
 
+// ctrl + enter to save
+function handleSave() {
+  save2TiddlyWiki(
+    title.value,
+    md.value,
+    port.value!,
+    link.value,
+    dynamicTags.value,
+    status.value
+  );
+}
+
 function resetGROQAPIKEY() {
   chrome.storage.local.remove('GROQ_APIKEY');
   ElMessage({
@@ -89,13 +101,18 @@ function resetGROQAPIKEY() {
 
 const editRef = ref<HTMLInputElement>();
 
+function randomChar() {
+  return Math.random().toString(36).slice(-8);
+}
+
 function addJournal() {
   // Debounce
   md.value = '';
   isCheckTw5.value = true;
-  title.value = formattime(new Date(), 'YYYY/MM/DD');
+  title.value = formattime(new Date(), 'YYYY/MM/DD') + `-${randomChar()}`;
   dynamicTags.value = ['Journal'];
   currentTab.value = 'edit';
+  link.value = `#${title.value}`;
 
   // nextTick(() => {
   //   editRef.value?.focus();
@@ -347,6 +364,7 @@ watch(port, (newValue) => {
           ref="editRef"
           placeholder="写点什么吧 ..."
           v-model="md"
+          @keyup.enter.ctrl="handleSave"
           @input="debounceEdit"
           :autosize="{ minRows: 4, maxRows: 20 }"
           type="textarea"
