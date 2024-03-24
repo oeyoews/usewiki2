@@ -304,7 +304,12 @@ function savePort(port: number) {
 
         <div class="items-center">
           <h2>连接到 Nodejs TiddlyWiki5</h2>
-          <el-switch v-model="isCheckTw5" />
+          <el-switch
+            v-model="isCheckTw5"
+            style="
+              --el-switch-on-color: #13ce66;
+              --el-switch-off-color: #ff4949;
+            " />
 
           <div>
             <h2>Nodejs TiddlyWiki5 端口</h2>
