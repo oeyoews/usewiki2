@@ -1,6 +1,7 @@
 import { defineConfig } from 'wxt';
 import vue from '@vitejs/plugin-vue';
 import Icons from 'unplugin-icons/vite';
+import path from 'path';
 
 // @ts-ignore
 import AutoImport from 'unplugin-auto-import/vite';
@@ -16,6 +17,11 @@ export default defineConfig({
     presets: ['vue'],
   },
   vite: () => ({
+    resolve: {
+      alias: {
+        '@/': `${path.resolve(__dirname)}/`,
+      },
+    },
     plugins: [
       vue(),
       Icons({

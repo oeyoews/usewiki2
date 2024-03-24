@@ -4,6 +4,7 @@ import 'element-plus/es/components/message/style/css';
 import { formattime } from '@/utils/formattime';
 
 import AI from '@/utils/ai';
+import { copyMd } from '@/utils/copyMd';
 
 import json from '../../package.json';
 import { debounce } from '@/utils/debounce';
@@ -55,14 +56,6 @@ chrome.storage.local.get(['tags'], function (result) {
     dynamicTags.value = ['剪藏'];
   }
 });
-
-function copyMd(text: string) {
-  navigator.clipboard.writeText(text);
-  ElMessage({
-    message: '复制成功',
-    type: 'success',
-  });
-}
 
 function saveGROQAPIKEY() {
   if (!GROQ_APIKEY.value) {
