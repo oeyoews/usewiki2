@@ -58,8 +58,8 @@ chrome.storage.local.get(['tags'], function (result) {
   }
 });
 
-function copyMd() {
-  navigator.clipboard.writeText(md.value)
+function copyMd(text: string) {
+  navigator.clipboard.writeText(text)
   ElMessage({
     message: '复制成功',
     type: "success"
@@ -246,7 +246,7 @@ watch(port, (newValue) => {
           </ElIcon>
         </ElButton>
 
-        <ElButton @click="copyMd">
+        <ElButton @click="copyMd(md)">
           <ElIcon>
             <MdiContentCopy />
           </ElIcon>
@@ -305,9 +305,18 @@ watch(port, (newValue) => {
         <template #label>
           <EosIconsAi />
         </template>
-        <el-input type="text" v-model="title" class="mb-1" />
-        <el-input placeholder="写点什么吧 ..." v-model="aimd" :autosize="{ minRows: 4, maxRows: 20 }" type="textarea"
-          spellcheck="false" class="w-full" resize="none" />
+        <el-input v-model="aimd" :autosize="{ minRows: 4, maxRows: 20 }" type="textarea" spellcheck="false" class="w-full"
+          resize="none" />
+
+        <div class="flex gap-2 items-center justify-end">
+          <ElButton @click="copyMd(aimd)" class="mt-1">
+            <ElIcon>
+              <MdiContentCopy />
+            </ElIcon>
+          </ElButton>
+        </div>
+
+
       </ElTabPane>
 
       <!-- setup -->
@@ -339,7 +348,8 @@ watch(port, (newValue) => {
             <ElButton v-else class="button-new-tag" size="small" @click="showInput"> + </ElButton>
           </div>
 
-          <h2>API</h2>
+          <h2>GROQ API</h2>
+          <!-- https://console.groq.com/keys -->
 
           <div class="flex gap-2">
             <ElInput v-model.trim="GROQ_APIKEY" placeholder="**************" type="password" />
