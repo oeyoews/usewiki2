@@ -225,6 +225,9 @@ async function ai2md() {
   isAIChecking.value = true
 
   const chatCompletion = await AI(md.value);
+  if (!chatCompletion) {
+    isAIChecking.value = false
+  }
   const mes = chatCompletion!.choices[0].message;
   ElMessage({
     message: 'GROQ 润色成功',

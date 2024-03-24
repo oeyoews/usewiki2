@@ -1,5 +1,6 @@
 import Groq from 'groq-sdk';
 import { type ClientOptions } from 'groq-sdk';
+import { type ChatCompletionCreateParams } from 'groq-sdk/resources/chat/completions';
 
 /**
  * @see: https://github.com/groq/groq-typescript
@@ -36,23 +37,36 @@ const ai = async (question: string, options?: ClientOptions) => {
     timeout: 9 * 1000, //
   });
 
-  const params = {
+  // TODO: 上下文压缩
+  // Groq.Chat.CompletionCreateParams
+  const params: ChatCompletionCreateParams = {
     messages: [
       {
         role: 'system',
         content:
           '我想让你充当中文翻译者，我会用任何语言与你交谈，你会检测语言，翻译成中文，保持相同的意思，我要你只回复更正、改进，不要写任何解释。不要删减文章，仅仅做 markdown 语法修正，适当加上 markdown 的标题段落',
       },
+      // {
+      //   role: 'assistant',
+      //   content: '',
+      // },
       {
         role: 'user',
         // TODO: hack prompt
         content: question,
       },
     ],
+    // TODO: 支持选择模型
+    // @see: https://console.groq.com/docs/models
     model: 'mixtral-8x7b-32768',
+    // model: 'gemma-7b-it',
+    // model: 'llama2-70b-4096',
+    // seed: question.length,
+    temperature: 0.5,
+    stream: false,
   };
 
-  const completions = groq.chat.completions;
+  const completions: Groq.Chat.Completions = groq.chat.completions;
 
   const res = completions.create(params).catch(async (err) => {
     if (err instanceof Groq.APIError) {
