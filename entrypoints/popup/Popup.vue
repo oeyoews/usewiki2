@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import 'element-plus/es/components/message/style/css';
+import CodeMirror from 'vue-codemirror6';
+// @ts-ignore
+import { markdown as markdownL } from '@codemirror/lang-markdown';
+import { oneDark } from '@codemirror/theme-one-dark';
+import { Font } from '@/utils/Codemirror6/font';
 
 import AI from '@/utils/ai';
 
@@ -20,6 +25,7 @@ import FaRegularSave from '~icons/fa-regular/save';
 import saveMarkdown from '@/utils/saveMarkdown';
 import save2TiddlyWiki from '@/utils/save2TiddlyWiki';
 import { html2md, md2html } from '@/utils/parser';
+const lang = markdownL();
 
 const currentTab = ref('preview');
 const aimd = ref('');
@@ -312,6 +318,11 @@ watch(port, (newValue) => {
 
         <el-input type="text" v-model="title" class="mb-1" />
 
+        <CodeMirror
+          :lang="lang"
+          v-model="md"
+          :extensions="[oneDark]"
+          basic="true" />
         <el-input
           placeholder="写点什么吧 ..."
           v-model="md"
@@ -451,3 +462,9 @@ watch(port, (newValue) => {
     </ElTabs>
   </div>
 </template>
+
+<style scoped>
+.cm-editor {
+  font-size: 18px;
+}
+</style>

@@ -15,6 +15,9 @@
     "postinstall": "wxt prepare"
   },
   "dependencies": {
+    "@codemirror/lang-markdown": "^6.2.4",
+    "@codemirror/theme-one-dark": "^6.1.2",
+    "@codemirror/view": "^6.26.0",
     "@iconify-json/fa6-regular": "^1.1.18",
     "@mozilla/readability": "^0.5.0",
     "@tailwindcss/typography": "^0.5.10",
@@ -41,7 +44,8 @@
     "unplugin-auto-import": "^0.17.5",
     "unplugin-icons": "^0.18.5",
     "unplugin-vue-components": "^0.26.0",
-    "vue": "^3.4.21"
+    "vue": "^3.4.21",
+    "vue-codemirror6": "^1.2.5"
   },
   "devDependencies": {
     "@iconify-json/charm": "^1.1.12",
