@@ -9,18 +9,7 @@ import { copyMd } from '@/utils/copyMd';
 import json from '../../package.json';
 import { debounce } from '@/utils/debounce';
 
-import BiJournals from '~icons/bi/journals?width=16px&height=16px';
-import StreamlineAiEditSparkSolid from '~icons/streamline/ai-edit-spark-solid';
-import MdiSparklesOutline from '~icons/mdi/sparkles-outline';
-import MdiContentCopy from '~icons/mdi/content-copy';
-import IconoirSpark from '~icons/iconoir/spark';
-import CharmGithub from '~icons/charm/github';
-import MaterialSymbolsDownload from '~icons/material-symbols/download';
-import FaRegularEdit from '~icons/fa-regular/edit';
-import TdesignSetting from '~icons/tdesign/setting';
-import MaterialSymbolsInfoOutline from '~icons/material-symbols/info-outline';
-import FaFileTextO from '~icons/fa/file-text-o';
-import FaRegularSave from '~icons/fa-regular/save';
+import * as WI from '@/utils/icons';
 
 import saveMarkdown from '@/utils/saveMarkdown';
 import save2TiddlyWiki from '@/utils/save2TiddlyWiki';
@@ -287,17 +276,17 @@ watch(port, (newValue) => {
       <div class="flex justify-end">
         <!-- <ElBacktop :right="100" :bottom="100" /> -->
         <ElButton @click="saveMarkdown(md, title!)">
-          <MaterialSymbolsDownload />
+          <WI.MaterialSymbolsDownload />
         </ElButton>
 
         <!-- copy -->
         <ElButton @click="copyMd(md)">
-          <MdiContentCopy />
+          <WI.MdiContentCopy />
         </ElButton>
 
         <!-- ai -->
         <ElButton @click="ai2md">
-          <IconoirSpark :class="{ 'animate-spin': isAIChecking }" />
+          <WI.IconoirSpark :class="{ 'animate-spin': isAIChecking }" />
         </ElButton>
 
         <!-- journal -->
@@ -307,7 +296,7 @@ watch(port, (newValue) => {
           trigger="click">
           <template #reference>
             <ElButton>
-              <BiJournals />
+              <WI.BiJournals />
             </ElButton>
           </template>
         </el-popconfirm>
@@ -316,7 +305,7 @@ watch(port, (newValue) => {
         <ElButton
           v-show="isCheckTw5"
           @click="save2TiddlyWiki(title, md, port!, link, dynamicTags, status)">
-          <FaRegularSave />
+          <WI.FaRegularSave />
         </ElButton>
       </div>
     </div>
@@ -325,7 +314,7 @@ watch(port, (newValue) => {
       <!-- preview -->
       <ElTabPane name="preview">
         <template #label>
-          <FaFileTextO />
+          <WI.FaFileTextO />
         </template>
         <div v-if="title">
           <div class="flex items-center justify-center gap-2">
@@ -347,7 +336,7 @@ watch(port, (newValue) => {
       <!-- edit -->
       <ElTabPane name="edit">
         <template #label>
-          <FaRegularEdit />
+          <WI.FaRegularEdit />
         </template>
 
         <ElInput type="text" v-model="title" class="mb-1" />
@@ -369,7 +358,7 @@ watch(port, (newValue) => {
       <!-- aimd preview -->
       <ElTabPane name="aipreview" v-if="aihtml">
         <template #label>
-          <MdiSparklesOutline />
+          <WI.MdiSparklesOutline />
         </template>
         <div v-if="title">
           <div class="flex items-center justify-center gap-2">
@@ -391,7 +380,7 @@ watch(port, (newValue) => {
       <!-- AI edit MD -->
       <ElTabPane v-if="aimd" name="aiedit">
         <template #label>
-          <StreamlineAiEditSparkSolid />
+          <WI.StreamlineAiEditSparkSolid />
         </template>
         <el-input
           v-model="aimd"
@@ -402,7 +391,7 @@ watch(port, (newValue) => {
           resize="none" />
         <div class="flex gap-2 items-center justify-end">
           <ElButton @click="copyMd(aimd)" class="mt-1">
-            <MdiContentCopy />
+            <WI.MdiContentCopy />
           </ElButton>
         </div>
       </ElTabPane>
@@ -410,7 +399,7 @@ watch(port, (newValue) => {
       <!-- setup -->
       <ElTabPane>
         <template #label>
-          <TdesignSetting />
+          <WI.TdesignSetting />
         </template>
 
         <div class="items-center">
@@ -474,7 +463,7 @@ watch(port, (newValue) => {
       <!-- info -->
       <ElTabPane v-if="status.tiddlywiki_version">
         <template #label>
-          <MaterialSymbolsInfoOutline />
+          <WI.MaterialSymbolsInfoOutline />
         </template>
 
         <div class="flex items-center gap-2">
@@ -483,7 +472,7 @@ watch(port, (newValue) => {
           <ElTag> {{ json.name.toUpperCase() }}: {{ json.version }} </ElTag>
           <ElLink href="https://github.com/oeyoews/usewiki2" target="_blank">
             <ElButton>
-              <CharmGithub />
+              <WI.CharmGithub />
             </ElButton>
           </ElLink>
         </div>
