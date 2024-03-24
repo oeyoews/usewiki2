@@ -8,7 +8,11 @@
     "isolatedModules": true,
     // "types": [
     // "element-plus/global"
-    // ], // "types": ["unplugin-icons/types/vue"],
+    // ],
+    "types": [
+      "unplugin-icons/types/vue",
+      "chrome"
+    ],
     "verbatimModuleSyntax": true,
     "baseUrl": ".",
     "paths": {

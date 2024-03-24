@@ -5,25 +5,16 @@ import AI from '@/utils/ai'
 
 import json from '../../package.json'
 
-// @ts-ignore
-import MdiSparklesOutline from '~icons/mdi/sparkles-outline?width=16px&height=16px';
-// @ts-ignore
-import MdiContentCopy from '~icons/mdi/content-copy?width=16px&height=16px';
-// @ts-ignore
-import EosIconsAi from '~icons/eos-icons/ai?width=16px&height=16px';
-// @ts-ignore
-import CharmGithub from '~icons/charm/github?width=16px&height=16px';
-// @ts-ignore
+import StreamlineAiEditSparkSolid from '~icons/streamline/ai-edit-spark-solid';
+import MdiSparklesOutline from '~icons/mdi/sparkles-outline';
+import MdiContentCopy from '~icons/mdi/content-copy';
+import IconoirSpark from '~icons/iconoir/spark';
+import CharmGithub from '~icons/charm/github';
 import MaterialSymbolsDownload from '~icons/material-symbols/download';
-// @ts-ignore
 import FaRegularEdit from '~icons/fa-regular/edit';
-// @ts-ignore
 import TdesignSetting from '~icons/tdesign/setting';
-// @ts-ignore
 import MaterialSymbolsInfoOutline from '~icons/material-symbols/info-outline';
-// @ts-ignore
 import FaFileTextO from '~icons/fa/file-text-o';
-// @ts-ignore
 import FaRegularSave from '~icons/fa-regular/save';
 
 import saveMarkdown from '@/utils/saveMarkdown';
@@ -46,6 +37,8 @@ const InputRef = ref()
 const inputValue = ref()
 const dynamicTags = ref()
 const port = ref<number | undefined>()
+
+const aihtml = ref('')
 
 chrome.storage.local.get('isCheckTw5', function (result) {
   isCheckTw5.value = result.isCheckTw5
@@ -211,7 +204,6 @@ function checkStatus() {
 
 watch(md, async () => {
   html.value = (await md2html(md.value))
-
 })
 
 async function ai2md() {
@@ -233,8 +225,9 @@ async function ai2md() {
     message: 'GROQ 润色成功',
     type: 'success'
   })
-  currentTab.value = 'ai'
+  currentTab.value = 'aipreview'
   aimd.value = mes.content;
+  aihtml.value = await md2html(aimd.value);
 
   isAIChecking.value = false;
 }
@@ -261,6 +254,7 @@ watch(port, (newValue) => {
           </ElIcon>
         </ElButton>
 
+        <!-- copy -->
         <ElButton @click="copyMd(md)">
           <ElIcon>
             <MdiContentCopy />
@@ -268,8 +262,9 @@ watch(port, (newValue) => {
 
         </ElButton>
 
+        <!-- ai -->
         <ElButton @click="ai2md">
-          <MdiSparklesOutline :class="{ 'animate-spin': isAIChecking }" />
+          <IconoirSpark :class="{ 'animate-spin': isAIChecking }" />
         </ElButton>
 
         <ElButton @click="save2TiddlyWiki(title, md, port!, link, dynamicTags, status)">
@@ -278,15 +273,15 @@ watch(port, (newValue) => {
       </div>
     </div>
 
-
     <ElTabs type="border-card" :model-value="currentTab">
+
+      <!-- preview -->
       <ElTabPane name="preview">
         <template #label>
           <ElIcon>
             <FaFileTextO />
           </ElIcon>
         </template>
-        <!-- preview -->
         <div v-if="title">
           <div class="flex items-center justify-center gap-2">
             <h2>
@@ -316,14 +311,27 @@ watch(port, (newValue) => {
 
       </ElTabPane>
 
-      <!-- AIMD -->
-      <ElTabPane v-if="aimd" name="ai">
+      <!-- aimd preview -->
+      <ElTabPane name="aipreview" v-if="aihtml">
         <template #label>
-          <EosIconsAi />
+          <ElIcon>
+            <MdiSparklesOutline />
+          </ElIcon>
+        </template>
+        <div v-if="title">
+          <article class="prose prose-gray max-w-none prose-sm dark:prose-invert">
+            <div v-html="aihtml"></div>
+          </article>
+        </div>
+      </ElTabPane>
+
+      <!-- AI edit MD -->
+      <ElTabPane v-if="aimd" name="aiedit">
+        <template #label>
+          <StreamlineAiEditSparkSolid />
         </template>
         <el-input v-model="aimd" :autosize="{ minRows: 4, maxRows: 20 }" type="textarea" spellcheck="false" class="w-full"
           resize="none" />
-
         <div class="flex gap-2 items-center justify-end">
           <ElButton @click="copyMd(aimd)" class="mt-1">
             <ElIcon>
@@ -331,9 +339,10 @@ watch(port, (newValue) => {
             </ElIcon>
           </ElButton>
         </div>
-
-
       </ElTabPane>
+
+
+
 
       <!-- setup -->
       <ElTabPane>
