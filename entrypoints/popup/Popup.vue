@@ -210,12 +210,12 @@ async function ai2md() {
   isAIChecking.value = false;
 }
 
-watch(port, (newValue) => {
-  chrome.storage.local.set({ port: newValue });
+function savePort(port: number) {
+  chrome.storage.local.set({ port });
   if (isCheckTw5.value) {
     checkStatus();
   }
-});
+}
 </script>
 
 <template>
@@ -349,15 +349,18 @@ watch(port, (newValue) => {
         </template>
 
         <div class="items-center">
-          <h2>连接 TiddlyWiki5</h2>
+          <h2>连接到 Nodejs TiddlyWiki5</h2>
           <!-- 首次配置弹窗提示配置端口 -->
           <el-switch v-model="isCheckTw5" />
 
           <div>
-            <h2>端口</h2>
-            <ElInput v-model.trim.number="port" />
+            <h2>Nodejs TiddlyWiki5 端口</h2>
+            <div class="flex gap-2">
+              <ElInput v-model.trim.number="port" />
+              <ElButton @click="savePort(port!)">保存</ElButton>
+            </div>
           </div>
-          <h2>标签</h2>
+          <h2>剪藏标签</h2>
           <!-- tag -->
           <div class="flex gap-2">
             <ElTag

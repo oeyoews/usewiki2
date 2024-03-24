@@ -17,7 +17,6 @@
 
 * welcome page
 * tour: https://element-plus.org/zh-CN/component/tour.html
-* port 通知优化
 * 右键菜单实现功能，快捷键提示
 * 支持多条 journal 合并，支持配置默认日记 tag
 

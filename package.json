@@ -2,7 +2,7 @@
   "name": "usewiki2",
   "description": "manifest.json description",
   "private": true,
-  "version": "1.4.0",
+  "version": "1.4.2",
   "type": "module",
   "scripts": {
     "dev": "wxt",
