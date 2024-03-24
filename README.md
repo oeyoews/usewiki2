@@ -24,11 +24,7 @@
 
 ## Roadmap
 
-<<<<<<< HEAD
-* ai prettier
-=======
 * 支持更改 prompt
->>>>>>> ai-groq
 * 支持保存到 github, such as issues, discussion
 * i18n
 * codemirror6
