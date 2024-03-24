@@ -4,16 +4,31 @@ import { type ClientOptions } from 'groq-sdk';
 /**
  * @see: https://github.com/groq/groq-typescript
  */
-const ai = (question: string, options?: ClientOptions) => {
-  // apiKey: options?.apiKey || process.env.GROQ_APIKEY,
-  const apiKey = '';
+const ai = async (question: string, options?: ClientOptions) => {
+  let apiKey = (await storage.getItem('local:GROQ_APIKEY')) as string;
+
   if (!apiKey) {
     ElMessage({
       message: '请先配置 GROQ_APIKEY',
       type: 'warning',
     });
+    ElMessageBox.prompt('请输入你的 GROQ APIKEY', '提示', {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+    }).then(({ value }) => {
+      apiKey = value;
+      chrome.storage.local.set({ GROQ_APIKEY: apiKey });
+    });
     return;
   }
+
+  if (apiKey) {
+    ElMessage({
+      message: '润色中 ...',
+      type: 'info',
+    });
+  }
+
   const groq = new Groq({
     dangerouslyAllowBrowser: true,
     apiKey,
@@ -50,6 +65,14 @@ const ai = (question: string, options?: ClientOptions) => {
       throw err;
     }
   });
+
+  if (!res) {
+    ElMessage({
+      message: '润色失败',
+      type: 'error',
+    });
+    return;
+  }
 
   return res;
 };
