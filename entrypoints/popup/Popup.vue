@@ -250,7 +250,8 @@ watch(port, (newValue) => {
 
 <template>
   <div class="overflow-y-auto w-[600px] h-[550px]">
-    <div class="sticky top-0 backdrop-blur-sm mb-2">
+
+    <div class="sticky inset-x-0 top-0 backdrop-blur-sm rounded-md mb-2 z-10">
       <div class="flex justify-end">
 
         <!-- <ElBacktop :right="100" :bottom="100" /> -->
@@ -276,6 +277,7 @@ watch(port, (newValue) => {
         </ElButton>
       </div>
     </div>
+
 
     <ElTabs type="border-card" :model-value="currentTab">
       <ElTabPane name="preview">
@@ -365,10 +367,14 @@ watch(port, (newValue) => {
           <h2>GROQ API</h2>
           <!-- https://console.groq.com/keys -->
 
-          <div class="flex gap-2">
+          <div class="flex gap-1">
             <ElInput v-model.trim="GROQ_APIKEY" placeholder="**************" type="password" />
-            <ElButton @click="saveGROQAPIKEY">save</ElButton>
-            <ElButton @click="resetGROQAPIKEY">reset</ElButton>
+            <ElButton @click="saveGROQAPIKEY">保存</ElButton>
+            <el-popconfirm title="你确定要重置API吗 ?" @confirm="resetGROQAPIKEY">
+              <template #reference>
+                <ElButton>重置</ElButton>
+              </template>
+            </el-popconfirm>
           </div>
 
         </div>
