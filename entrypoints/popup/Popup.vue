@@ -3,6 +3,7 @@ import 'element-plus/es/components/message/style/css';
 
 import { formattime } from '@/utils/formattime';
 
+import * as utils from '@/utils/utils';
 import AI from '@/utils/ai';
 import { copyMd } from '@/utils/copyMd';
 
@@ -15,6 +16,8 @@ import saveMarkdown from '@/utils/saveMarkdown';
 import save2TiddlyWiki from '@/utils/save2TiddlyWiki';
 import { html2md, md2html } from '@/utils/parser';
 
+const editRef = ref<HTMLInputElement>();
+const isChecking = ref(false);
 const currentTab = ref<ITabs>('preview');
 const aimd = ref('');
 const html = ref('');
@@ -46,23 +49,7 @@ chrome.storage.local.get(['tags'], function (result) {
   }
 });
 
-function saveGROQAPIKEY() {
-  if (!GROQ_APIKEY.value) {
-    ElMessage({
-      type: 'error',
-      message: '请输入 GROQ API KEY',
-    });
-    return;
-  }
-  chrome.storage.local.set({ GROQ_APIKEY: GROQ_APIKEY.value });
-  ElMessage({
-    type: 'success',
-    message: '保存成功',
-  });
-}
-
-// ctrl + enter to save
-function handleSave() {
+const handleSave = () =>
   save2TiddlyWiki(
     title.value,
     md.value,
@@ -71,34 +58,16 @@ function handleSave() {
     dynamicTags.value,
     status.value
   );
-}
-
-function resetGROQAPIKEY() {
-  chrome.storage.local.remove('GROQ_APIKEY');
-  ElMessage({
-    type: 'success',
-    message: '已成功重置 GROQ API KEY',
-  });
-}
-
-const editRef = ref<HTMLInputElement>();
-
-function randomChar() {
-  return Math.random().toString(36).slice(-8);
-}
 
 function addJournal() {
-  // Debounce
   md.value = '';
   isCheckTw5.value = true;
-  title.value = formattime(new Date(), 'YYYY/MM/DD') + `-${randomChar()}`;
+  title.value = formattime(new Date(), 'YYYY/MM/DD') + `-${utils.randomChar()}`;
   dynamicTags.value = ['Journal'];
   currentTab.value = 'edit';
   link.value = `#${title.value}`;
 
-  // nextTick(() => {
-  //   editRef.value?.focus();
-  // });
+  // nextTick(() => { //   editRef.value?.focus(); // });
 
   // HACK: 由于弹出框的问题，导致 focus 后，unfocus
   setTimeout(() => {
@@ -116,6 +85,7 @@ const showInput = () => {
     InputRef.value!.input!.focus();
   });
 };
+
 const handleInputConfirm = () => {
   if (inputValue.value) {
     dynamicTags.value.push(inputValue.value.trim());
@@ -154,35 +124,22 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
 //   }
 // })
 
-const status = ref<{
-  username: string;
-  tiddlywiki_version: string;
-}>({
+const vanillaStatus: IStatus = {
   username: '',
   tiddlywiki_version: '',
-});
+};
 
-watch(isCheckTw5, (newValue, oldValue) => {
+const status = ref<IStatus>(vanillaStatus);
+
+watch(isCheckTw5, (newValue) => {
   chrome.storage.local.set({ isCheckTw5: newValue });
-
   if (newValue) {
-    // ElMessage({
-    //   message: '检测到 TiddlyWiki 5.x',
-    //   type: 'success'
-    // })
     checkStatus();
   } else {
-    // @ts-ignore
-    // 清空 status
-    status.value = '';
-    // ElMessage({
-    //   message: '关闭 TiddlyWiki 5.x 检测',
-    //   type: 'info'
-    // })
+    status.value = vanillaStatus;
   }
 });
 
-const isChecking = ref(false);
 function checkStatus() {
   if (isChecking.value) {
     ElMessage({
@@ -190,9 +147,6 @@ function checkStatus() {
     });
     return;
   } else if (!port.value) {
-    // ElMessage({
-    //   message: "加载中 ..."
-    // })
     return;
   }
 
@@ -302,9 +256,7 @@ watch(port, (newValue) => {
         </el-popconfirm>
 
         <!-- save to tiddlywiki -->
-        <ElButton
-          v-show="isCheckTw5"
-          @click="save2TiddlyWiki(title, md, port!, link, dynamicTags, status)">
+        <ElButton v-show="isCheckTw5" @click="handleSave">
           <WI.FaRegularSave />
         </ElButton>
       </div>
@@ -448,10 +400,10 @@ watch(port, (newValue) => {
               v-model.trim="GROQ_APIKEY"
               placeholder="**************"
               type="password" />
-            <ElButton @click="saveGROQAPIKEY">保存</ElButton>
+            <ElButton @click="utils.saveGROQAPIKEY(GROQ_APIKEY)">保存</ElButton>
             <el-popconfirm
               title="你确定要重置API吗 ?"
-              @confirm="resetGROQAPIKEY">
+              @confirm="utils.resetGROQAPIKEY">
               <template #reference>
                 <ElButton>重置</ElButton>
               </template>

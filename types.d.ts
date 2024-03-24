@@ -17,3 +17,8 @@ interface IArticle {
 }
 
 type ITabs = 'edit' | 'preview' | 'aiedit' | 'aipreview';
+
+interface IStatus {
+  username: string;
+  tiddlywiki_version: string;
+}
