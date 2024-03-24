@@ -6,6 +6,8 @@ import AI from '@/utils/ai'
 import json from '../../package.json'
 
 // @ts-ignore
+import MdiSparklesOutline from '~icons/mdi/sparkles-outline?width=16px&height=16px';
+// @ts-ignore
 import EosIconsAi from '~icons/eos-icons/ai?width=16px&height=16px';
 // @ts-ignore
 import CharmGithub from '~icons/charm/github?width=16px&height=16px';
@@ -26,7 +28,7 @@ import saveMarkdown from '@/utils/saveMarkdown';
 import save2TiddlyWiki from '@/utils/save2TiddlyWiki';
 import { html2md, md2html } from '@/utils/parser';
 
-const isAI = ref();
+const currentTab = ref('preview');
 const aimd = ref('')
 const html = ref('')
 const md = ref('')
@@ -34,6 +36,7 @@ const link = ref('')
 const faviconUrl = ref('')
 const title = ref('')
 
+const GROQ_APIKEY = ref('')
 const isCheckTw5 = ref(false)
 const inputVisible = ref(false)
 const InputRef = ref()
@@ -52,6 +55,29 @@ chrome.storage.local.get(['tags'], function (result) {
     dynamicTags.value = ['剪藏']
   }
 });
+
+function saveGROQAPIKEY() {
+  if (!GROQ_APIKEY.value) {
+    ElMessage({
+      type: 'error',
+      message: '请输入 GROQ API KEY'
+    })
+    return
+  }
+  chrome.storage.local.set({ GROQ_APIKEY: GROQ_APIKEY.value })
+  ElMessage({
+    type: 'success',
+    message: '保存成功'
+  })
+}
+
+function resetGROQAPIKEY() {
+  chrome.storage.local.remove('GROQ_APIKEY')
+  ElMessage({
+    type: 'success',
+    message: '已成功重置 GROQ API KEY'
+  })
+}
 
 const handleClose = (tag: string) => {
   dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
@@ -175,26 +201,19 @@ function checkStatus() {
 watch(md, async () => {
   html.value = (await md2html(md.value))
 
-  // TODO: Debounce
-  // ElMessage({
-  //   message: '润色中 ...',
-  //   type: 'info'
-  // })
-  // const chatCompletion = await AI(md.value);
-  // if (!chatCompletion) {
-  //   ElMessage({
-  //     message: '润色失败',
-  //     type: 'error'
-  //   })
-  //   return
-  // }
-  // const mes = chatCompletion!.choices[0].message;
-  // ElMessage({
-  //   message: 'GROQ 润色成功',
-  //   type: 'success'
-  // })
-  // aimd.value = mes.content;
 })
+
+async function ai2md() {
+  // TODO: Debounce
+  const chatCompletion = await AI(md.value);
+  const mes = chatCompletion!.choices[0].message;
+  ElMessage({
+    message: 'GROQ 润色成功',
+    type: 'success'
+  })
+  currentTab.value = 'ai'
+  aimd.value = mes.content;
+}
 
 watch(port, (newValue) => {
   chrome.storage.local.set({ port: newValue })
@@ -217,14 +236,18 @@ watch(port, (newValue) => {
           </ElIcon>
         </ElButton>
 
+        <ElButton @click="ai2md">
+          <MdiSparklesOutline />
+        </ElButton>
+
         <ElButton @click="save2TiddlyWiki(title, md, port!, link, dynamicTags, status)">
           <FaRegularSave />
         </ElButton>
       </div>
     </div>
 
-    <ElTabs type="border-card">
-      <ElTabPane>
+    <ElTabs type="border-card" :model-value="currentTab">
+      <ElTabPane name="preview">
         <template #label>
           <ElIcon>
             <FaFileTextO />
@@ -248,7 +271,7 @@ watch(port, (newValue) => {
       </ElTabPane>
 
       <!-- edit -->
-      <ElTabPane>
+      <ElTabPane name="edit">
         <template #label>
           <FaRegularEdit />
         </template>
@@ -260,17 +283,16 @@ watch(port, (newValue) => {
 
       </ElTabPane>
 
-      <ElTabPane v-if="aimd">
+      <!-- AIMD -->
+      <ElTabPane v-if="aimd" name="ai">
         <template #label>
           <EosIconsAi />
         </template>
-
         <el-input type="text" v-model="title" class="mb-1" />
-
         <el-input placeholder="写点什么吧 ..." v-model="aimd" :autosize="{ minRows: 4, maxRows: 20 }" type="textarea"
           spellcheck="false" class="w-full" resize="none" />
-
       </ElTabPane>
+
       <!-- setup -->
       <ElTabPane>
         <template #label>
@@ -300,8 +322,13 @@ watch(port, (newValue) => {
             <ElButton v-else class="button-new-tag" size="small" @click="showInput"> + </ElButton>
           </div>
 
-          <h2>AI</h2>
-          <ElSwitch v-model="isAI" disabled title="WIP"></ElSwitch>
+          <h2>API</h2>
+
+          <div class="flex gap-2">
+            <ElInput v-model.trim="GROQ_APIKEY" placeholder="**************" type="password" />
+            <ElButton @click="saveGROQAPIKEY">save</ElButton>
+            <ElButton @click="resetGROQAPIKEY">reset</ElButton>
+          </div>
 
         </div>
 
