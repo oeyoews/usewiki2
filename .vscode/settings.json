@@ -6,4 +6,9 @@
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"files.eol": "\n",
+	"explorer.fileNesting.enabled": true,
+	"explorer.fileNesting.patterns": {
+		".gitignore": ".gitconfig",
+		"wxt.config.ts": "auto-imports*.ts, components*.ts, tailwind.config.cjs, tsconfig.json, types.d.ts, postcss.config.cjs"
+	}
 }
