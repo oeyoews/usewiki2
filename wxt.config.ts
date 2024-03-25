@@ -7,6 +7,7 @@ import path from 'path';
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
+import tailwindcss from '@tailwindcss/vite';
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
@@ -23,6 +24,7 @@ export default defineConfig({
       },
     },
     plugins: [
+      tailwindcss(),
       vue(),
       Icons({
         autoInstall: true,

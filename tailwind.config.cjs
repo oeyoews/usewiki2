@@ -1,3 +1,4 @@
+// v4 not support plugins
 const typography = require('@tailwindcss/typography');
 
 module.exports = {
