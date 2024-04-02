@@ -19,6 +19,7 @@
 * tour: https://element-plus.org/zh-CN/component/tour.html
 * 右键菜单实现功能，快捷键提示
 * 支持多条 journal 合并，支持配置默认日记 tag
+* 支持删除刚刚保存的 tiddler. 主要不要删除修改过后的 title
 
 ## Roadmap
 
