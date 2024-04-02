@@ -57,7 +57,7 @@ const save2TiddlyWiki = async (
       'Content-Type': 'application/json',
       'x-requested-with': 'TiddlyWiki',
     },
-    body: JSON.stringify({
+    body: {
       text,
       creator: status.value.username,
       type: 'text/markdown',
@@ -65,7 +65,7 @@ const save2TiddlyWiki = async (
       created: currentTime,
       modified: currentTime,
       tags,
-    }),
+    },
   });
 };
 
