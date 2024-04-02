@@ -93,6 +93,7 @@ const save2TiddlyWiki = async (
     },
   });
 
+  // 条目已存在的情况
   if (oldTiddler?.text === text) {
     notify({
       message: h('div', [
