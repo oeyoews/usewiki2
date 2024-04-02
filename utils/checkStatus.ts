@@ -8,18 +8,19 @@ export async function checkStatus(
 ) {
   isChecking.value = true;
   const baseURL = `http://localhost:${port}`;
-  const twFetch = ofetch.create({ baseURL });
-
-  const data = await twFetch('/status')
-    .catch((e) => {
+  const twFetch = ofetch.create({
+    baseURL,
+    async onRequestError({ request, response, options }) {
       notify({
-        message: 'TiddlyWiki 未成功连接' + e.message,
+        message: 'TiddlyWiki 未成功连接',
         type: 'error',
       });
-    })
-    .finally(() => {
-      isChecking.value = false;
-    });
+    },
+  });
+
+  const data = await twFetch('/status').finally(() => {
+    isChecking.value = false;
+  });
 
   status.value = data;
 
