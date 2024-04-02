@@ -1,5 +1,6 @@
 import { formattime } from './formattime';
 import { ElMessage as notify } from 'element-plus';
+import { ofetch } from 'ofetch';
 
 const save2TiddlyWiki = async (
   title: string,
@@ -29,7 +30,27 @@ const save2TiddlyWiki = async (
 
   const currentTime = formattime(new Date());
 
-  fetch(`http://localhost:${port}/recipes/default/tiddlers/${title}`, {
+  const baseURL = `http://localhost:${port}`;
+  const savetwFetch = ofetch.create({
+    baseURL,
+    async onResponse({ request, response, options }) {
+      if (response.status === 204) {
+        notify({
+          message: '保存成功',
+          type: 'success',
+        });
+      }
+    },
+    async onResponseError({ request, response, options }) {
+      console.log('[fetch error]', response.status);
+      notify({
+        message: '保存失败' + response._data,
+        type: 'error',
+      });
+    },
+  });
+
+  await savetwFetch(`/recipes/default/tiddlers/${title}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -44,21 +65,7 @@ const save2TiddlyWiki = async (
       modified: currentTime,
       tags,
     }),
-  })
-    .then((res) => {
-      if (res.ok) {
-        notify({
-          message: '保存成功',
-          type: 'success',
-        });
-      }
-    })
-    .catch((e) => {
-      notify({
-        message: '保存失败' + e,
-        type: 'error',
-      });
-    });
+  });
 };
 
 export default save2TiddlyWiki;

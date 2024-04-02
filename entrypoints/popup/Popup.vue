@@ -125,10 +125,10 @@ const vanillaStatus: IStatus = {
 
 const status = ref<IStatus>(vanillaStatus);
 
-watch(isCheckTw5, (newValue) => {
+watch(isCheckTw5, async (newValue) => {
   chrome.storage.local.set({ isCheckTw5: newValue });
   if (newValue) {
-    checkStatus(port.value!, status, isChecking);
+    await checkStatus(port.value!, status, isChecking);
   } else {
     status.value = vanillaStatus;
   }
