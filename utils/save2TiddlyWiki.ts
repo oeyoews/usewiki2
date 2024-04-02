@@ -33,8 +33,9 @@ const save2TiddlyWiki = async (
   const baseURL = `http://localhost:${port}`;
   const savetwFetch = ofetch.create({
     baseURL,
+    retry: 0,
     async onResponse({ request, response, options }) {
-      if (response.status === 204) {
+      if (response.ok) {
         notify({
           message: '保存成功',
           type: 'success',

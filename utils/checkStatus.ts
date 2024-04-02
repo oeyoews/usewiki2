@@ -10,6 +10,15 @@ export async function checkStatus(
   const baseURL = `http://localhost:${port}`;
   const twFetch = ofetch.create({
     baseURL,
+    retry: 0,
+    onResponse({ request, response, options }) {
+      if (response.ok) {
+        notify({
+          message: 'TiddlyWiki 连接成功',
+          type: 'success',
+        });
+      }
+    },
     async onRequestError({ request, response, options }) {
       notify({
         message: 'TiddlyWiki 未成功连接',
@@ -23,16 +32,4 @@ export async function checkStatus(
   });
 
   status.value = data;
-
-  if (!data.tiddlywiki_version) {
-    notify({
-      message: 'TiddlyWiki 未连接',
-      type: 'error',
-    });
-  } else {
-    notify({
-      message: 'TiddlyWiki 连接成功',
-      type: 'success',
-    });
-  }
 }
