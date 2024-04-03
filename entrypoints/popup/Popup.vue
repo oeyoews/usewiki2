@@ -174,7 +174,7 @@ function savePort(port: number) {
 </script>
 
 <template>
-  <div class="overflow-y-auto w-[600px] h-[550px]">
+  <div class="overflow-y-auto">
     <div class="sticky inset-x-0 top-0 backdrop-blur-sm rounded-md mb-2 z-10">
       <div class="flex justify-end">
         <!-- <ElBacktop :right="100" :bottom="100" /> -->

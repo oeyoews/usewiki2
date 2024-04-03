@@ -60,6 +60,7 @@ export default defineConfig({
     name: 'Usewiki2',
     description: 'Usewiki2: usewiki 的 vue 版本',
     permissions: [
+      'sidePanel',
       'contextMenus',
       'alarms',
       'activeTab',
@@ -73,7 +74,15 @@ export default defineConfig({
       extension_pages: "script-src 'self'; object-src 'self'",
     },
     host_permissions: ['<all_urls>'],
+    // https://developer.chrome.com/docs/extensions/reference/api/sidePanel
+    sidebar_action: {
+      default_panel: 'popup.html',
+      // default_icon: 'icons/icon48.png',
+    },
 
+    action: {
+      default_title: '单击打开 Usewiki2',
+    },
     browser_action: {
       default_popup: 'popup.html',
       default_title: 'Usewiki2',
