@@ -16,6 +16,7 @@ export async function checkStatus(
         notify({
           message: 'TiddlyWiki 连接成功',
           type: 'success',
+          duration: 1000,
         });
       }
     },
