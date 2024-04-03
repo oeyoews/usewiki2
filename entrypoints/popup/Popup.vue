@@ -372,7 +372,9 @@ function savePort(port: number) {
           <ElTag type="success"> Username: {{ status.username }} </ElTag>
           <ElTag> {{ json.name.toUpperCase() }}: {{ json.version }} </ElTag>
           <ElLink href="https://github.com/oeyoews/usewiki2" target="_blank">
-            <WI.CharmGithub />
+            <ElButton>
+              <WI.CharmGithub />
+            </ElButton>
           </ElLink>
         </div>
       </ElTabPane>
