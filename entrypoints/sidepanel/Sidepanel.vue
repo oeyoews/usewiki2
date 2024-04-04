@@ -225,6 +225,8 @@ function savePort(port: number) {
       <div class="flex justify-end">
         <!-- <ElBacktop :right="100" :bottom="100" /> -->
         <ElButton
+          size="default"
+          class="aspect-square"
           @click="
             getContent({
               tip: true,
@@ -233,37 +235,44 @@ function savePort(port: number) {
           <WI.MdiCloudRefreshVariant />
         </ElButton>
 
-        <ElButton @click="saveMarkdown(md, title!)">
+        <ElButton
+          @click="saveMarkdown(md, title!)"
+          size="default"
+          class="aspect-square">
           <WI.MaterialSymbolsDownload />
         </ElButton>
 
         <!-- copy -->
-        <ElButton @click="copyMd(md)">
+        <ElButton @click="copyMd(md)" size="default" class="aspect-square">
           <WI.MdiContentCopy />
         </ElButton>
 
         <!-- ai -->
-        <ElButton @click="ai2md">
+        <ElButton @click="ai2md" size="default" class="aspect-square">
           <WI.IconoirSpark :class="{ 'animate-spin': isAIChecking }" />
         </ElButton>
 
         <!-- journal -->
-        <ElButton @click="addJournal">
+        <ElButton @click="addJournal" size="default" class="aspect-square">
           <WI.BiJournals />
         </ElButton>
 
         <!-- save to tiddlywiki -->
-        <ElButton v-show="isCheckTw5" @click="handleSave">
+        <ElButton
+          v-show="isCheckTw5"
+          @click="handleSave"
+          size="default"
+          class="aspect-square">
           <WI.FaRegularSave />
         </ElButton>
       </div>
     </div>
 
-    <ElTabs type="border-card" :model-value="currentTab">
+    <ElTabs type="" :model-value="currentTab">
       <!-- preview -->
       <ElTabPane name="preview">
         <template #label>
-          <WI.FaFileTextO />
+          <WI.FaFileTextO /> <span class="ml-1">预览</span>
         </template>
         <div v-if="title">
           <div class="flex items-center justify-center gap-2">
@@ -286,6 +295,7 @@ function savePort(port: number) {
       <ElTabPane name="edit">
         <template #label>
           <WI.FaRegularEdit />
+          <span class="ml-1">编辑</span>
         </template>
 
         <ElInput type="text" v-model="title" class="mb-1" />
@@ -338,7 +348,7 @@ function savePort(port: number) {
           class="w-full"
           resize="none" />
         <div class="flex gap-2 items-center justify-end">
-          <ElButton @click="copyMd(aimd)" class="mt-1">
+          <ElButton @click="copyMd(aimd)" class="mt-1" size="default">
             <WI.MdiContentCopy />
           </ElButton>
         </div>
@@ -348,6 +358,7 @@ function savePort(port: number) {
       <ElTabPane>
         <template #label>
           <WI.TdesignSetting />
+          <span class="ml-1">配置</span>
         </template>
 
         <div class="items-center">
@@ -389,7 +400,7 @@ function savePort(port: number) {
             <ElButton
               v-else
               class="button-new-tag"
-              size="small"
+              size="default"
               @click="showInput">
               +
             </ElButton>
