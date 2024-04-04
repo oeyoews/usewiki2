@@ -62,6 +62,7 @@ export default defineConfig({
     permissions: [
       'sidePanel',
       'contextMenus',
+      'notifications',
       'alarms',
       'activeTab',
       'contextMenus',

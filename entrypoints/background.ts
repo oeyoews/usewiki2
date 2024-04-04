@@ -18,10 +18,21 @@ export default defineBackground(() => {
       chrome.action.setIcon({
         path: 'tw32.png',
       });
+
+      // 首次打开提示，然后存储，不再提示
+      chrome.notifications.create({
+        type: 'basic',
+        iconUrl: 'tw256.png',
+        title: 'Usewiki2',
+        message: '恭喜你，发现了一个 TiddlyWiki 网站',
+        // buttons: [{ title: 'Keep it Flowing.' }],
+        priority: 0,
+      });
+
       // chrome.action.setBadgeText({ text: request.version });
     } else {
       chrome.action.setIcon({
-        path: 'icons/icon32.png',
+        path: 'icons/icon128.png',
       });
     }
   });
