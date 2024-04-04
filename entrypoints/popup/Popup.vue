@@ -219,9 +219,9 @@ function savePort(port: number) {
               {{ title }}
             </h2>
           </div>
-          <el-divider border-style="dashed" />
+          <!-- <el-divider border-style="dashed" /> -->
           <article
-            class="prose prose-gray max-w-none prose-sm dark:prose-invert">
+            class="prose prose-gray max-w-none prose-sm dark:prose-invert flex-wrap prose-img:max-w-[300px] prose-img:my-0 prose-img:rounded-md prose-video:max-w-[300px] prose-video:max-h-[300px] prose-video:my-0">
             <div v-html="html"></div>
           </article>
         </div>
@@ -262,7 +262,7 @@ function savePort(port: number) {
               {{ title }}
             </h2>
           </div>
-          <el-divider border-style="dashed" />
+          <!-- <el-divider border-style="dashed" /> -->
           <article
             class="prose prose-gray max-w-none prose-sm dark:prose-invert">
             <div v-html="aihtml"></div>
