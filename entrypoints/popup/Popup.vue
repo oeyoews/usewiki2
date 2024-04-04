@@ -12,6 +12,7 @@ import save2TiddlyWiki from '@/utils/save2TiddlyWiki';
 import { html2md, md2html } from '@/utils/parser';
 import { ElMessage as notify } from 'element-plus';
 import { checkStatus } from '@/utils/checkStatus';
+import * as constant from '@/utils/constant';
 
 const editRef = ref<HTMLInputElement>();
 const isChecking = ref(false);
@@ -32,8 +33,9 @@ const dynamicTags = ref();
 const port = ref<number | undefined>();
 const aihtml = ref('');
 
+// TODO: use sync instead of local
 chrome.storage.local.get('port', function (result) {
-  port.value = result.port || '8080';
+  port.value = result.port || constant.default_port;
 });
 
 chrome.storage.local.get('isCheckTw5', function (result) {
@@ -44,9 +46,36 @@ chrome.storage.local.get(['tags'], function (result) {
   if (result.tags) {
     dynamicTags.value = Object.values(result.tags);
   } else {
-    dynamicTags.value = ['剪藏'];
+    dynamicTags.value = [constant.default_tag];
   }
 });
+
+// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+//   if (message.type === 'tabUpdated') {
+//     // 更新 popup 中的页面信息
+//     console.log(message.url, message.tab);
+//     const { tab, url, favIconUrl } = message;
+//     link.value = url;
+//     faviconUrl.value = favIconUrl!;
+//     chrome.tabs.sendMessage(
+//       // @ts-ignore
+//       tab.id,
+//       {
+//         info: 'get-doc',
+//         message: '获取文章',
+//       },
+//       async function (response: IArticle) {
+//         if (!response.content)
+//           notify({
+//             message: '发生错误',
+//           });
+//         html.value = response.content;
+//         md.value = await html2md(html.value);
+//         title.value = response.title;
+//       }
+//     );
+//   }
+// });
 
 chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
   const tab = tabs[0];

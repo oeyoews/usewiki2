@@ -1,4 +1,16 @@
 export default defineBackground(() => {
+  // chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  //   // 检查 URL 是否改变
+  //   if (changeInfo.url) {
+  //     // 发送消息给 popup
+  //     chrome.runtime.sendMessage({
+  //       type: 'tabUpdated',
+  //       tab,
+  //       url: changeInfo.url,
+  //     });
+  //   }
+  // });
+
   chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
     await chrome.sidePanel.setOptions({
       tabId,
