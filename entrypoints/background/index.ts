@@ -1,20 +1,8 @@
-import { menus } from './menu';
-import save2TiddlyWiki from '@/utils/save2TiddlyWiki';
-import * as constant from '@/utils/constant';
+import { menus, type MenuIds } from './menu';
+import save2TiddlyWiki from '../../utils/save2TiddlyWiki';
+import * as constant from '../../utils/constant';
 
 export default defineBackground(() => {
-  // chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  //   // 检查 URL 是否改变
-  //   if (changeInfo.url) {
-  //     // 发送消息给 popup
-  //     chrome.runtime.sendMessage({
-  //       type: 'tabUpdated',
-  //       tab,
-  //       url: changeInfo.url,
-  //     });
-  //   }
-  // });
-
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.info === 'tiddlywiki-send-message') {
       console.log(request);
@@ -56,14 +44,16 @@ export default defineBackground(() => {
 
   // 右键菜单
   chrome.runtime.onInstalled.addListener(() => {
-    // chrome.browserAction.setBadgeText({ text: 'NEW' });
     menus.map((menu) => {
-      chrome.contextMenus.create(menu);
+      chrome.contextMenus.create(
+        menu as unknown as chrome.contextMenus.CreateProperties
+      );
     });
   });
 
   chrome.contextMenus.onClicked.addListener((info, tab) => {
-    switch (info.menuItemId) {
+    const { menuItemId } = info;
+    switch (menuItemId as MenuIds) {
       case 'usewiki2-save':
         // TODO: 需要检查连接状态
         chrome.tabs.sendMessage(

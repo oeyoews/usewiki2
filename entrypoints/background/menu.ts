@@ -1,4 +1,4 @@
-export const menus: chrome.contextMenus.CreateProperties[] = [
+export const menus = [
   {
     id: 'usewiki2-save',
     title: '保存当前页面到 tiddlywiki',
@@ -14,4 +14,6 @@ export const menus: chrome.contextMenus.CreateProperties[] = [
     title: '提交 Bug',
     contexts: ['all'],
   },
-];
+] as const;
+
+export type MenuIds = (typeof menus)[number]['id'];
