@@ -1,5 +1,5 @@
 import { menus, type MenuIds } from './menu';
-import save2TiddlyWiki from '../../utils/save2TiddlyWiki';
+// import save2TiddlyWiki from '../../utils/save2TiddlyWiki';
 import * as constant from '../../utils/constant';
 
 export default defineBackground(() => {
@@ -54,6 +54,22 @@ export default defineBackground(() => {
   chrome.contextMenus.onClicked.addListener((info, tab) => {
     const { menuItemId } = info;
     switch (menuItemId as MenuIds) {
+      case 'usewiki2-open':
+        chrome.storage.local.get('port', function (result) {
+          if (result.port) {
+            chrome.tabs.create({
+              url: 'http://localhost:' + result.port,
+            });
+          } else {
+            chrome.notifications.create({
+              type: 'basic',
+              title: constant.default_name,
+              message: '请先连接 TiddlyWiki',
+              iconUrl: constant.tiddlywiki_icon,
+            });
+          }
+        });
+        break;
       case 'usewiki2-save':
         // TODO: 需要检查连接状态
         chrome.tabs.sendMessage(

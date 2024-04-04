@@ -2,7 +2,7 @@
   "name": "usewiki2",
   "description": "Convert HTML to Markdown, and save to your computer, support nodejs tiddlywiki",
   "private": true,
-  "version": "2.5.2",
+  "version": "2.6.0",
   "type": "module",
   "scripts": {
     "dev": "wxt",
@@ -42,6 +42,7 @@
     "unplugin-auto-import": "^0.17.5",
     "unplugin-icons": "^0.18.5",
     "unplugin-vue-components": "^0.26.0",
+    "vite-plugin-vue-devtools": "^7.0.25",
     "vue": "^3.4.21"
   },
   "devDependencies": {

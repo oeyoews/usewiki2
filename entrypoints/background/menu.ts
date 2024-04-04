@@ -1,7 +1,12 @@
 export const menus = [
   {
+    id: 'usewiki2-open',
+    title: '直接打开 TiddlyWiki',
+    contexts: ['all'],
+  },
+  {
     id: 'usewiki2-save',
-    title: '保存当前页面到 tiddlywiki',
+    title: '保存当前页面到 TiddlyWiki',
     contexts: ['all'],
   },
   {
