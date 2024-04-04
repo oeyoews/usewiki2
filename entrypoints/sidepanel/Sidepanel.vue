@@ -77,23 +77,40 @@ chrome.storage.local.get(['tags'], function (result) {
 //   }
 // });
 
-chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-  const tab = tabs[0];
-  link.value = tab.url!;
-  faviconUrl.value = tab.favIconUrl!;
-  chrome.tabs.sendMessage(
-    // @ts-ignore
-    tab.id,
-    {
-      info: 'get-doc',
-      message: '获取文章',
-    },
-    async function (response: IArticle) {
-      html.value = response.content;
-      md.value = await html2md(html.value);
-      title.value = response.title;
-    }
-  );
+function getContent(
+  options = {
+    tip: false,
+  }
+) {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    const tab = tabs[0];
+    link.value = tab.url!;
+    faviconUrl.value = tab.favIconUrl!;
+    chrome.tabs.sendMessage(
+      // @ts-ignore
+      tab.id,
+      {
+        info: 'get-doc',
+        message: '获取文章',
+      },
+      async function (response: IArticle) {
+        html.value = response.content;
+        md.value = await html2md(html.value);
+        title.value = response.title;
+        if (options.tip) {
+          notify({
+            message: '刷新成功',
+            type: 'success',
+            duration: 750,
+          });
+        }
+      }
+    );
+  });
+}
+
+onMounted(() => {
+  getContent();
 });
 
 const handleSave = () =>
@@ -207,6 +224,15 @@ function savePort(port: number) {
     <div class="sticky inset-x-0 top-0 backdrop-blur-sm rounded-md mb-2 z-10">
       <div class="flex justify-end">
         <!-- <ElBacktop :right="100" :bottom="100" /> -->
+        <ElButton
+          @click="
+            getContent({
+              tip: true,
+            })
+          ">
+          <WI.MdiCloudRefreshVariant />
+        </ElButton>
+
         <ElButton @click="saveMarkdown(md, title!)">
           <WI.MaterialSymbolsDownload />
         </ElButton>
