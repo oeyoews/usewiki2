@@ -86,7 +86,7 @@ export default defineConfig({
       default_title: '单击打开 Usewiki2',
     },
     browser_action: {
-      default_popup: 'popup.html',
+      // default_popup: 'popup.html',
       default_title: 'Usewiki2',
     },
   },
