@@ -1,7 +1,10 @@
 import { isProbablyReaderable, Readability } from '@mozilla/readability';
 
 export default defineContentScript({
-  matches: ['<all_urls>'],
+  // matches: ['<all_urls>'],
+  matches: ['https://*/*'],
+  // not work 还是 不能重和？??
+  exclude: ['https://google.com/*', 'https://bing.com/*', 'chrome://*'],
   runAt: 'document_start',
   main() {
     // 检查是否为 tiddlywiki site
