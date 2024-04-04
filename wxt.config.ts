@@ -74,6 +74,7 @@ export default defineConfig({
       extension_pages: "script-src 'self'; object-src 'self'",
     },
     host_permissions: ['<all_urls>'],
+    // optional_permissions: ['https://google.com/**', 'https://bing.com/'],
     // https://developer.chrome.com/docs/extensions/reference/api/sidePanel
     sidebar_action: {
       default_panel: 'popup.html',
