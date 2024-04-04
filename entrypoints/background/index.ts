@@ -1,8 +1,32 @@
 import { menus, type MenuIds } from './menu';
 // import save2TiddlyWiki from '../../utils/save2TiddlyWiki';
 import * as constant from '../../utils/constant';
+import open from './open';
+import save from './save';
 
 export default defineBackground(() => {
+  // https://github.com/GoogleChrome/chrome-extensions-samples/blob/main/api-samples/omnibox/simple-example/service-worker.js
+  // https://developer.chrome.com/docs/extensions/reference/api/omnibox
+  chrome.omnibox.onInputStarted.addListener(function () {
+    chrome.omnibox.setDefaultSuggestion({
+      description:
+        'Usewiki2: 输入 "open" 打开 TiddlyWiki，输入 "save" 保存文章',
+    });
+  });
+
+  chrome.omnibox.onInputEntered.addListener(function (text, suggest) {
+    switch (text) {
+      case 'open':
+        open();
+        break;
+      case 'save':
+        save();
+        break;
+      default:
+        break;
+    }
+  });
+
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.info === 'tiddlywiki-send-message') {
       console.log(request);
@@ -55,41 +79,10 @@ export default defineBackground(() => {
     const { menuItemId } = info;
     switch (menuItemId as MenuIds) {
       case 'usewiki2-open':
-        chrome.storage.sync.get('port', function (result) {
-          if (result.port) {
-            chrome.tabs.create({
-              url: 'http://localhost:' + result.port,
-            });
-          } else {
-            chrome.notifications.create({
-              type: 'basic',
-              title: constant.default_name,
-              message: '请先连接 TiddlyWiki',
-              iconUrl: constant.tiddlywiki_icon,
-            });
-          }
-        });
+        open();
         break;
       case 'usewiki2-save':
-        // TODO: 需要检查连接状态
-        chrome.tabs.sendMessage(
-          // @ts-ignore
-          tab.id,
-          {
-            info: 'get-doc',
-            message: '获取文章',
-          },
-          async function (response: IArticle) {
-            console.log(response);
-            chrome.notifications.create({
-              type: 'basic',
-              title: constant.default_name,
-              message: '敬请期待',
-              iconUrl: constant.tiddlywiki_icon,
-            });
-          }
-        );
-
+        save(tab?.id!);
         break;
       case 'usewiki2-bug':
         chrome.tabs.create({

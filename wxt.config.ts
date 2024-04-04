@@ -58,6 +58,7 @@ export default defineConfig({
       '128': 'icons/icon128.png',
     },
     name: 'Usewiki2',
+    omnibox: { keyword: 'tw' },
     description: 'Usewiki2: usewiki 的 vue 版本',
     permissions: [
       'sidePanel',
