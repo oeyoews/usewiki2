@@ -1,3 +1,7 @@
+import { menus } from './menu';
+import save2TiddlyWiki from '@/utils/save2TiddlyWiki';
+import * as constant from '@/utils/constant';
+
 export default defineBackground(() => {
   // chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   //   // 检查 URL 是否改变
@@ -53,18 +57,46 @@ export default defineBackground(() => {
   // 右键菜单
   chrome.runtime.onInstalled.addListener(() => {
     // chrome.browserAction.setBadgeText({ text: 'NEW' });
-    chrome.contextMenus.create({
-      id: 'usewiki2',
-      title: '打开 Usewiki2',
-      contexts: ['all'],
+    menus.map((menu) => {
+      chrome.contextMenus.create(menu);
     });
   });
 
   chrome.contextMenus.onClicked.addListener((info, tab) => {
-    if (info.menuItemId === 'usewiki2') {
-      chrome.sidePanel
-        .open({ tabId: tab?.id! })
-        .catch((error) => console.error(error));
+    switch (info.menuItemId) {
+      case 'usewiki2-save':
+        // TODO: 需要检查连接状态
+        chrome.tabs.sendMessage(
+          // @ts-ignore
+          tab.id,
+          {
+            info: 'get-doc',
+            message: '获取文章',
+          },
+          async function (response: IArticle) {
+            console.log(response);
+            chrome.notifications.create({
+              type: 'basic',
+              title: constant.default_name,
+              message: '敬请期待',
+              iconUrl: constant.tiddlywiki_icon,
+            });
+          }
+        );
+
+        break;
+      case 'usewiki2-bug':
+        chrome.tabs.create({
+          url: 'https://github.com/oeyoews/usewiki2/issues/new',
+        });
+        break;
+      case 'usewiki2':
+        chrome.sidePanel
+          .open({ tabId: tab?.id! })
+          .catch((error) => console.error(error));
+        break;
+      default:
+        break;
     }
   });
 });
