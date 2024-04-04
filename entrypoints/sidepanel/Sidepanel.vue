@@ -248,7 +248,11 @@ function savePort(port: number) {
         </ElButton>
 
         <!-- ai -->
-        <ElButton @click="ai2md" size="default" class="aspect-square">
+        <ElButton
+          @click="ai2md"
+          size="default"
+          class="aspect-square"
+          v-if="false">
           <WI.IconoirSpark :class="{ 'animate-spin': isAIChecking }" />
         </ElButton>
 
@@ -406,23 +410,27 @@ function savePort(port: number) {
             </ElButton>
           </div>
 
-          <h2>GROQ API</h2>
-          <!-- https://console.groq.com/keys -->
+          <div class="hidden">
+            <h2>GROQ API</h2>
+            <div class="flex gap-1">
+              <!-- https://console.groq.com/keys -->
 
-          <div class="flex gap-1">
-            <ElInput
-              v-model.trim="GROQ_APIKEY"
-              placeholder="**************"
-              type="password" />
-            <ElButton @click="utils.saveGROQAPIKEY(GROQ_APIKEY)">保存</ElButton>
+              <ElInput
+                v-model.trim="GROQ_APIKEY"
+                placeholder="**************"
+                type="password" />
+              <ElButton @click="utils.saveGROQAPIKEY(GROQ_APIKEY)"
+                >保存</ElButton
+              >
 
-            <el-popconfirm
-              title="你确定要重置API吗 ?"
-              @confirm="utils.resetGROQAPIKEY">
-              <template #reference>
-                <ElButton>重置</ElButton>
-              </template>
-            </el-popconfirm>
+              <el-popconfirm
+                title="你确定要重置API吗 ?"
+                @confirm="utils.resetGROQAPIKEY">
+                <template #reference>
+                  <ElButton>重置</ElButton>
+                </template>
+              </el-popconfirm>
+            </div>
           </div>
         </div>
       </ElTabPane>
