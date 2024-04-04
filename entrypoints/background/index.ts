@@ -9,21 +9,38 @@ export default defineBackground(() => {
   // https://developer.chrome.com/docs/extensions/reference/api/omnibox
   chrome.omnibox.onInputStarted.addListener(function () {
     chrome.omnibox.setDefaultSuggestion({
-      description:
-        'Usewiki2: 输入 "open" 打开 TiddlyWiki，输入 "save" 保存文章',
+      description: '输入<match>open</match>或者回车打开 TiddlyWiki',
     });
   });
 
+  chrome.omnibox.onInputChanged.addListener(function (text, suggest) {
+    suggest([
+      {
+        content: 'doc',
+        description: '输入<match>doc</match>查看 TiddlyWiki 中文文档',
+      },
+      // {
+      //   content: 'save',
+      //   description: '输入<match>save</match>保存文章',
+      // },
+    ]);
+  });
+
   chrome.omnibox.onInputEntered.addListener(function (text, suggest) {
-    switch (text) {
+    switch (text.trim()) {
       case 'open':
         open();
         break;
       case 'save':
         save();
         break;
-      default:
+      case 'doc':
+        chrome.tabs.create({
+          url: 'https://bramchen.github.io/tw5-docs/zh-Hans',
+        });
         break;
+      default:
+        open();
     }
   });
 
