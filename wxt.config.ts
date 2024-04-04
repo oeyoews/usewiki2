@@ -77,10 +77,10 @@ export default defineConfig({
     host_permissions: ['<all_urls>'],
     // optional_permissions: ['https://google.com/**', 'https://bing.com/'],
     // https://developer.chrome.com/docs/extensions/reference/api/sidePanel
-    sidebar_action: {
-      default_panel: 'popup.html',
-      // default_icon: 'icons/icon48.png',
-    },
+    // sidebar_action: {
+    //   default_panel: 'sidepanel.html',
+    // default_icon: 'icons/icon48.png',
+    // },
 
     action: {
       default_title: '单击打开 Usewiki2',

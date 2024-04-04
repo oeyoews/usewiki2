@@ -32,7 +32,7 @@ export default defineBackground(() => {
   chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
     await chrome.sidePanel.setOptions({
       tabId,
-      path: 'popup.html',
+      path: 'sidepanel.html',
       enabled: true,
     });
   });
