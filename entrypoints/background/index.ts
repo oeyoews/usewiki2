@@ -55,7 +55,7 @@ export default defineBackground(() => {
     const { menuItemId } = info;
     switch (menuItemId as MenuIds) {
       case 'usewiki2-open':
-        chrome.storage.local.get('port', function (result) {
+        chrome.storage.sync.get('port', function (result) {
           if (result.port) {
             chrome.tabs.create({
               url: 'http://localhost:' + result.port,

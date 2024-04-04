@@ -34,15 +34,15 @@ const port = ref<number | undefined>();
 const aihtml = ref('');
 
 // TODO: use sync instead of local
-chrome.storage.local.get('port', function (result) {
+chrome.storage.sync.get('port', function (result) {
   port.value = result.port || constant.default_port;
 });
 
-chrome.storage.local.get('isCheckTw5', function (result) {
+chrome.storage.sync.get('isCheckTw5', function (result) {
   isCheckTw5.value = result.isCheckTw5;
 });
 
-chrome.storage.local.get(['tags'], function (result) {
+chrome.storage.sync.get(['tags'], function (result) {
   if (result.tags) {
     dynamicTags.value = Object.values(result.tags);
   } else {
@@ -152,7 +152,7 @@ const showInput = () => {
 const handleInputConfirm = () => {
   if (inputValue.value) {
     dynamicTags.value.push(inputValue.value.trim());
-    chrome.storage.local.set({ tags: toRaw(dynamicTags.value) });
+    chrome.storage.sync.set({ tags: toRaw(dynamicTags.value) });
   }
   inputVisible.value = false;
   inputValue.value = '';
@@ -172,7 +172,7 @@ const vanillaStatus: IStatus = {
 const status = ref<IStatus>(vanillaStatus);
 
 watch(isCheckTw5, async (newValue) => {
-  chrome.storage.local.set({ isCheckTw5: newValue });
+  chrome.storage.sync.set({ isCheckTw5: newValue });
   if (newValue) {
     await checkStatus(port.value!, status, isChecking);
   } else {
@@ -212,7 +212,7 @@ async function ai2md() {
 }
 
 function savePort(port: number) {
-  chrome.storage.local.set({ port });
+  chrome.storage.sync.set({ port });
   if (isCheckTw5.value) {
     checkStatus(port, status, isChecking);
   }

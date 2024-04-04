@@ -20,7 +20,7 @@ const ai = async (question: string, options?: ClientOptions) => {
       cancelButtonText: '取消',
     }).then(({ value }) => {
       apiKey = value;
-      chrome.storage.local.set({ GROQ_APIKEY: apiKey });
+      chrome.storage.sync.set({ GROQ_APIKEY: apiKey });
     });
     return;
   }

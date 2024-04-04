@@ -18,7 +18,7 @@ export function saveGROQAPIKEY(GROQ_APIKEY: string) {
     });
     return;
   }
-  chrome.storage.local.set({ GROQ_APIKEY });
+  chrome.storage.sync.set({ GROQ_APIKEY });
   notify({
     type: 'success',
     message: '保存成功',
