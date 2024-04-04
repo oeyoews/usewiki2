@@ -243,7 +243,7 @@ function savePort(port: number) {
           <div class="flex items-center justify-center gap-2">
             <h2>
               <a :href="link" target="_blank" v-if="link">
-                <img :src="faviconUrl" class="rounded-full size-4" />
+                <img alt="" :src="faviconUrl" class="rounded-full size-4" />
               </a>
               {{ title }}
             </h2>

@@ -11,6 +11,21 @@ export default defineBackground(() => {
   //   }
   // });
 
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.info === 'tiddlywiki-send-message') {
+      console.log(request);
+      // https://stackoverflow.com/questions/14481107/typeerror-cannot-call-method-setbadgetext-of-undefined
+      chrome.action.setIcon({
+        path: 'tw32.png',
+      });
+      // chrome.action.setBadgeText({ text: request.version });
+    } else {
+      chrome.action.setIcon({
+        path: 'icons/icon32.png',
+      });
+    }
+  });
+
   chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
     await chrome.sidePanel.setOptions({
       tabId,
@@ -26,6 +41,7 @@ export default defineBackground(() => {
 
   // 右键菜单
   chrome.runtime.onInstalled.addListener(() => {
+    // chrome.browserAction.setBadgeText({ text: 'NEW' });
     chrome.contextMenus.create({
       id: 'usewiki2',
       title: '打开 Usewiki2',

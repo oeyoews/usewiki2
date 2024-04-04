@@ -4,8 +4,27 @@ export default defineContentScript({
   matches: ['<all_urls>'],
   runAt: 'document_start',
   main() {
+    // 检查是否为 tiddlywiki site
+    document.addEventListener('DOMContentLoaded', () => {
+      const meta = document.querySelector('meta[name="generator"]');
+      // @ts-ignore
+      if (meta && meta.content === 'TiddlyWiki') {
+        // const version = document.querySelector(
+        //   'meta[name="tiddlywiki-version"]'
+        //   // @ts-ignore
+        // )?.content;
+        chrome.runtime.sendMessage({
+          info: 'tiddlywiki-send-message',
+          // version,
+        });
+      } else {
+        chrome.runtime.sendMessage({ info: 'general-send-message' });
+      }
+    });
+
     function getDoc() {
       const documentClone = document.cloneNode(true) as Document;
+
       const reader = new Readability(documentClone);
       const article = reader.parse();
       return article;
