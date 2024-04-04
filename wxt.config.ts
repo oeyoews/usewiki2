@@ -74,8 +74,9 @@ export default defineConfig({
     content_security_policy: {
       extension_pages: "script-src 'self'; object-src 'self'",
     },
-    // host_permissions: ['<all_urls>'],
-    host_permissions: ['https://*/*'],
+    // NOTE: 这会影响网络请求，比如获取 status, 开发环境下无影响
+    host_permissions: ['<all_urls>'],
+    // host_permissions: ['https://*/*'],
     // optional_permissions: ['https://google.com/**', 'https://bing.com/'],
     // https://developer.chrome.com/docs/extensions/reference/api/sidePanel
     // sidebar_action: {
