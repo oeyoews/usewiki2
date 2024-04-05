@@ -1,9 +1,11 @@
+import * as constant from './constant';
+
 export const portStorage = storage.defineItem<number>('sync:port', {
-  defaultValue: 8080,
+  defaultValue: constant.default_port,
 });
 
 export const tagStorage = storage.defineItem<string[]>('sync:tags', {
-  defaultValue: ['剪藏'],
+  defaultValue: [constant.default_tag],
 });
 
 export const isCheckTw5Storage = storage.defineItem<boolean>(
