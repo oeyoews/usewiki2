@@ -5,6 +5,24 @@ import open from './open';
 import save from './save';
 
 export default defineBackground(() => {
+  // chrome.runtime.onStartup.addListener(() => { })
+
+  chrome.runtime.onInstalled.addListener(function (details) {
+    if (details.reason === 'install') {
+      // chrome.tabs.create({ url: chrome.extension.getURL('index.html') });
+      chrome.notifications.create({
+        type: 'basic',
+        title: constant.default_name,
+        iconUrl: constant.tiddlywiki_icon,
+        message: '欢迎使用' + constant.default_name,
+      });
+    }
+  });
+
+  // chrome.runtime.setUninstallURL('https://github.com/oeyoews/usewiki2/issues/new', () => {
+  //   console.log('setUninstallURL');
+  // });
+
   // https://github.com/GoogleChrome/chrome-extensions-samples/blob/main/api-samples/omnibox/simple-example/service-worker.js
   // https://developer.chrome.com/docs/extensions/reference/api/omnibox
   chrome.omnibox.onInputStarted.addListener(function () {
