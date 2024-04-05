@@ -1,5 +1,8 @@
 ## Usewiki2
 
+> [!IMPORTANT]
+> 此插件目前支持 google chrome, Edge, 暂不支持 Firefox.
+
 > [!TIP]
 > UseWiki2: usewiki 的 vue 版本，但是带来了更多功能。
 
