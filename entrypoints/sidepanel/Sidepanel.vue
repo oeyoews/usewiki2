@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import 'element-plus/es/components/message/style/css';
 import { formattime } from '@/utils/formattime';
-import utils from '@/utils/utils';
+import * as utils from '@/utils/utils';
 import AI from '@/utils/ai';
 import { copyMd } from '@/utils/copyMd';
 import json from '../../package.json';
 import { debounce } from '@/utils/debounce';
-import WI from '@/utils/icons';
+import * as WI from '@/utils/icons';
 import saveMarkdown from '@/utils/saveMarkdown';
 import save2TiddlyWiki from '@/utils/save2TiddlyWiki';
 import { html2md, md2html } from '@/utils/parser';
