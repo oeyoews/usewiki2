@@ -16,12 +16,12 @@ export default defineContentScript({
         //   'meta[name="tiddlywiki-version"]'
         //   // @ts-ignore
         // )?.content;
-        chrome.runtime.sendMessage({
+        browser.runtime.sendMessage({
           info: 'tiddlywiki-send-message',
           // version,
         });
       } else {
-        chrome.runtime.sendMessage({ info: 'general-send-message' });
+        browser.runtime.sendMessage({ info: 'general-send-message' });
       }
     });
 
@@ -33,8 +33,9 @@ export default defineContentScript({
       return article;
     }
 
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
       if (request.info === 'get-doc') {
+        // @ts-ignore
         sendResponse(getDoc());
       }
     });
@@ -61,7 +62,7 @@ export default defineContentScript({
     //     'message',
     //     (event) => {
     //       if (event.data.key === 'tiddlywiki-send-message') {
-    //         chrome.runtime.sendMessage({
+    //         browser.runtime.sendMessage({
     //           info: event.data.key,
     //           message: event.data.message,
     //         });

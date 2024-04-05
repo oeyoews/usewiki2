@@ -3,7 +3,7 @@ export function randomChar() {
 }
 
 export function resetGROQAPIKEY() {
-  chrome.storage.local.remove('GROQ_APIKEY');
+  browser.storage.local.remove('GROQ_APIKEY');
   notify({
     type: 'success',
     message: '已成功重置 GROQ API KEY',
@@ -18,7 +18,7 @@ export function saveGROQAPIKEY(GROQ_APIKEY: string) {
     });
     return;
   }
-  chrome.storage.sync.set({ GROQ_APIKEY });
+  browser.storage.sync.set({ GROQ_APIKEY });
   notify({
     type: 'success',
     message: '保存成功',

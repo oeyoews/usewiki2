@@ -1,4 +1,4 @@
 import { createApp } from 'vue';
-import Sidepanel from './Sidepanel.vue';
+import App from './App.vue';
 
-createApp(Sidepanel).mount('#app');
+createApp(App).mount('#app');

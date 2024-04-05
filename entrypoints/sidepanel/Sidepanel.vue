@@ -12,7 +12,7 @@ import save2TiddlyWiki from '@/utils/save2TiddlyWiki';
 import { html2md, md2html } from '@/utils/parser';
 import { ElMessage as notify } from 'element-plus';
 import { checkStatus } from '@/utils/checkStatus';
-import * as constant from '@/utils/constant';
+import { isCheckTw5Storage, tagStorage, portStorage } from '@/utils/storage';
 
 const editRef = ref<HTMLInputElement>();
 const isChecking = ref(false);
@@ -30,83 +30,40 @@ const inputVisible = ref(false);
 const InputRef = ref();
 const inputValue = ref();
 const dynamicTags = ref();
-const port = ref<number | undefined>();
+const port = ref<number>();
 const aihtml = ref('');
 
-// TODO: use sync instead of local
-chrome.storage.sync.get('port', function (result) {
-  port.value = result.port || constant.default_port;
-});
+port.value = await portStorage.getValue();
 
-chrome.storage.sync.get('isCheckTw5', function (result) {
-  isCheckTw5.value = result.isCheckTw5;
-});
+isCheckTw5.value = await isCheckTw5Storage.getValue();
 
-chrome.storage.sync.get(['tags'], function (result) {
-  if (result.tags) {
-    dynamicTags.value = Object.values(result.tags);
-  } else {
-    dynamicTags.value = [constant.default_tag];
-  }
-});
+dynamicTags.value = Object.values(await tagStorage.getValue());
 
-// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-//   if (message.type === 'tabUpdated') {
-//     // 更新 popup 中的页面信息
-//     console.log(message.url, message.tab);
-//     const { tab, url, favIconUrl } = message;
-//     link.value = url;
-//     faviconUrl.value = favIconUrl!;
-//     chrome.tabs.sendMessage(
-//       // @ts-ignore
-//       tab.id,
-//       {
-//         info: 'get-doc',
-//         message: '获取文章',
-//       },
-//       async function (response: IArticle) {
-//         if (!response.content)
-//           notify({
-//             message: '发生错误',
-//           });
-//         html.value = response.content;
-//         md.value = await html2md(html.value);
-//         title.value = response.title;
-//       }
-//     );
-//   }
-// });
-
-function getContent(
+async function getContent(
   options = {
     tip: false,
   }
 ) {
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    const tab = tabs[0];
-    link.value = tab.url!;
-    faviconUrl.value = tab.favIconUrl!;
-    chrome.tabs.sendMessage(
-      // @ts-ignore
-      tab.id,
-      {
-        info: 'get-doc',
-        message: '获取文章',
-      },
-      async function (response: IArticle) {
-        html.value = response.content;
-        md.value = await html2md(html.value);
-        title.value = response.title;
-        if (options.tip) {
-          notify({
-            message: '刷新成功',
-            type: 'success',
-            duration: 750,
-          });
-        }
-      }
-    );
+  const tabs = await browser.tabs.query({ active: true, currentWindow: true });
+
+  const tab = tabs[0];
+  link.value = tab.url!;
+  faviconUrl.value = tab.favIconUrl!;
+  const response = await browser.tabs.sendMessage(tab.id!, {
+    info: 'get-doc',
+    message: '获取文章',
   });
+
+  html.value = response.content;
+  md.value = await html2md(html.value);
+  title.value = response.title;
+  if (options.tip) {
+    notify({
+      message: '刷新成功',
+      type: 'success',
+      duration: 750,
+    });
+  }
 }
 
 onMounted(() => {
@@ -149,16 +106,16 @@ const showInput = () => {
   });
 };
 
-const handleInputConfirm = () => {
+const handleInputConfirm = async () => {
   if (inputValue.value) {
     dynamicTags.value.push(inputValue.value.trim());
-    chrome.storage.sync.set({ tags: toRaw(dynamicTags.value) });
+    await tagStorage.setValue(toRaw(dynamicTags.value));
   }
   inputVisible.value = false;
   inputValue.value = '';
 };
 
-// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+// browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 //   if (request.info === 'tiddlywiki-send-message') {
 //     console.log(request.message)
 //   }
@@ -171,14 +128,20 @@ const vanillaStatus: IStatus = {
 
 const status = ref<IStatus>(vanillaStatus);
 
-watch(isCheckTw5, async (newValue) => {
-  chrome.storage.sync.set({ isCheckTw5: newValue });
-  if (newValue) {
+watchEffect(async () => {
+  await isCheckTw5Storage.setValue(isCheckTw5.value);
+  if (isCheckTw5.value) {
     await checkStatus(port.value!, status, isChecking);
-  } else {
-    status.value = vanillaStatus;
   }
 });
+
+// watch(isCheckTw5, async (newValue) => {
+//   if (newValue) {
+//     await checkStatus(port.value!, status, isChecking);
+//   } else {
+//     status.value = vanillaStatus;
+//   }
+// });
 
 const debounceEdit = debounce(async function () {
   html.value = await md2html(md.value);
@@ -211,8 +174,8 @@ async function ai2md() {
   isAIChecking.value = false;
 }
 
-function savePort(port: number) {
-  chrome.storage.sync.set({ port });
+async function savePort(port: number) {
+  await portStorage.setValue(port);
   if (isCheckTw5.value) {
     checkStatus(port, status, isChecking);
   }
@@ -290,7 +253,7 @@ function savePort(port: number) {
           <!-- <el-divider border-style="dashed" /> -->
           <article
             class="prose prose-gray max-w-none prose-sm dark:prose-invert flex-wrap prose-img:max-w-[300px] prose-img:my-0 prose-img:rounded-md prose-video:max-w-[300px] prose-video:max-h-[300px] prose-video:my-0">
-            <div v-html="html"></div>
+            <div v-html="html" class="mx-2"></div>
           </article>
         </div>
       </ElTabPane>
@@ -404,7 +367,7 @@ function savePort(port: number) {
             <ElButton
               v-else
               class="button-new-tag"
-              size="default"
+              size="small"
               @click="showInput">
               +
             </ElButton>

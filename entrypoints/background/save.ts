@@ -1,7 +1,7 @@
 import * as constant from '../../utils/constant';
 
 export default function (tabId?: number) {
-  chrome.notifications.create({
+  browser.notifications.create({
     type: 'basic',
     title: constant.default_name,
     message: '敬请期待',
@@ -9,7 +9,7 @@ export default function (tabId?: number) {
   });
   return;
   if (!tabId) return;
-  chrome.tabs.sendMessage(
+  browser.tabs.sendMessage(
     // @ts-ignore
     tabId,
     {
@@ -18,7 +18,7 @@ export default function (tabId?: number) {
     },
     async function (response: IArticle) {
       console.log(response);
-      chrome.notifications.create({
+      browser.notifications.create({
         type: 'basic',
         title: constant.default_name,
         message: '敬请期待',
