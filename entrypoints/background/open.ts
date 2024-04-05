@@ -1,4 +1,4 @@
-import * as constant from '../../utils/constant';
+import constant from '../../utils/constant';
 import { portStorage } from '../../utils/storage';
 
 export default async function () {

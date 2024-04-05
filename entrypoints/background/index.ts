@@ -1,7 +1,7 @@
 import { menus, type MenuIds } from './menu';
 import { type Menus } from 'wxt/browser';
 // import save2TiddlyWiki from '../../utils/save2TiddlyWiki';
-import * as constant from '../../utils/constant';
+import constant from '../../utils/constant';
 import open from './open';
 import save from './save';
 

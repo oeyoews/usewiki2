@@ -1,7 +1,7 @@
 import { formattime } from './formattime';
 import { ElMessageBox, ElMessage as notify } from 'element-plus';
 import { ofetch } from 'ofetch';
-import * as constant from './constant';
+import constant from './constant';
 
 const save2TiddlyWiki = async (
   title: string,

@@ -1,4 +1,4 @@
-import * as constant from './constant';
+import constant from './constant';
 
 export const portStorage = storage.defineItem<number>('sync:port', {
   defaultValue: constant.default_port,

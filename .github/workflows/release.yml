@@ -31,7 +31,7 @@ jobs:
         run: pnpm install
 
       - name: Build Page
-        run: pnpm zip && pnpm zip:firefox
+        run: pnpm zip
 
       - name: Create Release
         uses: softprops/action-gh-release@v1

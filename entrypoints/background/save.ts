@@ -1,4 +1,4 @@
-import * as constant from '../../utils/constant';
+import constant from '../../utils/constant';
 
 export default function (tabId?: number) {
   browser.notifications.create({
