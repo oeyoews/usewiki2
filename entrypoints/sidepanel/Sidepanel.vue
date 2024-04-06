@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Info from './components/Info.vue';
 import 'element-plus/es/components/message/style/css';
 import { formattime } from '@/utils/formattime';
 import * as utils from '@/utils/utils';
@@ -280,47 +281,6 @@ async function savePort(port: number) {
           resize="none" />
       </ElTabPane>
 
-      <!-- aimd preview -->
-      <ElTabPane name="aipreview" v-if="aihtml">
-        <template #label>
-          <WI.MdiSparklesOutline />
-        </template>
-        <div v-if="title">
-          <div class="flex items-center justify-center gap-2">
-            <h2>
-              <a :href="link" target="_blank" v-if="link">
-                <img :src="faviconUrl" class="rounded-full size-4" />
-              </a>
-              {{ title }}
-            </h2>
-          </div>
-          <!-- <el-divider border-style="dashed" /> -->
-          <article
-            class="prose prose-gray max-w-none prose-sm dark:prose-invert">
-            <div v-html="aihtml"></div>
-          </article>
-        </div>
-      </ElTabPane>
-
-      <!-- AI edit MD -->
-      <ElTabPane v-if="aimd" name="aiedit">
-        <template #label>
-          <WI.StreamlineAiEditSparkSolid />
-        </template>
-        <el-input
-          v-model="aimd"
-          :autosize="{ minRows: 4, maxRows: 20 }"
-          type="textarea"
-          spellcheck="false"
-          class="w-full"
-          resize="none" />
-        <div class="flex gap-2 items-center justify-end">
-          <ElButton @click="copyMd(aimd)" class="mt-1" size="default">
-            <WI.MdiContentCopy />
-          </ElButton>
-        </div>
-      </ElTabPane>
-
       <!-- setup -->
       <ElTabPane>
         <template #label>
@@ -398,23 +358,7 @@ async function savePort(port: number) {
         </div>
       </ElTabPane>
 
-      <!-- info -->
-      <ElTabPane v-if="status.tiddlywiki_version">
-        <template #label>
-          <WI.MaterialSymbolsInfoOutline />
-        </template>
-
-        <div class="flex items-center gap-2 flex-wrap">
-          <ElTag> TiddlyWiki5: {{ status.tiddlywiki_version }} </ElTag>
-          <ElTag type="success"> Username: {{ status.username }} </ElTag>
-          <ElTag> {{ json.name.toUpperCase() }}: {{ json.version }} </ElTag>
-          <ElLink href="https://github.com/oeyoews/usewiki2" target="_blank">
-            <ElButton>
-              <WI.CharmGithub />
-            </ElButton>
-          </ElLink>
-        </div>
-      </ElTabPane>
+      <Info :status="status" :json="json" />
     </ElTabs>
   </div>
 </template>
