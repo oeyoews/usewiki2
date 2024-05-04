@@ -189,7 +189,9 @@ async function savePort(port: number) {
       <div class="flex justify-end">
         <!-- <ElBacktop :right="100" :bottom="100" /> -->
         <ElButton
-          size="default"
+          type="primary"
+          plain
+          size="small"
           class="aspect-square"
           @click="
             getContent({
@@ -201,27 +203,40 @@ async function savePort(port: number) {
 
         <ElButton
           @click="saveMarkdown(md, title!)"
-          size="default"
+          size="small"
+          type="warning"
+          plain
           class="aspect-square">
           <WI.MaterialSymbolsDownload />
         </ElButton>
 
         <!-- copy -->
-        <ElButton @click="copyMd(md)" size="default" class="aspect-square">
+        <ElButton
+          @click="copyMd(md)"
+          size="small"
+          type="info"
+          plain
+          class="aspect-square">
           <WI.MdiContentCopy />
         </ElButton>
 
         <!-- ai -->
         <ElButton
           @click="ai2md"
-          size="default"
+          size="small"
           class="aspect-square"
           v-if="false">
           <WI.IconoirSpark :class="{ 'animate-spin': isAIChecking }" />
         </ElButton>
 
         <!-- journal -->
-        <ElButton @click="addJournal" size="default" class="aspect-square">
+        <ElButton
+          @click="addJournal"
+          size="small"
+          class="aspect-square"
+          plain
+          type="success"
+          tooltip="添加到日记本">
           <WI.BiJournals />
         </ElButton>
 
@@ -229,7 +244,7 @@ async function savePort(port: number) {
         <ElButton
           v-show="isCheckTw5"
           @click="handleSave"
-          size="default"
+          size="small"
           class="aspect-square">
           <WI.FaRegularSave />
         </ElButton>
@@ -301,7 +316,9 @@ async function savePort(port: number) {
             <h2>Nodejs TiddlyWiki5 端口</h2>
             <div class="flex gap-2">
               <ElInput v-model.trim.number="port" />
-              <ElButton @click="savePort(port!)">保存</ElButton>
+              <ElButton type="success" plain @click="savePort(port!)"
+                >保存</ElButton
+              >
             </div>
           </div>
           <h2>剪藏标签</h2>
@@ -328,6 +345,8 @@ async function savePort(port: number) {
               v-else
               class="button-new-tag"
               size="small"
+              type="success"
+              plain
               @click="showInput">
               +
             </ElButton>
