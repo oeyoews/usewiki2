@@ -120,6 +120,9 @@ importers:
       '@iconify-json/mdi':
         specifier: ^1.1.66
         version: 1.1.66
+      '@iconify-json/octicon':
+        specifier: ^1.1.54
+        version: 1.1.54
       '@iconify-json/ri':
         specifier: ^1.1.20
         version: 1.1.20
@@ -672,6 +675,9 @@ packages:
 
   '@iconify-json/mdi@1.1.66':
     resolution: {integrity: sha512-7KPF2RVUUWav/hXCM8Ti/smqu3cmgePJpiX9CSkldiL+80+eBRBeKlc4vPOc9jhAItlqIU1vKsbKoPP0JIfgbg==}
+
+  '@iconify-json/octicon@1.1.54':
+    resolution: {integrity: sha512-1sKH5THuE9pMg7r4e/31vHaHJMBU32QdDLBt0riKt+4NXhEkF39AMxITGREagO4TeCw6ygqDgouj9ZE2y0l+Tg==}
 
   '@iconify-json/ri@1.1.20':
     resolution: {integrity: sha512-yScIGjLFBCJKWKskQTWRjNI2Awoq+VRDkRxEsCQvSfdz41n+xkRtFG2K6J1OVI90ClRHfjFC8VJ2+WzxxyFjTQ==}
@@ -3950,6 +3956,10 @@ snapshots:
       '@iconify/types': 2.0.0
 
   '@iconify-json/mdi@1.1.66':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/octicon@1.1.54':
     dependencies:
       '@iconify/types': 2.0.0
 

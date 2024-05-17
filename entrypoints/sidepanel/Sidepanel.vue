@@ -33,6 +33,7 @@ const inputValue = ref();
 const dynamicTags = ref();
 const port = ref<number>();
 const aihtml = ref('');
+const infoDialogStatus = ref(false);
 
 port.value = await portStorage.getValue();
 
@@ -181,13 +182,24 @@ async function savePort(port: number) {
     checkStatus(port, status, isChecking);
   }
 }
+
+const toggleInfoDialog = () => {
+  infoDialogStatus.value = !infoDialogStatus.value;
+};
 </script>
 
 <template>
   <div class="overflow-y-auto">
     <div class="sticky inset-x-0 top-0 backdrop-blur-sm rounded-md mb-2 z-10">
       <div class="flex justify-end">
-        <!-- <ElBacktop :right="100" :bottom="100" /> -->
+        <ElButton
+          @click="toggleInfoDialog"
+          size="small"
+          plain
+          type="primary"
+          class="aspect-square">
+          <WI.OcticonInfo24 />
+        </ElButton>
         <ElButton
           type="primary"
           plain
@@ -377,7 +389,9 @@ async function savePort(port: number) {
         </div>
       </ElTabPane>
 
-      <Info :status="status" :json="json" />
+      <el-dialog v-model="infoDialogStatus" width="500" align-center>
+        <Info :status="status" :json="json" />
+      </el-dialog>
     </ElTabs>
   </div>
 </template>

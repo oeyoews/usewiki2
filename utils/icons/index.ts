@@ -11,3 +11,4 @@ export { default as MaterialSymbolsInfoOutline } from '~icons/material-symbols/i
 export { default as FaFileTextO } from '~icons/fa/file-text-o';
 export { default as FaRegularSave } from '~icons/fa-regular/save';
 export { default as MdiCloudRefreshVariant } from '~icons/mdi/cloud-refresh-variant';
+export { default as OcticonInfo24 } from '~icons/octicon/info-24';
