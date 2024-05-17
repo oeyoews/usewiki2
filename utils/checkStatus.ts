@@ -17,6 +17,7 @@ export async function checkStatus(
           message: 'TiddlyWiki 连接成功',
           type: 'success',
           duration: 750,
+          showClose: true,
         });
       }
     },
