@@ -14,7 +14,7 @@ export async function checkStatus(
     onResponse({ request, response, options }) {
       if (response.ok) {
         notify({
-          message: 'TiddlyWiki 连接成功',
+          message: '连接成功',
           type: 'success',
           duration: 750,
           showClose: true,
@@ -23,7 +23,7 @@ export async function checkStatus(
     },
     async onRequestError({ request, response, options }) {
       notify({
-        message: 'TiddlyWiki 未成功连接',
+        message: '连接失败',
         type: 'error',
       });
     },
