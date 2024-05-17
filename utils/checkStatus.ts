@@ -16,7 +16,7 @@ export async function checkStatus(
         notify({
           message: '连接成功',
           type: 'success',
-          duration: 750,
+          duration: 1750,
           showClose: true,
         });
       }
