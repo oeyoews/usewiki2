@@ -189,14 +189,17 @@ const toggleInfoDialog = () => {
 </script>
 
 <template>
-  <div class="overflow-y-auto">
-    <div class="sticky inset-x-0 top-0 backdrop-blur-sm rounded-md mb-2 z-10">
-      <div class="flex justify-end">
+  <!-- top-2 -->
+  <div class="sticky inset-x-0">
+    <div class="flex justify-center">
+      <div
+        class="backdrop-blur-lg z-[999] flex justify-center items-center bg-gray-200/50 inset-x-0 gap-2 p-2 rounded-md px-6">
         <ElButton
           @click="toggleInfoDialog"
           size="small"
           plain
           type="primary"
+          title="显示更多信息"
           class="aspect-square">
           <WI.OcticonInfo24 />
         </ElButton>
@@ -205,6 +208,7 @@ const toggleInfoDialog = () => {
           plain
           size="small"
           class="aspect-square"
+          title="刷新"
           @click="
             getContent({
               tip: true,
@@ -218,6 +222,7 @@ const toggleInfoDialog = () => {
           size="small"
           type="warning"
           plain
+          title="保存"
           class="aspect-square">
           <WI.MaterialSymbolsDownload />
         </ElButton>
@@ -226,6 +231,7 @@ const toggleInfoDialog = () => {
         <ElButton
           @click="copyMd(md)"
           size="small"
+          title="复制"
           type="info"
           plain
           class="aspect-square">
@@ -233,13 +239,13 @@ const toggleInfoDialog = () => {
         </ElButton>
 
         <!-- ai -->
-        <ElButton
+        <!--         <ElButton
           @click="ai2md"
           size="small"
           class="aspect-square"
           v-if="false">
           <WI.IconoirSpark :class="{ 'animate-spin': isAIChecking }" />
-        </ElButton>
+        </ElButton> -->
 
         <!-- journal -->
         <ElButton
@@ -247,6 +253,7 @@ const toggleInfoDialog = () => {
           size="small"
           class="aspect-square"
           plain
+          title="添加日记"
           type="success"
           tooltip="添加到日记本">
           <WI.BiJournals />
@@ -257,15 +264,18 @@ const toggleInfoDialog = () => {
           v-show="isCheckTw5"
           @click="handleSave"
           size="small"
+          title="保存到 TiddlyWiki"
           class="aspect-square">
           <WI.FaRegularSave />
         </ElButton>
       </div>
     </div>
+  </div>
 
-    <ElTabs type="" :model-value="currentTab">
+  <div class="top-10">
+    <ElTabs type="" :model-value="currentTab" class="">
       <!-- preview -->
-      <ElTabPane name="preview">
+      <ElTabPane name="preview" class="overflow-y-auto h-screen">
         <template #label>
           <WI.FaFileTextO /> <span class="ml-1">预览</span>
         </template>
@@ -293,7 +303,7 @@ const toggleInfoDialog = () => {
           <span class="ml-1">编辑</span>
         </template>
 
-        <ElInput type="text" v-model="title" class="mb-1" />
+        <ElInput type="text" v-model="title" class="mb-4" />
 
         <ElInput
           ref="editRef"
