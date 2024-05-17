@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Info from './components/Info.vue';
 import 'element-plus/es/components/message/style/css';
+import 'element-plus/es/components/notification/style/css';
 import { formattime } from '@/utils/formattime';
 import * as utils from '@/utils/utils';
 import AI from '@/utils/ai';
@@ -189,57 +190,60 @@ const toggleInfoDialog = () => {
 </script>
 
 <template>
-  <!-- top-2 -->
-  <div class="sticky inset-x-0">
-    <div class="flex justify-center">
-      <div
-        class="backdrop-blur-lg z-[999] flex justify-center items-center bg-gray-200/50 inset-x-0 gap-2 p-2 rounded-md px-6">
-        <ElButton
-          @click="toggleInfoDialog"
-          size="small"
-          plain
-          type="primary"
-          title="显示更多信息"
-          class="aspect-square">
-          <WI.OcticonInfo24 />
-        </ElButton>
-        <ElButton
-          type="primary"
-          plain
-          size="small"
-          class="aspect-square"
-          title="刷新"
-          @click="
-            getContent({
-              tip: true,
-            })
-          ">
-          <WI.MdiCloudRefreshVariant />
-        </ElButton>
+  <div class="inset-x-0 mb-4">
+    <div
+      class="backdrop-blur-lg z-[999] flex justify-center items-center bg-gray-200/50 inset-x-0 gap-2 p-2 rounded-md px-6">
+      <!-- class="group aspect-square hover:aspect-auto transition-all duration-800"> -->
+      <ElButton
+        @click="toggleInfoDialog"
+        size="small"
+        plain
+        type="primary"
+        title="显示更多信息"
+        class="aspect-square">
+        <WI.OcticonInfo24 />
+        <!-- <span
+          class="duration-800 hidden ml-2 transition-all group-hover:block delay-75"
+          >详情</span
+        > -->
+      </ElButton>
+      <ElButton
+        type="primary"
+        plain
+        size="small"
+        class="aspect-square"
+        title="刷新"
+        @click="
+          getContent({
+            tip: true,
+          })
+        ">
+        <WI.MdiCloudRefreshVariant />
+      </ElButton>
 
-        <ElButton
-          @click="saveMarkdown(md, title!)"
-          size="small"
-          type="warning"
-          plain
-          title="保存"
-          class="aspect-square">
-          <WI.MaterialSymbolsDownload />
-        </ElButton>
+      <ElButton
+        @click="saveMarkdown(md, title!)"
+        size="small"
+        type="warning"
+        plain
+        title="保存"
+        class="aspect-square">
+        <WI.MaterialSymbolsDownload />
+      </ElButton>
 
-        <!-- copy -->
-        <ElButton
-          @click="copyMd(md)"
-          size="small"
-          title="复制"
-          type="info"
-          plain
-          class="aspect-square">
-          <WI.MdiContentCopy />
-        </ElButton>
+      <!-- copy -->
+      <ElButton
+        @click="copyMd(md)"
+        size="small"
+        title="复制"
+        type="info"
+        plain
+        class="aspect-square">
+        <WI.MdiContentCopy />
+      </ElButton>
 
-        <!-- ai -->
-        <!--         <ElButton
+      <!-- ai -->
+      <!--         <ElButton
           @click="ai2md"
           size="small"
           class="aspect-square"
@@ -247,32 +251,31 @@ const toggleInfoDialog = () => {
           <WI.IconoirSpark :class="{ 'animate-spin': isAIChecking }" />
         </ElButton> -->
 
-        <!-- journal -->
-        <ElButton
-          @click="addJournal"
-          size="small"
-          class="aspect-square"
-          plain
-          title="添加日记"
-          type="success"
-          tooltip="添加到日记本">
-          <WI.BiJournals />
-        </ElButton>
+      <!-- journal -->
+      <ElButton
+        @click="addJournal"
+        size="small"
+        class="aspect-square"
+        plain
+        title="添加日记"
+        type="success"
+        tooltip="添加到日记本">
+        <WI.BiJournals />
+      </ElButton>
 
-        <!-- save to tiddlywiki -->
-        <ElButton
-          v-show="isCheckTw5"
-          @click="handleSave"
-          size="small"
-          title="保存到 TiddlyWiki"
-          class="aspect-square">
-          <WI.FaRegularSave />
-        </ElButton>
-      </div>
+      <!-- save to tiddlywiki -->
+      <ElButton
+        v-show="isCheckTw5"
+        @click="handleSave"
+        size="small"
+        title="保存到 TiddlyWiki"
+        class="aspect-square">
+        <WI.FaRegularSave />
+      </ElButton>
     </div>
   </div>
 
-  <div class="top-10">
+  <div>
     <ElTabs type="" :model-value="currentTab" class="">
       <!-- preview -->
       <ElTabPane name="preview" class="overflow-y-auto h-screen">
@@ -399,9 +402,9 @@ const toggleInfoDialog = () => {
         </div>
       </ElTabPane>
 
-      <el-dialog v-model="infoDialogStatus" width="500" align-center>
+      <el-drawer v-model="infoDialogStatus" direction="btt" title="连接信息">
         <Info :status="status" :json="json" />
-      </el-dialog>
+      </el-drawer>
     </ElTabs>
   </div>
 </template>

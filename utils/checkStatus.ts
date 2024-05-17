@@ -1,4 +1,5 @@
-import { ElMessage as notify } from 'element-plus';
+import { ElNotification as notify } from 'element-plus';
+
 import { ofetch } from 'ofetch';
 
 export async function checkStatus(
@@ -14,16 +15,15 @@ export async function checkStatus(
     onResponse({ request, response, options }) {
       if (response.ok) {
         notify({
-          message: '连接成功',
+          title: '连接成功',
           type: 'success',
-          duration: 1750,
-          showClose: true,
+          position: 'bottom-right',
         });
       }
     },
     async onRequestError({ request, response, options }) {
       notify({
-        message: '连接失败',
+        title: '连接失败',
         type: 'error',
       });
     },

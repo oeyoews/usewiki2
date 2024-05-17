@@ -4,9 +4,9 @@ defineProps(['status', 'json']);
 </script>
 
 <template>
-  <div class="flex items-center gap-2 flex-wrap">
+  <div class="flex gap-2 flex-col">
     <ElTag> TiddlyWiki5: {{ status.tiddlywiki_version }} </ElTag>
-    <ElTag type="success"> Username: {{ status.username }} </ElTag>
+    <ElTag> Username: {{ status.username }} </ElTag>
     <ElTag> {{ json.name.toUpperCase() }}: {{ json.version }} </ElTag>
     <ElLink href="https://github.com/oeyoews/usewiki2" target="_blank">
       <WI.CharmGithub />
