@@ -1,6 +1,13 @@
 import { ElMessage as notify } from 'element-plus';
 
 function saveMarkdown(markdown: string, title: string) {
+  if (!markdown || !title) {
+    notify({
+      message: '内容为空',
+      type: 'warning',
+    });
+    return;
+  }
   const blob = new Blob([markdown], { type: 'text/markdown' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
