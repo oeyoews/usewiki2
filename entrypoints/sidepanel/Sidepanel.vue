@@ -15,6 +15,7 @@ import { html2md, md2html } from '@/utils/parser';
 import { ElMessage as notify } from 'element-plus';
 import { checkStatus } from '@/utils/checkStatus';
 import { isCheckTw5Storage, tagStorage, portStorage } from '@/utils/storage';
+import getAI from '@/utils/openai';
 
 const editRef = ref<HTMLInputElement>();
 const isChecking = ref(false);
@@ -71,6 +72,7 @@ async function getContent(
 
 onMounted(() => {
   getContent();
+  // getAI();
 });
 
 const handleSave = () =>
@@ -276,17 +278,28 @@ const toggleInfoDialog = () => {
   </div>
 
   <div>
-    <ElTabs type="" :model-value="currentTab" class="">
+    <ElTabs
+      type=""
+      :model-value="currentTab"
+      class="">
       <!-- preview -->
-      <ElTabPane name="preview" class="overflow-y-auto h-screen">
+      <ElTabPane
+        name="preview"
+        class="overflow-y-auto h-screen">
         <template #label>
           <WI.FaFileTextO /> <span class="ml-1">预览</span>
         </template>
         <div v-if="title">
           <div class="flex items-center justify-center gap-2">
             <h2>
-              <a :href="link" target="_blank" v-if="link">
-                <img alt="" :src="faviconUrl" class="rounded-full size-4" />
+              <a
+                :href="link"
+                target="_blank"
+                v-if="link">
+                <img
+                  alt=""
+                  :src="faviconUrl"
+                  class="rounded-full size-4" />
               </a>
               {{ title }}
             </h2>
@@ -294,7 +307,9 @@ const toggleInfoDialog = () => {
           <!-- <el-divider border-style="dashed" /> -->
           <article
             class="prose prose-gray max-w-none prose-sm dark:prose-invert flex-wrap prose-img:max-w-[300px] prose-img:my-0 prose-img:rounded-md prose-video:max-w-[300px] prose-video:max-h-[300px] prose-video:my-0">
-            <div v-html="html" class="mx-2"></div>
+            <div
+              v-html="html"
+              class="mx-2"></div>
           </article>
         </div>
       </ElTabPane>
@@ -306,7 +321,10 @@ const toggleInfoDialog = () => {
           <span class="ml-1">编辑</span>
         </template>
 
-        <ElInput type="text" v-model="title" class="mb-4" />
+        <ElInput
+          type="text"
+          v-model="title"
+          class="mb-4" />
 
         <ElInput
           ref="editRef"
@@ -341,7 +359,10 @@ const toggleInfoDialog = () => {
             <h2>Nodejs TiddlyWiki5 端口</h2>
             <div class="flex gap-2">
               <ElInput v-model.trim.number="port" />
-              <ElButton type="success" plain @click="savePort(port!)"
+              <ElButton
+                type="success"
+                plain
+                @click="savePort(port!)"
                 >保存</ElButton
               >
             </div>
@@ -402,8 +423,13 @@ const toggleInfoDialog = () => {
         </div>
       </ElTabPane>
 
-      <el-drawer v-model="infoDialogStatus" direction="btt" title="连接信息">
-        <Info :status="status" :json="json" />
+      <el-drawer
+        v-model="infoDialogStatus"
+        direction="btt"
+        title="连接信息">
+        <Info
+          :status="status"
+          :json="json" />
       </el-drawer>
     </ElTabs>
   </div>

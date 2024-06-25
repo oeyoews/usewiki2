@@ -1,0 +1,12 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "node-terminal",
+			"name": "开发模式",
+			"request": "launch",
+			"command": "pnpm run dev",
+			"cwd": "${workspaceFolder}"
+		}
+	]
+}
