@@ -7,6 +7,13 @@
 			"request": "launch",
 			"command": "pnpm run dev",
 			"cwd": "${workspaceFolder}"
+		},
+		{
+			"type": "node-terminal",
+			"name": "本地构建插件",
+			"request": "launch",
+			"command": "pnpm run build",
+			"cwd": "${workspaceFolder}"
 		}
 	]
 }
