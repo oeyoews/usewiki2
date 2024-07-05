@@ -2,6 +2,7 @@ import { ElNotification as notify } from 'element-plus';
 
 import { ofetch } from 'ofetch';
 
+// 如果设置了username, password, 进行登录, 保存的时候应该也需要？
 export async function checkStatus(
   port: number,
   status: Ref<IStatus>,

@@ -182,6 +182,7 @@ async function ai2md() {
 async function savePort(port: number) {
   await portStorage.setValue(port);
   if (isCheckTw5.value) {
+    // 更新status
     checkStatus(port, status, isChecking);
   }
 }
