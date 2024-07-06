@@ -12,7 +12,7 @@ import * as WI from '@/utils/icons';
 import saveMarkdown from '@/utils/saveMarkdown';
 import save2TiddlyWiki from '@/utils/save2TiddlyWiki';
 import { html2md, md2html } from '@/utils/parser';
-import { ElMessage as notify } from 'element-plus';
+import { ElButton, ElMessage as notify } from 'element-plus';
 import { checkStatus } from '@/utils/checkStatus';
 import {
   isCheckTw5Storage,
@@ -381,27 +381,42 @@ const toggleInfoDialog = () => {
           <div>
             <h2>TiddlyWiki5 登录认证</h2>
             <div class="flex gap-2">
-              <ElInput v-model.trim.number="username" />
-              <ElInput
-                v-model.trim.number="password"
-                type="password"
-                show-password />
-              <ElButton
-                @click="
-                  saveAuth({
-                    username,
-                    password,
-                  })
-                "
-                >保存</ElButton
-              >
+              <el-form label-width="68px">
+                <el-form-item label="用户名">
+                  <ElInput
+                    v-model.trim.number="username"
+                    clearable />
+                </el-form-item>
+                <el-form-item label="密码">
+                  <ElInput
+                    v-model.trim.number="password"
+                    type="password"
+                    clearable
+                    show-password />
+                </el-form-item>
+                <el-form-item label="">
+                  <ElButton
+                    type="success"
+                    plain
+                    @click="
+                      saveAuth({
+                        username,
+                        password,
+                      })
+                    "
+                    >保存</ElButton
+                  >
+                </el-form-item>
+              </el-form>
             </div>
           </div>
 
           <div>
             <h2>Nodejs TiddlyWiki5 端口</h2>
             <div class="flex gap-2">
-              <ElInput v-model.trim.number="port" />
+              <ElInput
+                v-model.trim.number="port"
+                clearable />
               <ElButton
                 type="success"
                 plain
