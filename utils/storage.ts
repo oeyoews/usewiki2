@@ -4,6 +4,16 @@ export const portStorage = storage.defineItem<number>('sync:port', {
   defaultValue: constant.default_port,
 });
 
+export const authStorage = storage.defineItem<{
+  username: string;
+  password: string;
+}>('sync:auth', {
+  defaultValue: {
+    username: '',
+    password: '',
+  },
+});
+
 export const tagStorage = storage.defineItem<string[]>('sync:tags', {
   defaultValue: [constant.default_tag],
 });

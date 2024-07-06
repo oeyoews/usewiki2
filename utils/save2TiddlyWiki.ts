@@ -9,7 +9,9 @@ const save2TiddlyWiki = async (
   port: number,
   url: string,
   tag: string[],
-  status: Ref<IStatus>
+  status: Ref<IStatus>,
+  username: Ref<string>,
+  password: Ref<string>
 ) => {
   const baseURL = `http://localhost:${port}/recipes/default/tiddlers`;
 
@@ -43,6 +45,7 @@ const save2TiddlyWiki = async (
     tags,
   };
 
+  const token = 'Basic ' + btoa(username.value + ':' + password.value);
   const savetwFetch = ofetch.create({
     baseURL,
     method: 'PUT',
@@ -50,6 +53,7 @@ const save2TiddlyWiki = async (
     headers: {
       'Content-Type': 'application/json',
       'x-requested-with': 'TiddlyWiki',
+      Authorization: token,
     },
     async onResponse({ request, response, options }) {
       if (response.ok) {
@@ -74,6 +78,7 @@ const save2TiddlyWiki = async (
     headers: {
       'Content-Type': 'application/json',
       'x-requested-with': 'TiddlyWiki',
+      Authorization: `Basic ${btoa('oeyoews' + ':' + 'oeyoews')}`,
     },
   });
 
@@ -81,6 +86,11 @@ const save2TiddlyWiki = async (
     async onResponse({ request, response, options }) {
       switch (response.status) {
         case 200:
+          break;
+        case 401:
+          notify({
+            message: response.statusText,
+          });
           break;
         case 404:
           await savetwFetch(`/${title}`, {

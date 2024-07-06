@@ -14,8 +14,13 @@ import save2TiddlyWiki from '@/utils/save2TiddlyWiki';
 import { html2md, md2html } from '@/utils/parser';
 import { ElMessage as notify } from 'element-plus';
 import { checkStatus } from '@/utils/checkStatus';
-import { isCheckTw5Storage, tagStorage, portStorage } from '@/utils/storage';
-import getAI from '@/utils/openai';
+import {
+  isCheckTw5Storage,
+  tagStorage,
+  portStorage,
+  authStorage,
+} from '@/utils/storage';
+// import getAI from '@/utils/openai';
 
 const editRef = ref<HTMLInputElement>();
 const isChecking = ref(false);
@@ -33,11 +38,18 @@ const inputVisible = ref(false);
 const InputRef = ref();
 const inputValue = ref();
 const dynamicTags = ref();
-const port = ref<number>();
+const port = ref<number>(8000);
+const username = ref('');
+const password = ref('');
 const aihtml = ref('');
 const infoDialogStatus = ref(false);
 
 port.value = await portStorage.getValue();
+
+const auth = await authStorage.getValue();
+
+username.value = auth.username;
+password.value = auth.password;
 
 isCheckTw5.value = await isCheckTw5Storage.getValue();
 
@@ -82,7 +94,9 @@ const handleSave = () =>
     port.value!,
     link.value,
     dynamicTags.value,
-    status
+    status,
+    username,
+    password
   );
 
 function addJournal() {
@@ -136,7 +150,7 @@ const status = ref<IStatus>(vanillaStatus);
 watchEffect(async () => {
   await isCheckTw5Storage.setValue(isCheckTw5.value);
   if (isCheckTw5.value) {
-    await checkStatus(port.value!, status, isChecking);
+    await checkStatus(port!, status, isChecking, username, password);
   }
 });
 
@@ -183,7 +197,14 @@ async function savePort(port: number) {
   await portStorage.setValue(port);
   if (isCheckTw5.value) {
     // 更新status
-    checkStatus(port, status, isChecking);
+    checkStatus(toRef(port), status, isChecking, username, password);
+  }
+}
+
+async function saveAuth(option: { username: string; password: string }) {
+  await authStorage.setValue(option);
+  if (password.value) {
+    checkStatus(port, status, isChecking, username, password);
   }
 }
 
@@ -356,6 +377,27 @@ const toggleInfoDialog = () => {
               --el-switch-off-color: #ff4949;
             " />
 
+          <!-- auth -->
+          <div>
+            <h2>TiddlyWiki5 登录认证</h2>
+            <div class="flex gap-2">
+              <ElInput v-model.trim.number="username" />
+              <ElInput
+                v-model.trim.number="password"
+                type="password"
+                show-password />
+              <ElButton
+                @click="
+                  saveAuth({
+                    username,
+                    password,
+                  })
+                "
+                >保存</ElButton
+              >
+            </div>
+          </div>
+
           <div>
             <h2>Nodejs TiddlyWiki5 端口</h2>
             <div class="flex gap-2">
@@ -363,7 +405,7 @@ const toggleInfoDialog = () => {
               <ElButton
                 type="success"
                 plain
-                @click="savePort(port!)"
+                @click="savePort(port)"
                 >保存</ElButton
               >
             </div>

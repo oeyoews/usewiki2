@@ -4,15 +4,23 @@ import { ofetch } from 'ofetch';
 
 // 如果设置了username, password, 进行登录, 保存的时候应该也需要？
 export async function checkStatus(
-  port: number,
+  port: Ref<number>,
   status: Ref<IStatus>,
-  isChecking: Ref<boolean>
+  isChecking: Ref<boolean>,
+  username: Ref<string>,
+  password: Ref<string>
 ) {
+  const baseURL = `http://localhost:${port.value}`;
+  const token = 'Basic ' + btoa(username.value + ':' + password.value);
+
   isChecking.value = true;
-  const baseURL = `http://localhost:${port}`;
+
   const twFetch = ofetch.create({
     baseURL,
-    retry: 0,
+    retry: 1,
+    headers: {
+      Authorization: token,
+    },
     onResponse({ request, response, options }) {
       if (response.ok) {
         notify({
@@ -20,19 +28,34 @@ export async function checkStatus(
           type: 'success',
           position: 'bottom-right',
         });
+      } else {
+        if (response.status == 401) {
+          // response.statusText,
+          notify({
+            title: '请设置用户名和密码',
+            type: 'error',
+            position: 'bottom-right',
+          });
+        }
       }
     },
     async onRequestError({ request, response, options }) {
       notify({
-        title: '连接失败',
+        title: response?.statusText,
         type: 'error',
       });
     },
   });
 
-  const data = await twFetch('/status').finally(() => {
-    isChecking.value = false;
-  });
-
-  status.value = data;
+  try {
+    const data = await twFetch('/status');
+    status.value = data;
+  } catch (error) {
+    // notify({
+    //   title: '请设置用户名和密码',
+    //   type: 'error',
+    //   position: 'bottom-right',
+    // });
+  }
+  isChecking.value = false;
 }
