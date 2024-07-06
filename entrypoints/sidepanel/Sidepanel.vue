@@ -33,7 +33,7 @@ const faviconUrl = ref('');
 const title = ref('');
 const isAIChecking = ref(false);
 const GROQ_APIKEY = ref('');
-const isCheckTw5 = ref(false);
+const isCheckTw5 = ref(false); // 是否连接tw
 const inputVisible = ref(false);
 const InputRef = ref();
 const inputValue = ref();
@@ -60,6 +60,7 @@ async function getContent(
     tip: false,
   }
 ) {
+  html.value = '';
   const tabs = await browser.tabs.query({ active: true, currentWindow: true });
 
   const tab = tabs[0];
@@ -194,6 +195,22 @@ async function ai2md() {
 }
 
 async function savePort(port: number) {
+  if (!port) {
+    notify({
+      message: '请输入端口号',
+      type: 'error',
+    });
+    return;
+  }
+  // 检查端口号范围的合法性
+  if (port < 1024 || port > 65535) {
+    notify({
+      message: '端口号范围 1024 - 65535',
+      type: 'error',
+    });
+    return;
+  }
+
   await portStorage.setValue(port);
   if (isCheckTw5.value) {
     // 更新status
@@ -202,6 +219,14 @@ async function savePort(port: number) {
 }
 
 async function saveAuth(option: { username: string; password: string }) {
+  // 检查用户名或者密码是否合法
+  if (!option.username || !option.password) {
+    notify({
+      message: '请输入' + (option.username ? '密码' : '用户名'),
+      type: 'error',
+    });
+    return;
+  }
   await authStorage.setValue(option);
   if (password.value) {
     checkStatus(port, status, isChecking, username, password);
@@ -214,60 +239,74 @@ const toggleInfoDialog = () => {
 </script>
 
 <template>
+  <!-- <el-empty v-if="!html" /> -->
+  <!-- <el-skeleton
+    style="width: 100%"
+    :loading="html.length === 0"
+    animated
+    :throttle="800" /> -->
   <div class="inset-x-0 mb-4">
     <div
-      class="backdrop-blur-lg z-[999] flex justify-center items-center bg-gray-200/50 inset-x-0 gap-2 p-2 rounded-md px-6">
+      class="backdrop-blur-lg z-[999] flex justify-center items-center bg-gray-200/50 inset-x-0 gap-1 p-2 rounded-md px-6">
       <!-- class="group aspect-square hover:aspect-auto transition-all duration-800"> -->
-      <ElButton
-        @click="toggleInfoDialog"
-        size="small"
-        plain
-        type="primary"
-        title="显示更多信息"
-        class="aspect-square">
-        <WI.OcticonInfo24 />
-        <!-- <span
-          class="duration-800 hidden ml-2 transition-all group-hover:block delay-75"
-          >详情</span
-        > -->
-      </ElButton>
-      <ElButton
-        type="primary"
-        plain
-        size="small"
-        class="aspect-square"
-        title="刷新"
-        @click="
-          getContent({
-            tip: true,
-          })
-        ">
-        <WI.MdiCloudRefreshVariant />
-      </ElButton>
+      <el-tooltip
+        content="详情"
+        placement="bottom">
+        <ElButton
+          @click="toggleInfoDialog"
+          size="default"
+          plain
+          type="primary"
+          class="aspect-square">
+          <WI.OcticonInfo24 />
+        </ElButton>
+      </el-tooltip>
+      <el-tooltip
+        content="重新获取内容"
+        placement="bottom">
+        <ElButton
+          type="primary"
+          plain
+          size="default"
+          class="aspect-square"
+          @click="
+            getContent({
+              tip: true,
+            })
+          ">
+          <WI.MdiCloudRefreshVariant />
+        </ElButton>
+      </el-tooltip>
 
-      <ElButton
-        @click="saveMarkdown(md, title!)"
-        size="small"
-        type="warning"
-        plain
-        title="保存"
-        class="aspect-square">
-        <WI.MaterialSymbolsDownload />
-      </ElButton>
+      <el-tooltip
+        content="下载"
+        placement="bottom">
+        <ElButton
+          @click="saveMarkdown(md, title!)"
+          size="default"
+          type="warning"
+          plain
+          class="aspect-square">
+          <WI.MaterialSymbolsDownload />
+        </ElButton>
+      </el-tooltip>
 
       <!-- copy -->
-      <ElButton
-        @click="copyMd(md)"
-        size="small"
-        title="复制"
-        type="info"
-        plain
-        class="aspect-square">
-        <WI.MdiContentCopy />
-      </ElButton>
+      <el-tooltip
+        content="复制"
+        placement="bottom">
+        <ElButton
+          @click="copyMd(md)"
+          size="default"
+          type="primary"
+          plain
+          class="aspect-square">
+          <WI.ZondiconsCopy />
+        </ElButton>
+      </el-tooltip>
 
       <!-- ai -->
-      <!--         <ElButton
+      <!--  <ElButton
           @click="ai2md"
           size="small"
           class="aspect-square"
@@ -276,34 +315,39 @@ const toggleInfoDialog = () => {
         </ElButton> -->
 
       <!-- journal -->
-      <ElButton
-        @click="addJournal"
-        size="small"
-        class="aspect-square"
-        plain
-        title="添加日记"
-        type="success"
-        tooltip="添加到日记本">
-        <WI.BiJournals />
-      </ElButton>
+      <el-tooltip
+        content="写点什么吧"
+        placement="bottom">
+        <ElButton
+          @click="addJournal"
+          size="default"
+          class="aspect-square"
+          plain
+          type="success">
+          <WI.PhPencil />
+        </ElButton>
+      </el-tooltip>
 
       <!-- save to tiddlywiki -->
-      <ElButton
-        v-show="isCheckTw5"
-        @click="handleSave"
-        size="small"
-        title="保存到 TiddlyWiki"
-        class="aspect-square">
-        <WI.FaRegularSave />
-      </ElButton>
+      <el-tooltip
+        content="保存到 TiddlyWiki"
+        placement="bottom">
+        <ElButton
+          v-show="isCheckTw5"
+          @click="handleSave"
+          size="default"
+          plain
+          class="aspect-square">
+          <WI.SimpleIconsTiddlywiki />
+        </ElButton>
+      </el-tooltip>
     </div>
   </div>
 
   <div>
     <ElTabs
-      type=""
-      :model-value="currentTab"
-      class="">
+      type="border-card"
+      :model-value="currentTab">
       <!-- preview -->
       <ElTabPane
         name="preview"
@@ -368,92 +412,108 @@ const toggleInfoDialog = () => {
           <span class="ml-1">配置</span>
         </template>
 
-        <div class="items-center">
-          <h2>连接到 Nodejs TiddlyWiki5</h2>
-          <el-switch
-            v-model="isCheckTw5"
-            style="
-              --el-switch-on-color: #13ce66;
-              --el-switch-off-color: #ff4949;
-            " />
-
-          <!-- auth -->
+        <div class="items-center mx-2">
           <div>
-            <h2>TiddlyWiki5 登录认证</h2>
+            <h2>登录</h2>
             <div class="flex gap-2">
-              <el-form label-width="68px">
+              <el-form
+                label-width="68px"
+                label-position="top">
                 <el-form-item label="用户名">
                   <ElInput
                     v-model.trim.number="username"
-                    clearable />
+                    minlength="3"
+                    maxlength="20"
+                    show-word-limit
+                    placeholder="请输入用户名" />
                 </el-form-item>
                 <el-form-item label="密码">
                   <ElInput
+                    minlength="4"
+                    maxlength="20"
                     v-model.trim.number="password"
                     type="password"
-                    clearable
+                    placeholder="请输入密码"
                     show-password />
                 </el-form-item>
                 <el-form-item label="">
                   <ElButton
                     type="success"
                     plain
+                    :disabled="isChecking"
                     @click="
                       saveAuth({
                         username,
                         password,
                       })
-                    "
-                    >保存</ElButton
-                  >
+                    ">
+                    保存
+                  </ElButton>
                 </el-form-item>
               </el-form>
             </div>
           </div>
 
+          <h2>连接TiddlyWiki5</h2>
+          <el-switch
+            :loading="isChecking"
+            inline-prompt
+            v-model="isCheckTw5"
+            :inactive-icon="WI.SimpleIconsTiddlywiki"
+            :active-icon="WI.SimpleIconsTiddlywiki" />
+
           <div>
-            <h2>Nodejs TiddlyWiki5 端口</h2>
+            <h2>端口号</h2>
             <div class="flex gap-2">
               <ElInput
                 v-model.trim.number="port"
-                clearable />
+                type="number"
+                placeholder="请输入端口号" />
               <ElButton
                 type="success"
                 plain
+                @keyup.enter="savePort(port)"
                 @click="savePort(port)"
+                :disabled="isChecking"
                 >保存</ElButton
               >
             </div>
           </div>
-          <h2>剪藏标签</h2>
-          <!-- tag -->
-          <div class="flex gap-2">
-            <ElTag
-              v-for="tag in dynamicTags"
-              :key="tag"
-              closable
-              :disable-transitions="false"
-              @close="handleClose(tag)">
-              {{ tag }}
-            </ElTag>
-            <ElInput
-              v-if="inputVisible"
-              ref="InputRef"
-              v-model="inputValue"
-              class="w-20"
-              size="small"
-              @keyup.enter="handleInputConfirm"
-              @blur="handleInputConfirm" />
 
-            <ElButton
-              v-else
-              class="button-new-tag"
-              size="small"
-              type="success"
-              plain
-              @click="showInput">
-              +
-            </ElButton>
+          <div v-show="isCheckTw5">
+            <h2>标签</h2>
+            <!-- tag -->
+            <div class="flex gap-2">
+              <ElTag
+                v-for="tag in dynamicTags"
+                :key="tag"
+                closable
+                :disable-transitions="false"
+                @close="handleClose(tag)">
+                <div class="flex items-center gap-2">
+                  <WI.MdiTagOutline />
+                  {{ tag }}
+                </div>
+              </ElTag>
+              <ElInput
+                v-if="inputVisible"
+                ref="InputRef"
+                v-model="inputValue"
+                class="w-20"
+                size="default"
+                @keyup.enter="handleInputConfirm"
+                @blur="handleInputConfirm" />
+
+              <ElButton
+                v-else
+                class="button-new-tag"
+                size="small"
+                type="success"
+                plain
+                @click="showInput">
+                +
+              </ElButton>
+            </div>
           </div>
 
           <div class="hidden">
@@ -481,14 +541,18 @@ const toggleInfoDialog = () => {
         </div>
       </ElTabPane>
 
-      <el-drawer
+      <!-- <el-drawer
         v-model="infoDialogStatus"
         direction="btt"
-        title="连接信息">
+        title=""> -->
+      <el-dialog
+        v-model="infoDialogStatus"
+        width="80%"
+        align-center>
         <Info
           :status="status"
           :json="json" />
-      </el-drawer>
+      </el-dialog>
     </ElTabs>
   </div>
 </template>

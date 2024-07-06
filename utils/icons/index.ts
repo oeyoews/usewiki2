@@ -12,3 +12,7 @@ export { default as FaFileTextO } from '~icons/fa/file-text-o';
 export { default as FaRegularSave } from '~icons/fa-regular/save';
 export { default as MdiCloudRefreshVariant } from '~icons/mdi/cloud-refresh-variant';
 export { default as OcticonInfo24 } from '~icons/octicon/info-24';
+export { default as SimpleIconsTiddlywiki } from '~icons/simple-icons/tiddlywiki';
+export { default as MdiTagOutline } from '~icons/mdi/tag-outline';
+export { default as PhPencil } from '~icons/ph/pencil';
+export { default as ZondiconsCopy } from '~icons/zondicons/copy';

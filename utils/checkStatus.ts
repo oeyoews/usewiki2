@@ -27,27 +27,34 @@ export async function checkStatus(
           title: '连接成功',
           type: 'success',
           position: 'bottom-right',
+          duration: 1000,
         });
       } else {
         if (response.status == 401) {
           // response.statusText,
           notify({
-            title: '请设置用户名和密码',
+            title: '请设置正确的用户名和密码',
             type: 'error',
             position: 'bottom-right',
           });
         }
       }
     },
-    async onRequestError({ request, response, options }) {
+    async onRequestError({ error, request, response, options }) {
       notify({
-        title: response?.statusText,
+        //  + error.message,
+        title: '请检查端口号是否正确',
         type: 'error',
+        position: 'bottom-right',
+        duration: 2000,
       });
     },
   });
 
   try {
+    // if (isChecking.value) {
+    //   return;
+    // }
     const data = await twFetch('/status');
     status.value = data;
   } catch (error) {
