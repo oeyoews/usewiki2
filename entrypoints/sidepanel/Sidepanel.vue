@@ -7,6 +7,7 @@ import { formattime } from '@/utils/formattime';
 import * as utils from '@/utils/utils';
 import AI from '@/utils/ai';
 import { copyMd } from '@/utils/copyMd';
+// @ts-ignore
 import json from '../../package.json';
 import { debounce } from '@/utils/debounce';
 import * as WI from '@/utils/icons';
