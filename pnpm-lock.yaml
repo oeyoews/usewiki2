@@ -117,9 +117,15 @@ importers:
       '@iconify-json/fa-regular':
         specifier: ^1.1.8
         version: 1.1.8
+      '@iconify-json/fluent':
+        specifier: ^1.1.58
+        version: 1.1.58
       '@iconify-json/iconoir':
         specifier: ^1.1.44
         version: 1.1.44
+      '@iconify-json/lets-icons':
+        specifier: ^1.1.2
+        version: 1.1.2
       '@iconify-json/material-symbols':
         specifier: ^1.1.79
         version: 1.1.79
@@ -685,8 +691,14 @@ packages:
   '@iconify-json/fa@1.1.8':
     resolution: {integrity: sha512-he23ZsuDxA6Hx7rnrEpSJnmu7t7RtG/SbrENZhMSPiZ4bNRGHjyPZimtOy10k2/nfwNsW57ECDsO5eK0BkcoMg==}
 
+  '@iconify-json/fluent@1.1.58':
+    resolution: {integrity: sha512-J1U47sH4TIUVgABhUfgjSnyXdgUZNp96sakFW1brhahKOFAFtbshLLmVci6t42fY8LX21q4cS2qtAOzhlPnDfA==}
+
   '@iconify-json/iconoir@1.1.44':
     resolution: {integrity: sha512-XZZ6+nIgS3BUWTmIvZ1Um/TZcUsOEVDGOTZ50hihoTWYjfLLmPlxS/jxrTTpjJO/98wbyiDz4WOXFGqBrXMLPw==}
+
+  '@iconify-json/lets-icons@1.1.2':
+    resolution: {integrity: sha512-rju+DR2T5Up0y5CoNK9mpr4LVbAQISJEAXW5yHQQqPa8jqRYTTkJSc502H3QX4w91PUte9tAYNyv3hg5xk9how==}
 
   '@iconify-json/material-symbols@1.1.79':
     resolution: {integrity: sha512-/OvCxrxPQ/qncjGAPZkNk6LEpVX1nIK6e6BhMsbXMT5pEpnrePsRsVOYsiB8bJn3x67HP8zBrxZSYisDCKf8ow==}
@@ -3982,7 +3994,15 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
+  '@iconify-json/fluent@1.1.58':
+    dependencies:
+      '@iconify/types': 2.0.0
+
   '@iconify-json/iconoir@1.1.44':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/lets-icons@1.1.2':
     dependencies:
       '@iconify/types': 2.0.0
 

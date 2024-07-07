@@ -2,7 +2,7 @@
   "name": "usewiki2",
   "description": "Convert HTML to Markdown, and save to your computer, support nodejs tiddlywiki",
   "private": true,
-  "version": "3.6.0",
+  "version": "3.7.0",
   "type": "module",
   "scripts": {
     "dev": "wxt",
@@ -53,7 +53,9 @@
     "@iconify-json/eos-icons": "^1.1.10",
     "@iconify-json/fa": "^1.1.8",
     "@iconify-json/fa-regular": "^1.1.8",
+    "@iconify-json/fluent": "^1.1.58",
     "@iconify-json/iconoir": "^1.1.44",
+    "@iconify-json/lets-icons": "^1.1.2",
     "@iconify-json/material-symbols": "^1.1.79",
     "@iconify-json/mdi": "^1.1.66",
     "@iconify-json/octicon": "^1.1.54",

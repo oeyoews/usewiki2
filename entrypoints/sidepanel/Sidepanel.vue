@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Info from './components/Info.vue';
 import 'element-plus/es/components/message/style/css';
+import 'element-plus/theme-chalk/dark/css-vars.css';
 import 'element-plus/es/components/notification/style/css';
 import { formattime } from '@/utils/formattime';
 import * as utils from '@/utils/utils';
@@ -22,6 +23,7 @@ import {
 } from '@/utils/storage';
 // import getAI from '@/utils/openai';
 
+const isDarkMode = ref(false);
 const editRef = ref<HTMLInputElement>();
 const isChecking = ref(false);
 const currentTab = ref<ITabs>('preview');
@@ -39,8 +41,11 @@ const InputRef = ref();
 const inputValue = ref();
 const dynamicTags = ref();
 const port = ref<number>(8000);
+/** tiddlywiki 登录认证 用户名*/
 const username = ref('');
+/** tiddlywiki 登录认证 密码*/
 const password = ref('');
+
 const aihtml = ref('');
 const infoDialogStatus = ref(false);
 
@@ -83,9 +88,18 @@ async function getContent(
   }
 }
 
-onMounted(() => {
+onBeforeMount(() => {
+  const mediaQuery = window.matchMedia?.('(prefers-color-scheme: dark)');
+  if (mediaQuery.matches) {
+    isDarkMode.value = true;
+    document.documentElement.classList.add('dark');
+  }
+});
+
+onMounted(async () => {
   getContent();
-  // getAI();
+
+  await checkStatus(port!, status, isChecking, username, password);
 });
 
 const handleSave = () =>
@@ -148,20 +162,15 @@ const vanillaStatus: IStatus = {
 
 const status = ref<IStatus>(vanillaStatus);
 
-watchEffect(async () => {
-  await isCheckTw5Storage.setValue(isCheckTw5.value);
-  if (isCheckTw5.value) {
-    await checkStatus(port!, status, isChecking, username, password);
-  }
-});
+async function checkTwStatus() {
+  // 关闭连接tw5时， 直接关闭， 不进行检查网络连接是否成功
+  if (isCheckTw5.value) return true;
 
-// watch(isCheckTw5, async (newValue) => {
-//   if (newValue) {
-//     await checkStatus(port.value!, status, isChecking);
-//   } else {
-//     status.value = vanillaStatus;
-//   }
-// });
+  await isCheckTw5Storage.setValue(true);
+  let res = false;
+  res = await checkStatus(port!, status, isChecking, username, password);
+  return res;
+}
 
 const debounceEdit = debounce(async function () {
   html.value = await md2html(md.value);
@@ -198,7 +207,7 @@ async function savePort(port: number) {
   if (!port) {
     notify({
       message: '请输入端口号',
-      type: 'error',
+      type: 'warning',
     });
     return;
   }
@@ -206,7 +215,7 @@ async function savePort(port: number) {
   if (port < 1024 || port > 65535) {
     notify({
       message: '端口号范围 1024 - 65535',
-      type: 'error',
+      type: 'warning',
     });
     return;
   }
@@ -223,13 +232,24 @@ async function saveAuth(option: { username: string; password: string }) {
   if (!option.username || !option.password) {
     notify({
       message: '请输入' + (option.username ? '密码' : '用户名'),
-      type: 'error',
+      type: 'warning',
     });
     return;
   }
   await authStorage.setValue(option);
   if (password.value) {
     checkStatus(port, status, isChecking, username, password);
+  }
+}
+
+function toggleDarkMode() {
+  isDarkMode.value = !isDarkMode.value;
+  const DARK = 'dark';
+
+  if (isDarkMode.value) {
+    document.documentElement.classList.add(DARK);
+  } else {
+    document.documentElement.classList.remove(DARK);
   }
 }
 
@@ -246,11 +266,12 @@ const toggleInfoDialog = () => {
     animated
     :throttle="800" /> -->
   <div class="inset-x-0 mb-4">
+    <!-- bg-gray-200/50  -->
     <div
-      class="backdrop-blur-lg z-[999] flex justify-center items-center bg-gray-200/50 inset-x-0 gap-1 p-2 rounded-md px-6">
-      <!-- class="group aspect-square hover:aspect-auto transition-all duration-800"> -->
+      class="backdrop-blur-lg z-[999] flex justify-center items-center inset-x-0 gap-1 p-2 rounded-md px-6">
       <el-tooltip
         content="详情"
+        effect="light"
         placement="bottom">
         <ElButton
           @click="toggleInfoDialog"
@@ -261,7 +282,24 @@ const toggleInfoDialog = () => {
           <WI.OcticonInfo24 />
         </ElButton>
       </el-tooltip>
+
+      <!-- darkmode -->
       <el-tooltip
+        effect="light"
+        :content="`切换到 ${isDarkMode ? '白天模式' : '夜间模式'}`"
+        placement="bottom">
+        <ElButton
+          @click="toggleDarkMode"
+          size="default"
+          type="primary"
+          plain
+          class="aspect-square">
+          <WI.FluentDarkTheme24Filled />
+        </ElButton>
+      </el-tooltip>
+
+      <el-tooltip
+        effect="light"
         content="重新获取内容"
         placement="bottom">
         <ElButton
@@ -280,6 +318,7 @@ const toggleInfoDialog = () => {
 
       <el-tooltip
         content="下载"
+        effect="light"
         placement="bottom">
         <ElButton
           @click="saveMarkdown(md, title!)"
@@ -293,6 +332,7 @@ const toggleInfoDialog = () => {
 
       <!-- copy -->
       <el-tooltip
+        effect="light"
         content="复制"
         placement="bottom">
         <ElButton
@@ -316,9 +356,11 @@ const toggleInfoDialog = () => {
 
       <!-- journal -->
       <el-tooltip
+        effect="light"
         content="写点什么吧"
         placement="bottom">
         <ElButton
+          v-show="isCheckTw5"
           @click="addJournal"
           size="default"
           class="aspect-square"
@@ -330,6 +372,7 @@ const toggleInfoDialog = () => {
 
       <!-- save to tiddlywiki -->
       <el-tooltip
+        effect="light"
         content="保存到 TiddlyWiki"
         placement="bottom">
         <ElButton
@@ -370,9 +413,9 @@ const toggleInfoDialog = () => {
               {{ title }}
             </h2>
           </div>
-          <!-- <el-divider border-style="dashed" /> -->
+          <!-- dark:prose-invert -->
           <article
-            class="prose prose-gray max-w-none prose-sm dark:prose-invert flex-wrap prose-img:max-w-[300px] prose-img:my-0 prose-img:rounded-md prose-video:max-w-[300px] prose-video:max-h-[300px] prose-video:my-0">
+            class="prose-gray max-w-none prose-sm flex-wrap prose-img:max-w-[300px] prose-img:my-0 prose-img:rounded-md prose-video:max-w-[300px] prose-video:max-h-[300px] prose-video:my-0">
             <div
               v-html="html"
               class="mx-2"></div>
@@ -381,7 +424,9 @@ const toggleInfoDialog = () => {
       </ElTabPane>
 
       <!-- edit -->
-      <ElTabPane name="edit">
+      <ElTabPane
+        name="edit"
+        :disabled="!isCheckTw5">
         <template #label>
           <WI.FaRegularEdit />
           <span class="ml-1">编辑</span>
@@ -408,7 +453,7 @@ const toggleInfoDialog = () => {
       <!-- setup -->
       <ElTabPane>
         <template #label>
-          <WI.TdesignSetting />
+          <WI.LetsIconsSettingAltLine />
           <span class="ml-1">配置</span>
         </template>
 
@@ -456,6 +501,7 @@ const toggleInfoDialog = () => {
 
           <h2>连接TiddlyWiki5</h2>
           <el-switch
+            :before-change="checkTwStatus"
             :loading="isChecking"
             inline-prompt
             v-model="isCheckTw5"
@@ -516,11 +562,10 @@ const toggleInfoDialog = () => {
             </div>
           </div>
 
-          <div class="hidden">
+          <!-- https://console.groq.com/keys -->
+          <!-- <div class="hidden">
             <h2>GROQ API</h2>
             <div class="flex gap-1">
-              <!-- https://console.groq.com/keys -->
-
               <ElInput
                 v-model.trim="GROQ_APIKEY"
                 placeholder="**************"
@@ -537,14 +582,10 @@ const toggleInfoDialog = () => {
                 </template>
               </el-popconfirm>
             </div>
-          </div>
+        </div> -->
         </div>
       </ElTabPane>
 
-      <!-- <el-drawer
-        v-model="infoDialogStatus"
-        direction="btt"
-        title=""> -->
       <el-dialog
         v-model="infoDialogStatus"
         width="80%"
@@ -556,3 +597,9 @@ const toggleInfoDialog = () => {
     </ElTabs>
   </div>
 </template>
+
+<style scoped lang="css">
+::v-deep(.el-dialog) {
+  border-radius: 15px;
+}
+</style>

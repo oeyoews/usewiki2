@@ -28,7 +28,7 @@ const save2TiddlyWiki = async (
   if (!status.value.tiddlywiki_version) {
     notify({
       message: '请先连接 TiddlyWiki',
-      type: 'error',
+      type: 'warning',
     });
     return;
   }
@@ -60,6 +60,7 @@ const save2TiddlyWiki = async (
         notify({
           message: '保存成功',
           type: 'success',
+          duration: 1500,
         });
       }
     },
@@ -67,6 +68,7 @@ const save2TiddlyWiki = async (
       notify({
         message: '保存失败' + response._data,
         type: 'error',
+        duration: 2000,
       });
     },
   });
@@ -78,7 +80,7 @@ const save2TiddlyWiki = async (
     headers: {
       'Content-Type': 'application/json',
       'x-requested-with': 'TiddlyWiki',
-      Authorization: `Basic ${btoa('oeyoews' + ':' + 'oeyoews')}`,
+      Authorization: token,
     },
   });
 
@@ -107,8 +109,8 @@ const save2TiddlyWiki = async (
   if (oldTiddler?.text === text) {
     notify({
       message: h('div', [
-        h('span', { style: { fontWeight: 'bold' } }, title),
-        h('span', null, ' 没有新的变化，无需重复保存！'),
+        // h('span', { style: { fontWeight: 'bold' } }, title),
+        h('span', null, '无需重复保存！'),
       ]),
       type: 'warning',
     });

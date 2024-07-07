@@ -16,3 +16,5 @@ export { default as SimpleIconsTiddlywiki } from '~icons/simple-icons/tiddlywiki
 export { default as MdiTagOutline } from '~icons/mdi/tag-outline';
 export { default as PhPencil } from '~icons/ph/pencil';
 export { default as ZondiconsCopy } from '~icons/zondicons/copy';
+export { default as LetsIconsSettingAltLine } from '~icons/lets-icons/setting-alt-line';
+export { default as FluentDarkTheme24Filled } from '~icons/fluent/dark-theme-24-filled';

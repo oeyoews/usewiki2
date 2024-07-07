@@ -1,15 +1,16 @@
 {
-	"[typescript]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
-	},
-	"[vue]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
-	},
-	"files.eol": "\n",
-	"explorer.fileNesting.enabled": true,
-	"explorer.fileNesting.patterns": {
-		".gitignore": ".gitconfig",
-		"wxt.config.ts": "auto-imports*.ts, components*.ts, tailwind.config.cjs, tsconfig.json, types.d.ts, postcss.config.cjs"
-	},
-	"editor.formatOnSave": true
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "files.eol": "\n",
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    ".gitignore": ".gitconfig",
+    "wxt.config.ts": "auto-imports*.ts, components*.ts, tailwind.config.cjs, tsconfig.json, types.d.ts, postcss.config.cjs"
+  },
+  "editor.formatOnSave": true,
+  "editor.linkedEditing": true
 }

@@ -17,7 +17,7 @@ export async function checkStatus(
 
   const twFetch = ofetch.create({
     baseURL,
-    retry: 1,
+    retry: 0,
     headers: {
       Authorization: token,
     },
@@ -26,8 +26,9 @@ export async function checkStatus(
         notify({
           title: '连接成功',
           type: 'success',
-          position: 'bottom-right',
-          duration: 1000,
+          position: 'bottom-left',
+          showClose: false,
+          duration: 1500,
         });
       } else {
         if (response.status == 401) {
@@ -46,7 +47,7 @@ export async function checkStatus(
         title: '请检查端口号是否正确',
         type: 'error',
         position: 'bottom-right',
-        duration: 2000,
+        duration: 3000,
       });
     },
   });
@@ -57,12 +58,19 @@ export async function checkStatus(
     // }
     const data = await twFetch('/status');
     status.value = data;
+    isChecking.value = false;
+    if (data) {
+      return true;
+    } else {
+      return false;
+    }
   } catch (error) {
+    isChecking.value = false;
+    return false;
     // notify({
     //   title: '请设置用户名和密码',
     //   type: 'error',
     //   position: 'bottom-right',
     // });
   }
-  isChecking.value = false;
 }
