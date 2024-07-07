@@ -627,7 +627,7 @@ const toggleInfoDialog = () => {
               <ElButton
                 v-else
                 class="button-new-tag"
-                size="large"
+                size="default"
                 type="primary"
                 plain
                 @click="showInput">
