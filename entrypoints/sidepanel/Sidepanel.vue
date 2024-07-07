@@ -57,8 +57,6 @@ const auth = await authStorage.getValue();
 username.value = auth.username;
 password.value = auth.password;
 
-isCheckTw5.value = await isCheckTw5Storage.getValue();
-
 dynamicTags.value = Object.values(await tagStorage.getValue());
 
 async function getContent(
@@ -102,7 +100,11 @@ onMounted(async () => {
 
 onMounted(async () => {
   getContent();
-  await checkStatus(port!, status, isChecking, username, password);
+
+  isCheckTw5.value = await isCheckTw5Storage.getValue();
+  if (isCheckTw5.value) {
+    await checkStatus(port!, status, isChecking, username, password);
+  }
 });
 
 const handleSave = () =>
@@ -167,9 +169,15 @@ const status = ref<IStatus>(vanillaStatus);
 
 async function checkTwStatus() {
   // 关闭连接tw5时， 直接关闭， 不进行检查网络连接是否成功
-  if (isCheckTw5.value) return true;
+  if (isCheckTw5.value) {
+    status.value.tiddlywiki_version = '';
+    status.value.username = '';
+    await isCheckTw5Storage.setValue(false);
+    return true;
+  }
 
   await isCheckTw5Storage.setValue(true);
+  const value = await isCheckTw5Storage.getValue();
   let res = false;
   res = await checkStatus(port!, status, isChecking, username, password);
   return res;
@@ -215,9 +223,9 @@ async function savePort(port: number) {
     return;
   }
   // 检查端口号范围的合法性
-  if (port < 1024 || port > 65535) {
+  if (port < 0 || port > 65535) {
     notify({
-      message: '端口号范围 1024 - 65535',
+      message: '端口号范围 0 - 65535',
       type: 'warning',
     });
     return;
@@ -226,7 +234,13 @@ async function savePort(port: number) {
   await portStorage.setValue(port);
   if (isCheckTw5.value) {
     // 更新status
-    checkStatus(toRef(port), status, isChecking, username, password);
+    await checkStatus(toRef(port), status, isChecking, username, password);
+  } else {
+    notify({
+      message: '保存成功',
+      type: 'success',
+      duration: 1500,
+    });
   }
 }
 
@@ -240,8 +254,14 @@ async function saveAuth(option: { username: string; password: string }) {
     return;
   }
   await authStorage.setValue(option);
-  if (password.value) {
-    checkStatus(port, status, isChecking, username, password);
+  if (isCheckTw5.value) {
+    await checkStatus(port, status, isChecking, username, password);
+  } else {
+    notify({
+      message: '保存成功',
+      type: 'success',
+      duration: 1500,
+    });
   }
 }
 
@@ -570,6 +590,8 @@ const toggleInfoDialog = () => {
             <div class="flex gap-2">
               <ElInput
                 v-model.trim.number="port"
+                maxlength="5"
+                minlength="1"
                 type="number"
                 placeholder="请输入端口号" />
               <ElButton

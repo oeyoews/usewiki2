@@ -25,11 +25,11 @@ export const isCheckTw5Storage = storage.defineItem<boolean>(
   }
 );
 
-const mediaQuery = window.matchMedia?.('(prefers-color-scheme: dark)');
+// const mediaQuery = window.matchMedia?.('(prefers-color-scheme: dark)');
 
 export const isDarkModeStorage = storage.defineItem<boolean>(
   'sync:isDarkMode',
   {
-    defaultValue: mediaQuery.matches,
+    defaultValue: false,
   }
 );
