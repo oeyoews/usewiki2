@@ -25,6 +25,7 @@ import {
 } from '@/utils/storage';
 // import getAI from '@/utils/openai';
 
+const devMode = import.meta.env.DEV;
 const isDarkMode = ref(false);
 const editRef = ref<HTMLInputElement>();
 const isChecking = ref(false);
@@ -93,6 +94,12 @@ onMounted(async () => {
   if (isDark) {
     document.documentElement.classList.add('dark');
   }
+  notify({
+    message: devMode ? '开发模式' : '',
+    type: 'warning',
+    duration: 2000,
+  });
+  !devMode && (document.oncontextmenu = () => false);
   if (isDark) {
     isDarkMode.value = true;
     document.documentElement.classList.add('dark');
@@ -128,11 +135,9 @@ function addJournal() {
   currentTab.value = 'edit';
   link.value = `#${title.value}`;
 
-  // nextTick(() => { //   editRef.value?.focus(); // });
-  // HACK: 由于弹出框的问题，导致 focus 后，unfocus
-  setTimeout(() => {
+  nextTick(() => {
     if (editRef.value) editRef.value.focus();
-  }, 500);
+  });
 }
 
 const handleClose = (tag: string) => {
@@ -335,136 +340,61 @@ const toggleInfoDialog = () => {
 </script>
 
 <template>
-  <!-- <el-empty v-if="!html" /> -->
-  <!-- <el-skeleton
-    style="width: 100%"
-    :loading="html.length === 0"
-    animated
-    :throttle="800" /> -->
-  <div class="inset-x-0 mb-4">
-    <!-- bg-gray-200/50  -->
+  <div class="inset-x-0 top-0 sticky z-[10]">
     <div
-      class="backdrop-blur-lg z-[999] flex justify-center items-center inset-x-0 gap-1 p-2 rounded-md px-6">
-      <el-tooltip
-        content="详情"
-        effect="light"
-        placement="bottom">
-        <ElButton
-          @click="toggleInfoDialog"
-          size="default"
-          plain
-          type="primary"
-          class="aspect-square">
-          <WI.OcticonInfo24 />
-        </ElButton>
-      </el-tooltip>
-
-      <!-- darkmode -->
-      <!-- :content="`切换到 ${isDarkMode ? '白天模式' : '夜间模式'}`" -->
-      <el-tooltip
-        effect="light"
-        content="切换"
-        placement="left">
-        <ElButton
-          @click="toggleDark"
-          size="default"
-          type="primary"
-          plain
-          class="aspect-square">
-          <WI.FluentDarkTheme24Filled />
-        </ElButton>
-      </el-tooltip>
-
-      <el-tooltip
-        effect="light"
-        content="重新获取内容"
-        placement="bottom">
-        <ElButton
-          type="primary"
-          plain
-          size="default"
-          class="aspect-square"
-          @click="
-            getContent({
-              tip: true,
-            })
-          ">
-          <WI.MdiCloudRefreshVariant />
-        </ElButton>
-      </el-tooltip>
-
-      <el-tooltip
-        content="下载"
-        effect="light"
-        placement="bottom">
-        <ElButton
-          @click="saveMarkdown(md, title!)"
-          size="default"
-          type="warning"
-          plain
-          class="aspect-square">
-          <WI.MaterialSymbolsDownload />
-        </ElButton>
-      </el-tooltip>
-
-      <!-- copy -->
-      <el-tooltip
-        effect="light"
-        content="复制"
-        placement="bottom">
-        <ElButton
-          @click="copyMd(md)"
-          size="default"
-          type="primary"
-          plain
-          class="aspect-square">
-          <WI.ZondiconsCopy />
-        </ElButton>
-      </el-tooltip>
-
-      <!-- ai -->
-      <!--  <ElButton
-          @click="ai2md"
-          size="small"
-          class="aspect-square"
-          v-if="false">
-          <WI.IconoirSpark :class="{ 'animate-spin': isAIChecking }" />
-        </ElButton> -->
-
-      <!-- journal -->
-      <el-tooltip
-        effect="light"
-        content="写点什么吧"
-        placement="bottom">
-        <ElButton
-          v-show="isCheckTw5"
-          @click="addJournal"
-          size="default"
-          class="aspect-square"
-          plain
-          type="success">
-          <WI.PhPencil />
-        </ElButton>
-      </el-tooltip>
-
-      <!-- save to tiddlywiki -->
-      <el-tooltip
-        effect="light"
-        content="保存到 TiddlyWiki"
-        placement="bottom">
-        <ElButton
-          v-show="isCheckTw5"
-          @click="handleSave"
-          size="default"
-          plain
-          class="aspect-square">
-          <WI.SimpleIconsTiddlywiki />
-        </ElButton>
-      </el-tooltip>
+      class="backdrop-blur-lg z-[999] flex justify-end items-center inset-x-0 gap-1 p-2 rounded-md px-6">
+      <el-dropdown
+        size="default"
+        split-button
+        placement="bottom-start"
+        trigger="click"
+        type="success">
+        <span
+          class="el-dropdown-link flex items-center"
+          @click="handleSave">
+          <WI.SimpleIconsTiddlywiki class="mr-2" />
+          保存
+        </span>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item
+              :icon="WI.BiJournals"
+              @click="addJournal"
+              v-if="isCheckTw5"
+              >日记
+            </el-dropdown-item>
+            <el-dropdown-item
+              :icon="WI.MaterialSymbolsInfoOutline"
+              @click="toggleInfoDialog">
+              详情</el-dropdown-item
+            >
+            <el-dropdown-item
+              :icon="WI.ZondiconsCopy"
+              @click="copyMd(md)"
+              >复制
+            </el-dropdown-item>
+            <el-dropdown-item
+              :icon="WI.MaterialSymbolsDownload"
+              @click="saveMarkdown(md, title!)"
+              >下载
+            </el-dropdown-item>
+            <el-dropdown-item
+              :icon="WI.MdiCloudRefreshVariant"
+              @click="getContent({ tip: true })"
+              >刷新
+            </el-dropdown-item>
+            <el-dropdown-item
+              :icon="WI.FluentDarkTheme24Filled"
+              @click="toggleDark"
+              >切换
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
   </div>
 
-  <div>
+  <div class="">
     <ElTabs
       type="border-card"
       :model-value="currentTab">
