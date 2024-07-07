@@ -291,9 +291,9 @@ const isAppearanceTransition =
  */
 async function toggleDark(event?: MouseEvent) {
   const DARK = 'dark';
+  isDarkMode.value = !isDarkMode.value;
+  await isDarkModeStorage.setValue(isDarkMode.value);
   if (!isAppearanceTransition || !event) {
-    isDarkMode.value = !isDarkMode.value;
-    await isDarkModeStorage.setValue(isDarkMode.value);
     return;
   }
   const x = event.clientX;
@@ -304,7 +304,6 @@ async function toggleDark(event?: MouseEvent) {
   );
   // @ts-expect-error: Transition API
   const transition = document.startViewTransition(async () => {
-    isDarkMode.value = !isDarkMode.value;
     if (isDarkMode.value) {
       document.documentElement.classList.add(DARK);
     } else {
@@ -340,15 +339,15 @@ const toggleInfoDialog = () => {
 <template>
   <div
     className="fixed inset-0 -z-50 size-full bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
-  <div class="inset-x-0 top-0 sticky z-[10]">
+  <div class="inset-x-0 top-0 fixed z-[10]">
     <div
-      class="backdrop-blur-lg z-[999] flex justify-end items-center inset-x-0 gap-1 p-2 rounded-md px-6">
+      class="backdrop-blur-sm z-[999] flex justify-end items-center inset-x-0 gap-1 p-2 px-6">
       <el-dropdown
         size="default"
         split-button
         placement="bottom-start"
         trigger="click"
-        type="success">
+        type="primary">
         <span
           class="el-dropdown-link flex items-center"
           @click="debounceSave">
@@ -394,9 +393,11 @@ const toggleInfoDialog = () => {
     </div>
   </div>
 
-  <div class="">
+  <!-- <div class="h-[50px]"></div> -->
+  <div class="mx-2 fixed top-[50px] w-[95%]">
     <ElTabs
-      type="card"
+      stretch
+      type="border-card"
       :model-value="currentTab">
       <!-- preview -->
       <ElTabPane
@@ -425,7 +426,8 @@ const toggleInfoDialog = () => {
             class="prose-gray max-w-none prose-sm flex-wrap prose-img:max-w-[300px] prose-img:my-0 prose-img:rounded-md prose-video:max-w-[300px] prose-video:max-h-[300px] prose-video:my-0">
             <div
               v-html="html"
-              class="mx-2"></div>
+              class="mx-2"
+              style="height: calc(100vh - 150px); overflow-y: auto"></div>
 
             <!-- <el-backtop
               :right="50"
@@ -454,10 +456,10 @@ const toggleInfoDialog = () => {
           v-model="md"
           @keyup.enter.ctrl="handleSave"
           @input="debounceEdit"
-          :autosize="{ minRows: 4, maxRows: 20 }"
+          :autosize="{ minRows: 4, maxRows: 27 }"
           type="textarea"
           spellcheck="false"
-          class="w-full"
+          class="w-full border-none"
           resize="none" />
       </ElTabPane>
 
@@ -473,6 +475,7 @@ const toggleInfoDialog = () => {
             <h2>登录</h2>
             <div class="flex gap-2">
               <el-form
+                :spellcheck="false"
                 label-width="68px"
                 label-position="top">
                 <el-form-item label="用户名">
@@ -494,7 +497,7 @@ const toggleInfoDialog = () => {
                 </el-form-item>
                 <el-form-item label="">
                   <ElButton
-                    type="success"
+                    type="primary"
                     plain
                     :disabled="isChecking"
                     @click="
@@ -512,6 +515,7 @@ const toggleInfoDialog = () => {
 
           <h2>连接TiddlyWiki5</h2>
           <el-switch
+            size="large"
             :before-change="checkTwStatus"
             :loading="isChecking"
             inline-prompt
@@ -526,7 +530,7 @@ const toggleInfoDialog = () => {
                 v-model.trim.number="port"
                 maxlength="5"
                 minlength="1"
-                type="number"
+                @keyup.enter="savePort(port)"
                 placeholder="请输入端口号">
                 <template #prepend>
                   <el-select
@@ -542,9 +546,8 @@ const toggleInfoDialog = () => {
                 </template>
               </ElInput>
               <ElButton
-                type="success"
+                type="primary"
                 plain
-                @keyup.enter="savePort(port)"
                 @click="savePort(port)"
                 :disabled="isChecking"
                 >保存</ElButton
@@ -580,7 +583,7 @@ const toggleInfoDialog = () => {
                 v-else
                 class="button-new-tag"
                 size="small"
-                type="success"
+                type="primary"
                 plain
                 @click="showInput">
                 +
@@ -644,5 +647,14 @@ const toggleInfoDialog = () => {
 }
 .dark::view-transition-new(root) {
   z-index: 1;
+}
+
+::v-deep(.el-tabs__content) {
+  height: calc(100vh - 130px);
+}
+
+::v-deep(.el-tabs--border-card) {
+  border-radius: 0 0 10px 10px;
+  /* border: none; */
 }
 </style>
