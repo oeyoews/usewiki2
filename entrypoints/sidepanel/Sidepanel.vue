@@ -94,11 +94,6 @@ onMounted(async () => {
   if (isDark) {
     document.documentElement.classList.add('dark');
   }
-  notify({
-    message: devMode ? '开发模式' : '',
-    type: 'warning',
-    duration: 2000,
-  });
   !devMode && (document.oncontextmenu = () => false);
   if (isDark) {
     isDarkMode.value = true;
