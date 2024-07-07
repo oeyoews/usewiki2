@@ -25,6 +25,7 @@ import {
 } from '@/utils/storage';
 // import getAI from '@/utils/openai';
 
+const ports = [8000, 8080, 8001, 8081];
 const devMode = import.meta.env.DEV;
 const isDarkMode = ref(false);
 const editRef = ref<HTMLInputElement>();
@@ -391,7 +392,7 @@ const toggleInfoDialog = () => {
 
   <div class="">
     <ElTabs
-      type="border-card"
+      type="card"
       :model-value="currentTab">
       <!-- preview -->
       <ElTabPane
@@ -522,7 +523,20 @@ const toggleInfoDialog = () => {
                 maxlength="5"
                 minlength="1"
                 type="number"
-                placeholder="请输入端口号" />
+                placeholder="请输入端口号">
+                <template #prepend>
+                  <el-select
+                    v-model="port"
+                    placeholder="端口"
+                    style="width: 150px">
+                    <template v-for="(port, index) in ports">
+                      <el-option
+                        :label="`端口${index + 1} (${port})`"
+                        :value="port" />
+                    </template>
+                  </el-select>
+                </template>
+              </ElInput>
               <ElButton
                 type="success"
                 plain
