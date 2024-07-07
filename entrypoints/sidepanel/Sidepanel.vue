@@ -20,6 +20,7 @@ import {
   tagStorage,
   portStorage,
   authStorage,
+  isDarkModeStorage,
 } from '@/utils/storage';
 // import getAI from '@/utils/openai';
 
@@ -88,9 +89,12 @@ async function getContent(
   }
 }
 
-onBeforeMount(() => {
-  const mediaQuery = window.matchMedia?.('(prefers-color-scheme: dark)');
-  if (mediaQuery.matches) {
+onMounted(async () => {
+  const isDark = await isDarkModeStorage.getValue();
+  if (isDark) {
+    document.documentElement.classList.add('dark');
+  }
+  if (isDark) {
     isDarkMode.value = true;
     document.documentElement.classList.add('dark');
   }
@@ -242,8 +246,9 @@ async function saveAuth(option: { username: string; password: string }) {
   }
 }
 
-function toggleDarkMode() {
+async function toggleDarkMode() {
   isDarkMode.value = !isDarkMode.value;
+  await isDarkModeStorage.setValue(isDarkMode.value);
   const DARK = 'dark';
 
   if (isDarkMode.value) {
