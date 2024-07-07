@@ -358,6 +358,14 @@ const toggleInfoDialog = () => {
   <div class="inset-x-0 top-0 fixed z-[10]">
     <div
       class="backdrop-blur-sm z-[999] flex justify-end items-center inset-x-0 gap-1 p-2 px-6">
+      <!-- <el-badge
+        :value="1"
+        type="primary">
+        <el-button>
+          <WI.SimpleIconsTiddlywiki />
+          Tiddlers</el-button
+        >
+      </el-badge> -->
       <el-tag size="large">
         <!-- <WI.SvgSpinnersWifi
           class="text-gray-500"
@@ -371,7 +379,7 @@ const toggleInfoDialog = () => {
       </el-tag>
       <el-dropdown
         size="default"
-        split-button
+        :split-button="true"
         placement="bottom-start"
         trigger="click"
         type="primary">
@@ -474,12 +482,14 @@ const toggleInfoDialog = () => {
 
         <ElInput
           type="text"
+          size="large"
           v-model="title"
           class="mb-4" />
 
         <ElInput
           ref="editRef"
           placeholder="写点什么吧 ..."
+          size="large"
           v-model="md"
           @keyup.enter.ctrl="handleSave"
           @input="debounceEdit"
@@ -502,6 +512,7 @@ const toggleInfoDialog = () => {
             <h2>登录</h2>
             <div class="flex gap-2">
               <el-form
+                size="large"
                 :spellcheck="false"
                 label-width="68px"
                 label-position="top">
@@ -558,12 +569,14 @@ const toggleInfoDialog = () => {
               <!-- :prefix-icon="WI.GameIconsHole" -->
               <ElInput
                 v-model.trim.number="port"
+                size="large"
                 maxlength="5"
                 minlength="1"
                 @keyup.enter="savePort(port)"
                 placeholder="请输入端口号">
                 <template #prepend>
                   <el-select
+                    size="large"
                     v-model="port"
                     placeholder="端口"
                     style="width: 150px">
