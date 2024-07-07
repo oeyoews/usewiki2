@@ -8,7 +8,8 @@ export async function checkStatus(
   status: Ref<IStatus>,
   isChecking: Ref<boolean>,
   username: Ref<string>,
-  password: Ref<string>
+  password: Ref<string>,
+  isOnline: Ref<boolean>
 ) {
   const baseURL = `http://localhost:${port.value}`;
   const token = 'Basic ' + btoa(username.value + ':' + password.value);
@@ -23,14 +24,16 @@ export async function checkStatus(
     },
     onResponse({ request, response, options }) {
       if (response.ok) {
-        notify({
-          title: '连接成功',
-          type: 'success',
-          position: 'bottom-left',
-          showClose: false,
-          duration: 1500,
-        });
+        // notify({
+        //   title: '连接成功',
+        //   type: 'success',
+        //   position: 'bottom-left',
+        //   showClose: false,
+        //   duration: 1500,
+        // });
+        isOnline.value = true;
       } else {
+        isOnline.value = false;
         if (response.status == 401) {
           // response.statusText,
           notify({
@@ -42,6 +45,7 @@ export async function checkStatus(
       }
     },
     async onRequestError({ error, request, response, options }) {
+      isOnline.value = false;
       notify({
         //  + error.message,
         title: '请检查端口号是否正确',

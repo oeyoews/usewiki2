@@ -25,8 +25,9 @@ import {
 } from '@/utils/storage';
 // import getAI from '@/utils/openai';
 
+const isOnline = ref(false);
 const ports = [8000, 8080, 8001, 8081];
-const devMode = import.meta.env.DEV;
+// const devMode = import.meta.env.DEV;
 const isDarkMode = ref(false);
 const editRef = ref<HTMLInputElement>();
 const isChecking = ref(false);
@@ -107,7 +108,7 @@ onMounted(async () => {
 
   isCheckTw5.value = await isCheckTw5Storage.getValue();
   if (isCheckTw5.value) {
-    await checkStatus(port!, status, isChecking, username, password);
+    await checkStatus(port!, status, isChecking, username, password, isOnline);
   }
 });
 
@@ -169,6 +170,7 @@ const vanillaStatus: IStatus = {
   tiddlywiki_version: '',
 };
 
+// tiddlywiki status field
 const status = ref<IStatus>(vanillaStatus);
 
 async function checkTwStatus() {
@@ -176,14 +178,21 @@ async function checkTwStatus() {
   if (isCheckTw5.value) {
     status.value.tiddlywiki_version = '';
     status.value.username = '';
+    isOnline.value = false;
     await isCheckTw5Storage.setValue(false);
     return true;
   }
 
   await isCheckTw5Storage.setValue(true);
-  const value = await isCheckTw5Storage.getValue();
   let res = false;
-  res = await checkStatus(port!, status, isChecking, username, password);
+  res = await checkStatus(
+    port!,
+    status,
+    isChecking,
+    username,
+    password,
+    isOnline
+  );
   return res;
 }
 
@@ -238,7 +247,14 @@ async function savePort(port: number) {
   await portStorage.setValue(port);
   if (isCheckTw5.value) {
     // 更新status
-    await checkStatus(toRef(port), status, isChecking, username, password);
+    await checkStatus(
+      toRef(port),
+      status,
+      isChecking,
+      username,
+      password,
+      isOnline
+    );
   } else {
     notify({
       message: '保存成功',
@@ -259,7 +275,7 @@ async function saveAuth(option: { username: string; password: string }) {
   }
   await authStorage.setValue(option);
   if (isCheckTw5.value) {
-    await checkStatus(port, status, isChecking, username, password);
+    await checkStatus(port, status, isChecking, username, password, isOnline);
   } else {
     notify({
       message: '保存成功',
@@ -342,6 +358,17 @@ const toggleInfoDialog = () => {
   <div class="inset-x-0 top-0 fixed z-[10]">
     <div
       class="backdrop-blur-sm z-[999] flex justify-end items-center inset-x-0 gap-1 p-2 px-6">
+      <el-tag size="large">
+        <!-- <WI.SvgSpinnersWifi
+          class="text-gray-500"
+          v-if="isChecking && !isOnline" /> -->
+        <WI.RiWifiFill
+          class="text-emerald-600"
+          v-if="isOnline" />
+        <WI.MdiWifiOff
+          class="text-rose-600"
+          v-else />
+      </el-tag>
       <el-dropdown
         size="default"
         split-button

@@ -144,6 +144,9 @@ importers:
       '@iconify-json/streamline':
         specifier: ^1.1.8
         version: 1.1.8
+      '@iconify-json/svg-spinners':
+        specifier: ^1.1.2
+        version: 1.1.2
       '@iconify-json/tdesign':
         specifier: ^1.1.6
         version: 1.1.6
@@ -717,6 +720,9 @@ packages:
 
   '@iconify-json/streamline@1.1.8':
     resolution: {integrity: sha512-9G9y1BYgh3VTZdE8CPUVSfzjHL39/PkkdPpyVCeWYZ64flyPEEBMeRz4YyoOU8A8MMTUj2zCq9GcsLpZb9Yg1Q==}
+
+  '@iconify-json/svg-spinners@1.1.2':
+    resolution: {integrity: sha512-Aab6SqkORaTJ1W+ooufn6C8BsBitrn3uk8iRQLPA6pjhyvQAhkKCGMctyXIL5ZjrycnoFVsZ4mx7KnwEMra8qg==}
 
   '@iconify-json/tdesign@1.1.6':
     resolution: {integrity: sha512-PnYDkM8sEaVF3da5sMaP7TvvqgDrQFF2HAe+boX4uTJbVUMCQZFSO+OtpRSZWYQv609lB6SDDDfE2jKFE2P3Og==}
@@ -4068,6 +4074,10 @@ snapshots:
       '@iconify/types': 2.0.0
 
   '@iconify-json/streamline@1.1.8':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/svg-spinners@1.1.2':
     dependencies:
       '@iconify/types': 2.0.0
 

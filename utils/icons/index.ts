@@ -18,3 +18,6 @@ export { default as PhPencil } from '~icons/ph/pencil';
 export { default as ZondiconsCopy } from '~icons/zondicons/copy';
 export { default as LetsIconsSettingAltLine } from '~icons/lets-icons/setting-alt-line';
 export { default as FluentDarkTheme24Filled } from '~icons/fluent/dark-theme-24-filled';
+export { default as RiWifiFill } from '~icons/ri/wifi-fill';
+export { default as SvgSpinnersWifi } from '~icons/svg-spinners/wifi';
+export { default as MdiWifiOff } from '~icons/mdi/wifi-off';
