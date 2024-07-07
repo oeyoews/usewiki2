@@ -360,10 +360,11 @@ const toggleInfoDialog = () => {
       </el-tooltip>
 
       <!-- darkmode -->
+      <!-- :content="`切换到 ${isDarkMode ? '白天模式' : '夜间模式'}`" -->
       <el-tooltip
         effect="light"
-        :content="`切换到 ${isDarkMode ? '白天模式' : '夜间模式'}`"
-        placement="bottom">
+        content="切换"
+        placement="left">
         <ElButton
           @click="toggleDark"
           size="default"
@@ -495,6 +496,10 @@ const toggleInfoDialog = () => {
             <div
               v-html="html"
               class="mx-2"></div>
+
+            <!-- <el-backtop
+              :right="50"
+              :bottom="50" /> -->
           </article>
         </div>
       </ElTabPane>
