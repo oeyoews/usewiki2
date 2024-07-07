@@ -508,6 +508,7 @@ const toggleInfoDialog = () => {
                 <el-form-item label="用户名">
                   <ElInput
                     v-model.trim.number="username"
+                    :prefix-icon="WI.MingcuteUser4Line"
                     minlength="3"
                     maxlength="20"
                     show-word-limit
@@ -517,6 +518,7 @@ const toggleInfoDialog = () => {
                   <ElInput
                     minlength="4"
                     maxlength="20"
+                    :prefix-icon="WI.MynauiLockPassword"
                     v-model.trim.number="password"
                     type="password"
                     placeholder="请输入密码"
@@ -553,6 +555,7 @@ const toggleInfoDialog = () => {
           <div>
             <h2>端口号</h2>
             <div class="flex gap-2">
+              <!-- :prefix-icon="WI.GameIconsHole" -->
               <ElInput
                 v-model.trim.number="port"
                 maxlength="5"

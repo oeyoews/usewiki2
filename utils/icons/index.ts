@@ -21,3 +21,6 @@ export { default as FluentDarkTheme24Filled } from '~icons/fluent/dark-theme-24-
 export { default as RiWifiFill } from '~icons/ri/wifi-fill';
 export { default as SvgSpinnersWifi } from '~icons/svg-spinners/wifi';
 export { default as MdiWifiOff } from '~icons/mdi/wifi-off';
+export { default as MingcuteUser4Line } from '~icons/mingcute/user-4-line';
+export { default as MynauiLockPassword } from '~icons/mynaui/lock-password';
+export { default as GameIconsHole } from '~icons/game-icons/hole';
