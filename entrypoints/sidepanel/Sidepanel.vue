@@ -589,6 +589,7 @@ const toggleInfoDialog = () => {
                 </template>
               </ElInput>
               <ElButton
+                size="large"
                 type="primary"
                 plain
                 @click="savePort(port)"
@@ -603,6 +604,7 @@ const toggleInfoDialog = () => {
             <!-- tag -->
             <div class="flex gap-2">
               <ElTag
+                size="large"
                 v-for="tag in dynamicTags"
                 :key="tag"
                 closable
@@ -614,11 +616,11 @@ const toggleInfoDialog = () => {
                 </div>
               </ElTag>
               <ElInput
+                size="large"
                 v-if="inputVisible"
                 ref="InputRef"
                 v-model="inputValue"
                 class="w-20"
-                size="default"
                 @keyup.enter="handleInputConfirm"
                 @blur="handleInputConfirm" />
 
