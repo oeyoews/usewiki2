@@ -338,6 +338,8 @@ const toggleInfoDialog = () => {
 </script>
 
 <template>
+  <div
+    className="fixed inset-0 -z-50 size-full bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
   <div class="inset-x-0 top-0 sticky z-[10]">
     <div
       class="backdrop-blur-lg z-[999] flex justify-end items-center inset-x-0 gap-1 p-2 rounded-md px-6">
