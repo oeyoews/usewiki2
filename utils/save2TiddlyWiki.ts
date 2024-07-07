@@ -94,10 +94,7 @@ const save2TiddlyWiki = async (
       'x-requested-with': 'TiddlyWiki',
       Authorization: token,
     },
-  });
 
-  const oldTiddler = await getTwFetch(`/${title}`, {
-    // async onResponseError({ request, response, options }) {},
     async onResponse({ request, response, options }) {
       switch (response.status) {
         case 200:
@@ -121,33 +118,37 @@ const save2TiddlyWiki = async (
     },
   });
 
-  // 条目已存在的情况
-  if (oldTiddler?.text === text) {
-    notify({
-      message: h('div', [
-        // h('span', { style: { fontWeight: 'bold' } }, title),
-        h('span', null, '无需重复保存！'),
-      ]),
-      type: 'warning',
-    });
-  } else {
-    ElMessageBox.confirm(`确定要覆盖 ${title} 吗`, '警告', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    })
-      .then(() => {
-        savetwFetch(`/${title}`, {
-          body: tiddler,
-        });
-      })
-      .catch(() => {
-        notify({
-          message: '已取消保存',
-          type: 'info',
-        });
+  try {
+    const oldTiddler = await getTwFetch(`/${title}`);
+
+    // 条目已存在的情况
+    if (oldTiddler?.text === text) {
+      notify({
+        message: h('div', [
+          // h('span', { style: { fontWeight: 'bold' } }, title),
+          h('span', null, '无需重复保存！'),
+        ]),
+        type: 'warning',
       });
-  }
+    } else {
+      ElMessageBox.confirm(`确定要覆盖 ${title} 吗`, '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+        .then(() => {
+          savetwFetch(`/${title}`, {
+            body: tiddler,
+          });
+        })
+        .catch(() => {
+          notify({
+            message: '已取消保存',
+            type: 'info',
+          });
+        });
+    }
+  } catch (error) {}
 };
 
 export default save2TiddlyWiki;
