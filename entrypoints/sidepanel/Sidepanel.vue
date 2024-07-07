@@ -102,7 +102,6 @@ onMounted(async () => {
 
 onMounted(async () => {
   getContent();
-
   await checkStatus(port!, status, isChecking, username, password);
 });
 
@@ -258,56 +257,58 @@ async function toggleDarkMode() {
   }
 }
 
-// const isAppearanceTransition =
-//   document.startViewTransition &&
-//   !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isAppearanceTransition =
+  // @ts-ignore
+  document.startViewTransition &&
+  !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// /**
-//  * Credit to [@hooray](https://github.com/hooray)
-//  * @see https://github.com/vuejs/vitepress/pull/2347
-//  */
-// async function toggleDark(event?: MouseEvent) {
-//   const DARK = 'dark';
-//   if (!isAppearanceTransition || !event) {
-//     isDarkMode.value = !isDarkMode.value;
-//     await isDarkModeStorage.setValue(isDarkMode.value);
-//     return;
-//   }
-//   if (isDarkMode.value) {
-//     document.documentElement.classList.add(DARK);
-//   } else {
-//     document.documentElement.classList.remove(DARK);
-//   }
-//   const x = event.clientX;
-//   const y = event.clientY;
-//   const endRadius = Math.hypot(
-//     Math.max(x, innerWidth - x),
-//     Math.max(y, innerHeight - y)
-//   );
-//   // @ts-expect-error: Transition API
-//   const transition = document.startViewTransition(async () => {
-//     isDarkMode.value = !isDarkMode.value;
-//     await nextTick();
-//   });
-//   transition.ready.then(() => {
-//     const clipPath = [
-//       `circle(0px at ${x}px ${y}px)`,
-//       `circle(${endRadius}px at ${x}px ${y}px)`,
-//     ];
-//     document.documentElement.animate(
-//       {
-//         clipPath: isDarkMode.value ? [...clipPath].reverse() : clipPath,
-//       },
-//       {
-//         duration: 400,
-//         easing: 'ease-in',
-//         pseudoElement: isDarkMode.value
-//           ? '::view-transition-old(root)'
-//           : '::view-transition-new(root)',
-//       }
-//     );
-//   });
-// }
+/**
+ * Credit to [@hooray](https://github.com/hooray)
+ * @see https://github.com/vuejs/vitepress/pull/2347
+ */
+async function toggleDark(event?: MouseEvent) {
+  const DARK = 'dark';
+  if (!isAppearanceTransition || !event) {
+    isDarkMode.value = !isDarkMode.value;
+    await isDarkModeStorage.setValue(isDarkMode.value);
+    return;
+  }
+  const x = event.clientX;
+  const y = event.clientY;
+  const endRadius = Math.hypot(
+    Math.max(x, innerWidth - x),
+    Math.max(y, innerHeight - y)
+  );
+  // @ts-expect-error: Transition API
+  const transition = document.startViewTransition(async () => {
+    isDarkMode.value = !isDarkMode.value;
+    await nextTick();
+  });
+  transition.ready.then(() => {
+    const clipPath = [
+      `circle(0px at ${x}px ${y}px)`,
+      `circle(${endRadius}px at ${x}px ${y}px)`,
+    ];
+    document.documentElement.animate(
+      {
+        clipPath: isDarkMode.value ? [...clipPath].reverse() : clipPath,
+      },
+      {
+        duration: 400,
+        easing: 'ease-in',
+        pseudoElement: isDarkMode.value
+          ? '::view-transition-old(root)'
+          : '::view-transition-new(root)',
+      }
+    );
+
+    if (isDarkMode.value) {
+      document.documentElement.classList.add(DARK);
+    } else {
+      document.documentElement.classList.remove(DARK);
+    }
+  });
+}
 
 const toggleInfoDialog = () => {
   infoDialogStatus.value = !infoDialogStatus.value;
@@ -345,7 +346,7 @@ const toggleInfoDialog = () => {
         :content="`切换到 ${isDarkMode ? '白天模式' : '夜间模式'}`"
         placement="bottom">
         <ElButton
-          @click="toggleDarkMode"
+          @click="toggleDark"
           size="default"
           type="primary"
           plain
@@ -657,5 +658,22 @@ const toggleInfoDialog = () => {
 <style scoped lang="css">
 ::v-deep(.el-dialog) {
   border-radius: 15px;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 2147483646;
+}
+.dark::view-transition-old(root) {
+  z-index: 2147483646;
+}
+.dark::view-transition-new(root) {
+  z-index: 1;
 }
 </style>

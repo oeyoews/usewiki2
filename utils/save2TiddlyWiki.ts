@@ -13,6 +13,13 @@ const save2TiddlyWiki = async (
   username: Ref<string>,
   password: Ref<string>
 ) => {
+  if (!title) {
+    notify({
+      message: '标题为空',
+      type: 'warning',
+    });
+    return;
+  }
   const baseURL = `http://localhost:${port}/recipes/default/tiddlers`;
 
   const tags = tag
