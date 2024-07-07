@@ -384,7 +384,7 @@ const toggleInfoDialog = () => {
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item
-              :icon="WI.BiJournals"
+              :icon="WI.PhPencil"
               @click="addJournal"
               v-if="isCheckTw5"
               >日记

@@ -1,4 +1,4 @@
-export { default as BiJournals } from '~icons/bi/journals?width=16px&height=16px';
+// export { default as BiJournals } from '~icons/bi/journals?width=16px&height=16px';
 export { default as StreamlineAiEditSparkSolid } from '~icons/streamline/ai-edit-spark-solid';
 export { default as MdiSparklesOutline } from '~icons/mdi/sparkles-outline';
 export { default as MdiContentCopy } from '~icons/mdi/content-copy';
