@@ -20,6 +20,11 @@ const save2TiddlyWiki = async (
     });
     return;
   }
+  if (!text) {
+    notify({ message: '内容为空', type: 'warning' });
+    return;
+  }
+
   const baseURL = `http://localhost:${port}/recipes/default/tiddlers`;
 
   const tags = tag
