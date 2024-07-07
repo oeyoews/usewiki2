@@ -266,17 +266,16 @@ async function saveAuth(option: { username: string; password: string }) {
   }
 }
 
-async function toggleDarkMode() {
-  isDarkMode.value = !isDarkMode.value;
-  await isDarkModeStorage.setValue(isDarkMode.value);
-  const DARK = 'dark';
-
-  if (isDarkMode.value) {
-    document.documentElement.classList.add(DARK);
-  } else {
-    document.documentElement.classList.remove(DARK);
-  }
-}
+// async function toggleDarkMode() {
+//   isDarkMode.value = !isDarkMode.value;
+//   await isDarkModeStorage.setValue(isDarkMode.value);
+//   const DARK = 'dark';
+//   if (isDarkMode.value) {
+//     document.documentElement.classList.add(DARK);
+//   } else {
+//     document.documentElement.classList.remove(DARK);
+//   }
+// }
 
 const isAppearanceTransition =
   // @ts-ignore
@@ -303,6 +302,11 @@ async function toggleDark(event?: MouseEvent) {
   // @ts-expect-error: Transition API
   const transition = document.startViewTransition(async () => {
     isDarkMode.value = !isDarkMode.value;
+    if (isDarkMode.value) {
+      document.documentElement.classList.add(DARK);
+    } else {
+      document.documentElement.classList.remove(DARK);
+    }
     await nextTick();
   });
   transition.ready.then(() => {
@@ -315,19 +319,13 @@ async function toggleDark(event?: MouseEvent) {
         clipPath: isDarkMode.value ? [...clipPath].reverse() : clipPath,
       },
       {
-        duration: 400,
+        duration: 250,
         easing: 'ease-in',
         pseudoElement: isDarkMode.value
           ? '::view-transition-old(root)'
           : '::view-transition-new(root)',
       }
     );
-
-    if (isDarkMode.value) {
-      document.documentElement.classList.add(DARK);
-    } else {
-      document.documentElement.classList.remove(DARK);
-    }
   });
 }
 
