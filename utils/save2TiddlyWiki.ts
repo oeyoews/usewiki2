@@ -97,6 +97,7 @@ const save2TiddlyWiki = async (
   });
 
   const oldTiddler = await getTwFetch(`/${title}`, {
+    // async onResponseError({ request, response, options }) {},
     async onResponse({ request, response, options }) {
       switch (response.status) {
         case 200:
@@ -112,6 +113,9 @@ const save2TiddlyWiki = async (
           });
           break;
         default:
+          notify({
+            message: response.statusText,
+          });
           break;
       }
     },

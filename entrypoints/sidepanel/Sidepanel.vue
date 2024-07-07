@@ -95,7 +95,7 @@ onMounted(async () => {
   if (isDark) {
     document.documentElement.classList.add('dark');
   }
-  !devMode && (document.oncontextmenu = () => false);
+  // !devMode && (document.oncontextmenu = () => false);
   if (isDark) {
     isDarkMode.value = true;
     document.documentElement.classList.add('dark');
@@ -122,6 +122,8 @@ const handleSave = () =>
     username,
     password
   );
+
+const debounceSave = debounce(handleSave, 500);
 
 function addJournal() {
   md.value = '';
@@ -347,7 +349,7 @@ const toggleInfoDialog = () => {
         type="success">
         <span
           class="el-dropdown-link flex items-center"
-          @click="handleSave">
+          @click="debounceSave">
           <WI.SimpleIconsTiddlywiki class="mr-2" />
           保存
         </span>
