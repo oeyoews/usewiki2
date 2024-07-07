@@ -8,7 +8,7 @@
 
 > 将当前网页文章转换成 Markdown 文件，支持保存到本地，TiddlyWiki5, 支持 AI 整理润色。
 
-![](./banner02.png)
+![usewiki2](banner03.png)
 
 <!-- * element plus, tailwindcss, wxt, vue, axios -->
 
