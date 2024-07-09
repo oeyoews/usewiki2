@@ -67,7 +67,6 @@ export default defineBackground(() => {
   browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // 接收content 消息
     if (request.type === 'tiddlywiki-send-message') {
-      console.log(request);
       // https://stackoverflow.com/questions/14481107/typeerror-cannot-call-method-setbadgetext-of-undefined
       browser.action.setIcon({
         path: 'tw32.png',

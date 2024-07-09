@@ -22,7 +22,7 @@ export default defineContentScript({
           // version,
         });
       } else {
-        // browser.runtime.sendMessage({ type: 'general-send-message' });
+        browser.runtime.sendMessage({ type: 'general-send-message' });
       }
     });
 
