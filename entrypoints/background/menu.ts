@@ -23,6 +23,6 @@ export const menus = [
     title: '提交 Bug',
     contexts: ['page'],
   },
-];
+] as const;
 
 export type MenuIds = (typeof menus)[number]['id'];

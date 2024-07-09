@@ -63,6 +63,7 @@ password.value = auth.password;
 
 dynamicTags.value = Object.values(await tagStorage.getValue());
 
+// 获取页面文章内容(-- content.ts), 可以手动触发函数， 重新提取页面文章内容
 async function getContent(
   options = {
     tip: false,
@@ -74,8 +75,9 @@ async function getContent(
   const tab = tabs[0];
   link.value = tab.url!;
   faviconUrl.value = tab.favIconUrl!;
+  // 向content.ts发送消息， 并且接受响应
   const response = await browser.tabs.sendMessage(tab.id!, {
-    info: 'get-doc',
+    type: 'get-doc',
     message: '获取文章',
   });
 
@@ -92,6 +94,9 @@ async function getContent(
 }
 
 onMounted(async () => {
+  // const bg = chrome.extension.getBackgroundPage();
+  // // @ts-ignore
+  // bg!.popUp();
   const isDark = await isDarkModeStorage.getValue();
   if (isDark) {
     document.documentElement.classList.add('dark');
@@ -355,7 +360,7 @@ const toggleInfoDialog = () => {
 <template>
   <div
     className="fixed inset-0 -z-50 size-full bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
-  <div class="inset-x-0 top-0 fixed z-[10]">
+  <div class="inset-x-0 top-0 fixed">
     <div
       class="backdrop-blur-sm z-[999] flex justify-end items-center inset-x-0 gap-1 p-2 px-6">
       <!-- <el-badge

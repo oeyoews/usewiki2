@@ -5,6 +5,7 @@ import constant from '../../utils/constant';
 import open from './open';
 import save from './save';
 
+// background 不能直接访问dom, 只能和content 通信, content(主进程) 类似一个桥梁
 export default defineBackground(() => {
   // browser.runtime.onStartup.addListener(() => { })
 
@@ -64,7 +65,8 @@ export default defineBackground(() => {
   });
 
   browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.info === 'tiddlywiki-send-message') {
+    // 接收content 消息
+    if (request.type === 'tiddlywiki-send-message') {
       console.log(request);
       // https://stackoverflow.com/questions/14481107/typeerror-cannot-call-method-setbadgetext-of-undefined
       browser.action.setIcon({
@@ -96,6 +98,15 @@ export default defineBackground(() => {
       enabled: true,
     });
   });
+
+  // chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
+  //   if (info.favIconUrl) {
+  //     chrome.tabs.sendMessage(tabId, {
+  //       type: 'routeUpdate',
+  //       data: tab,
+  //     });
+  //   }
+  // });
 
   // 单击直接打开 panel
   chrome.sidePanel

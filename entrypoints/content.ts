@@ -1,5 +1,6 @@
 import { isProbablyReaderable, Readability } from '@mozilla/readability';
 
+// 进入页面会执行的函数, 可以操作 DOM
 export default defineContentScript({
   // matches: ['<all_urls>'],
   matches: ['https://*/*'],
@@ -7,7 +8,7 @@ export default defineContentScript({
   exclude: ['https://google.com/*', 'https://bing.com/*', 'chrome://*'],
   runAt: 'document_start',
   main() {
-    // 检查是否为 tiddlywiki site
+    // 检查是否为 tiddlywiki site, 向bg 发送消息
     document.addEventListener('DOMContentLoaded', () => {
       const meta = document.querySelector('meta[name="generator"]');
       // @ts-ignore
@@ -17,26 +18,36 @@ export default defineContentScript({
         //   // @ts-ignore
         // )?.content;
         browser.runtime.sendMessage({
-          info: 'tiddlywiki-send-message',
+          type: 'tiddlywiki-send-message',
           // version,
         });
       } else {
-        browser.runtime.sendMessage({ info: 'general-send-message' });
+        // browser.runtime.sendMessage({ type: 'general-send-message' });
       }
     });
 
+    // 提取页面文章内容
     function getDoc() {
       const documentClone = document.cloneNode(true) as Document;
-
       const reader = new Readability(documentClone);
       const article = reader.parse();
       return article;
     }
 
-    browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      if (request.info === 'get-doc') {
-        // @ts-ignore
-        sendResponse(getDoc());
+    // 主进程监听消息
+    browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      // console.log(message);
+      switch (message.type) {
+        case 'get-doc':
+          // @ts-ignore
+          sendResponse(getDoc());
+          break;
+        case 'routeUpdate':
+          // 通知 popup 更新内容
+          browser.runtime.sendMessage({ type: 'routeUpdate', data: getDoc() });
+          break;
+        default:
+          break;
       }
     });
 
@@ -56,24 +67,23 @@ export default defineContentScript({
     //   ]);
     // });
 
-    // or use execsripting
-    // scripting
-    //   window.addEventListener(
-    //     'message',
-    //     (event) => {
-    //       if (event.data.key === 'tiddlywiki-send-message') {
-    //         browser.runtime.sendMessage({
-    //           info: event.data.key,
-    //           message: event.data.message,
-    //         });
-    //       }
-    //     },
-    //     false
-    //   );
+    // or use execsripting // scripting
+    // window.addEventListener(
+    //   'message',
+    //   (event) => {
+    //     if (event.data.key === 'tiddlywiki-send-message') {
+    //       browser.runtime.sendMessage({
+    //         info: event.data.key,
+    //         message: event.data.message,
+    //       });
+    //     }
+    //   },
+    //   false
+    // );
 
-    //   const s = document.createElement('script');
-    //   s.src = browser.runtime.getURL('/injected.js');
-    //   s.onload = () => s.remove();
-    //   (document.head || document.documentElement).appendChild(s);
+    // const s = document.createElement('script');
+    // s.src = browser.runtime.getURL('/injected.js');
+    // s.onload = () => s.remove();
+    // (document.head || document.documentElement).appendChild(s);
   },
 });
