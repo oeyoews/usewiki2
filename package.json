@@ -2,7 +2,7 @@
   "name": "usewiki2",
   "description": "Convert HTML to Markdown, and save to your computer, support nodejs tiddlywiki",
   "private": true,
-  "version": "4.2.1",
+  "version": "4.3.0",
   "type": "module",
   "scripts": {
     "dev": "wxt",
