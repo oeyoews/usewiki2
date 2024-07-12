@@ -2,16 +2,20 @@
 export { default as StreamlineAiEditSparkSolid } from '~icons/streamline/ai-edit-spark-solid';
 export { default as MdiSparklesOutline } from '~icons/mdi/sparkles-outline';
 export { default as MdiContentCopy } from '~icons/mdi/content-copy';
-export { default as IconoirSpark } from '~icons/iconoir/spark';
+
+// info
 export { default as CharmGithub } from '~icons/charm/github';
-export { default as MaterialSymbolsDownload } from '~icons/material-symbols/download';
+
+// tabs
 export { default as FaRegularEdit } from '~icons/fa-regular/edit';
 export { default as TdesignSetting } from '~icons/tdesign/setting';
-export { default as MaterialSymbolsInfoOutline } from '~icons/material-symbols/info-outline';
 export { default as FaFileTextO } from '~icons/fa/file-text-o';
+
+// tools
+export { default as MaterialSymbolsDownload } from '~icons/material-symbols/download';
+export { default as MaterialSymbolsInfoOutline } from '~icons/material-symbols/info-outline';
 export { default as FaRegularSave } from '~icons/fa-regular/save';
 export { default as MdiCloudRefreshVariant } from '~icons/mdi/cloud-refresh-variant';
-export { default as OcticonInfo24 } from '~icons/octicon/info-24';
 export { default as SimpleIconsTiddlywiki } from '~icons/simple-icons/tiddlywiki';
 export { default as MdiTagOutline } from '~icons/mdi/tag-outline';
 export { default as PhPencil } from '~icons/ph/pencil';

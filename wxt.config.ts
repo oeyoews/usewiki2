@@ -58,8 +58,8 @@ export default defineConfig({
       '128': 'icons/icon128.png',
     },
     name: 'Usewiki2',
+    description: 'TiddlyWiki5 的浏览器扩展',
     omnibox: { keyword: 'tw' },
-    description: 'Usewiki2: usewiki 的 vue 版本',
     permissions: [
       'sidePanel',
       'contextMenus',
@@ -86,7 +86,7 @@ export default defineConfig({
     // },
 
     action: {
-      default_title: '单击打开 Usewiki2',
+      default_title: 'TiddlyWiki5 的浏览器扩展',
     },
     browser_action: {
       // default_popup: 'popup.html',

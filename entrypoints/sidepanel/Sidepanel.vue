@@ -25,6 +25,7 @@ import {
 } from '@/utils/storage';
 // import getAI from '@/utils/openai';
 
+const textOver = ref(false);
 const isOnline = ref(false);
 const ports = [8000, 8080, 8001, 8081];
 // const devMode = import.meta.env.DEV;
@@ -84,6 +85,10 @@ async function getContent(
   html.value = response.content;
   md.value = await html2md(html.value);
   title.value = response.title;
+  if (title.value.length > 30) {
+    textOver.value = true;
+  }
+  // console.log(html.value);
   if (options.tip) {
     notify({
       message: '刷新成功',
@@ -442,36 +447,44 @@ const toggleInfoDialog = () => {
       <!-- preview -->
       <ElTabPane
         name="preview"
-        class="overflow-y-auto h-screen">
+        class="overflow-y-auto h-[calc(100vh-60px)]">
         <template #label>
           <WI.FaFileTextO /> <span class="ml-1">预览</span>
         </template>
         <div v-if="title">
           <div class="flex items-center justify-center gap-2">
-            <h2>
-              <a
-                :href="link"
-                target="_blank"
-                v-if="link">
-                <img
-                  alt=""
-                  :src="faviconUrl"
-                  class="rounded-full size-4" />
-              </a>
-              {{ title }}
-            </h2>
+            <el-popover
+              :width="300"
+              raw-content
+              :show-after="500">
+              <!-- 鼠标悬停时显示的内容 -->
+              <template #default>
+                {{ title }}
+              </template>
+              <!-- 默认显示的内容 -->
+              <template #reference>
+                <h2 class="line-clamp-2">
+                  <a
+                    :href="link"
+                    target="_blank"
+                    v-if="link && faviconUrl">
+                    <img
+                      alt=""
+                      :src="faviconUrl"
+                      class="rounded-full size-4" />
+                  </a>
+                  {{ title }}
+                </h2>
+              </template>
+            </el-popover>
           </div>
-          <!-- dark:prose-invert -->
           <article
-            class="prose-gray max-w-none prose-sm flex-wrap prose-img:max-w-[300px] prose-img:my-0 prose-img:rounded-md prose-video:max-w-[300px] prose-video:max-h-[300px] prose-video:my-0">
-            <div
-              v-html="html"
-              class="mx-2"
-              style="height: calc(100vh - 150px); overflow-y: auto"></div>
-
-            <!-- <el-backtop
-              :right="50"
-              :bottom="50" /> -->
+            class="prose-gray max-w-none prose-sm flex-wrap prose-img:max-w-[300px] prose-img:my-0 prose-img:rounded-md prose-video:max-w-[300px] prose-video:max-h-[300px] prose-video:my-0 prose-h2:my-2 prose-img:max-h-[300px] overflow-x-hidden h-[calc(100vh-160px)]">
+            <el-scrollbar styl>
+              <div
+                v-html="html"
+                class="mx-2 overflow-x-hidden"></div>
+            </el-scrollbar>
           </article>
         </div>
       </ElTabPane>
@@ -700,7 +713,8 @@ const toggleInfoDialog = () => {
 }
 
 ::v-deep(.el-tabs__content) {
-  height: calc(100vh - 130px);
+  height: calc(100vh - 110px);
+  padding: 5px 10px;
 }
 
 ::v-deep(.el-tabs--border-card) {
