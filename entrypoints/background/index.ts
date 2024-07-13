@@ -5,14 +5,23 @@ import constant from '../../utils/constant';
 import open from './open';
 import save from './save';
 
+// https://github.com/GoogleChrome/chrome-extensions-samples/blob/main/functional-samples/cookbook.sidepanel-multiple/service-worker.js
 // background 不能直接访问dom, 只能和content 通信, content(主进程) 类似一个桥梁
 export default defineBackground(() => {
   // browser.runtime.onStartup.addListener(() => { })
   const { pages } = constant;
 
+  // browser.tabs.onActivated
   browser.runtime.onInstalled.addListener(function (details) {
     if (details.reason === 'install') {
       // chrome.sidePanel.setOptions({ path: pages.optionsPage });
+      // 首次安装调转到欢迎页面
+      // chrome.tabs.create({ url: pages.welcomePage, });
+      // 单击直接打开 panel
+      chrome.sidePanel
+        .setPanelBehavior({ openPanelOnActionClick: true })
+        .catch((error) => console.error(error));
+
       browser.notifications.create({
         type: 'image',
         // eventTime: new Date().getTime(),
@@ -98,22 +107,9 @@ export default defineBackground(() => {
     }
   });
 
-  // 单击直接打开 panel
-  chrome.sidePanel
-    .setPanelBehavior({ openPanelOnActionClick: true })
-    .catch((error) => console.error(error));
-
   // https://wxt.dev/guide/directory-structure/entrypoints/sidepanel.html
-  browser.tabs.onUpdated.addListener(async (tabId, info, tab) => {
-    await chrome.sidePanel.setOptions({
-      tabId,
-      path: pages.sidePanelPage,
-      enabled: true,
-    });
-  });
 
   // browser.tabs.onActivated.addListener(async ({ tabId }) => {
-  //   console.log('计划了');
   //   const { path } = await chrome.sidePanel.getOptions({ tabId });
   //   if (path === pages.optionsPage) {
   //     chrome.sidePanel.setOptions({ path: pages.sidePanelPage });
@@ -121,14 +117,12 @@ export default defineBackground(() => {
   // });
 
   // 页面路由发生变化通知侧边栏前端页面更新
-  browser.runtime.onInstalled.addListener(() => {
-    browser.tabs.onUpdated.addListener((tabId, info, tab) => {
-      if (info.status === 'complete') {
-        chrome.tabs.sendMessage(tabId, {
-          type: 'routeUpdate',
-        });
-      }
-    });
+  browser.tabs.onUpdated.addListener((tabId, info, tab) => {
+    if (info.status === 'complete') {
+      chrome.tabs.sendMessage(tabId, {
+        type: 'routeUpdate',
+      });
+    }
   });
 
   browser.tabs.onUpdated.addListener((tabId, info, tab) => {
