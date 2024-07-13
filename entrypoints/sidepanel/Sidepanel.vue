@@ -64,18 +64,25 @@ const auth = await authStorage.getValue();
 username.value = auth.username;
 password.value = auth.password;
 
+// devmode
+if (process.env.NODE_ENV === 'development') {
+  port.value = constant.devPort;
+  username.value = constant.devUsername;
+  password.value = constant.devUsername;
+  isCheckTw5.value = true;
+}
+
 dynamicTags.value = Object.values(await tagStorage.getValue());
 
-const openOptionsPage = () => {
-  chrome.runtime.openOptionsPage();
-};
+// const openOptionsPage = () => {
+//   chrome.runtime.openOptionsPage();
+// };
 
-const togglePage = () => {
-  chrome.sidePanel.setOptions({
-    path: constant.pages.optionsPage,
-  });
-  console.log('打开设置页面');
-};
+// const togglePage = () => {
+//   chrome.sidePanel.setOptions({
+//     path: constant.pages.optionsPage,
+//   });
+// };
 
 // 获取页面文章内容(-- content.ts), 可以手动触发函数， 重新提取页面文章内容
 async function getContent(
@@ -120,7 +127,6 @@ onMounted(async () => {
   if (isDark) {
     document.documentElement.classList.add('dark');
   }
-  // !devMode && (document.oncontextmenu = () => false);
   if (isDark) {
     isDarkMode.value = true;
     document.documentElement.classList.add('dark');
@@ -131,6 +137,11 @@ onMounted(async () => {
   getContent();
 
   isCheckTw5.value = await isCheckTw5Storage.getValue();
+  // devmode
+  if (process.env.NODE_ENV === 'development') {
+    isCheckTw5.value = true;
+  }
+
   if (isCheckTw5.value) {
     await checkStatus(port!, status, isChecking, username, password, isOnline);
   }

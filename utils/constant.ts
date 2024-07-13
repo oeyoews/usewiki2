@@ -8,6 +8,8 @@ export default {
   markdown_type: 'text/markdown',
   default_tag: '剪藏',
   default_port: 8080,
+  devPort: 8000,
+  devUsername: 'oeyoews',
   default_name: 'Usewiki2',
   tiddlywiki_icon: 'tw256.png',
   pages: {
