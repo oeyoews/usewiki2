@@ -10,4 +10,9 @@ export default {
   default_port: 8080,
   default_name: 'Usewiki2',
   tiddlywiki_icon: 'tw256.png',
+  pages: {
+    welcomePage: 'welcome.html',
+    sidePanelPage: 'sidepanel.html',
+    optionsPage: 'options.html',
+  },
 };

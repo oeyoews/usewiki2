@@ -8,10 +8,11 @@ import save from './save';
 // background 不能直接访问dom, 只能和content 通信, content(主进程) 类似一个桥梁
 export default defineBackground(() => {
   // browser.runtime.onStartup.addListener(() => { })
+  const { pages } = constant;
 
   browser.runtime.onInstalled.addListener(function (details) {
     if (details.reason === 'install') {
-      // browser.tabs.create({ url: chrome.extension.getURL('index.html') });
+      // chrome.sidePanel.setOptions({ path: pages.optionsPage });
       browser.notifications.create({
         type: 'image',
         // eventTime: new Date().getTime(),
@@ -106,10 +107,18 @@ export default defineBackground(() => {
   browser.tabs.onUpdated.addListener(async (tabId, info, tab) => {
     await chrome.sidePanel.setOptions({
       tabId,
-      path: 'sidepanel.html',
+      path: pages.sidePanelPage,
       enabled: true,
     });
   });
+
+  // browser.tabs.onActivated.addListener(async ({ tabId }) => {
+  //   console.log('计划了');
+  //   const { path } = await chrome.sidePanel.getOptions({ tabId });
+  //   if (path === pages.optionsPage) {
+  //     chrome.sidePanel.setOptions({ path: pages.sidePanelPage });
+  //   }
+  // });
 
   // 页面路由发生变化通知侧边栏前端页面更新
   browser.runtime.onInstalled.addListener(() => {
@@ -123,15 +132,7 @@ export default defineBackground(() => {
   });
 
   browser.tabs.onUpdated.addListener((tabId, info, tab) => {
-    console.log(tab.url);
-    if (!tab.url) {
-      chrome.sidePanel.setOptions({
-        tabId,
-        path: 'sidepanel.html',
-        enabled: false,
-      });
-      return;
-    }
+    if (!tab.url) return;
     const url = new URL(tab.url);
     const domains = [
       'https://www.google.com',
@@ -142,13 +143,12 @@ export default defineBackground(() => {
     if (!domains.includes(url.origin)) {
       chrome.sidePanel.setOptions({
         tabId,
-        path: 'sidepanel.html',
+        path: pages.sidePanelPage,
         enabled: true,
       });
     } else {
       chrome.sidePanel.setOptions({
         tabId,
-        path: 'sidepanel.html',
         enabled: false,
       });
     }

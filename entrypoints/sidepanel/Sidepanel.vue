@@ -6,6 +6,7 @@ import 'element-plus/es/components/notification/style/css';
 import { formattime } from '@/utils/formattime';
 import * as utils from '@/utils/utils';
 import AI from '@/utils/ai';
+import constant from '@/utils/constant';
 import { copyMd } from '@/utils/copyMd';
 // @ts-ignore
 import json from '../../package.json';
@@ -67,6 +68,13 @@ dynamicTags.value = Object.values(await tagStorage.getValue());
 
 const openOptionsPage = () => {
   chrome.runtime.openOptionsPage();
+};
+
+const togglePage = () => {
+  chrome.sidePanel.setOptions({
+    path: constant.pages.optionsPage,
+  });
+  console.log('打开设置页面');
 };
 
 // 获取页面文章内容(-- content.ts), 可以手动触发函数， 重新提取页面文章内容
@@ -380,6 +388,7 @@ const toggleInfoDialog = () => {
   <div class="inset-x-0 top-0 fixed">
     <!-- https://developer.chrome.com/docs/extensions/develop/ui/options-page?hl=zh-cn -->
     <!-- <el-button @click="openOptionsPage">open </el-button> -->
+    <!-- <el-button @click="togglePage">toggle </el-button> -->
     <div
       class="backdrop-blur-sm z-[999] flex justify-end items-center inset-x-0 gap-1 p-2 px-6">
       <!-- <el-badge
