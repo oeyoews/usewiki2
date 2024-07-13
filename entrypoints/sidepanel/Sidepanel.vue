@@ -176,7 +176,7 @@ const handleInputConfirm = async () => {
 // 监听路由变化，自动更新页面
 browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.type === 'routeUpdate') {
-    // TODO: 弹窗提示页面更新
+    // Feature: 弹窗提示页面更新
     await getContent();
   }
 });
