@@ -90,27 +90,44 @@ export default defineBackground(() => {
     }
   });
 
-  browser.tabs.onUpdated.addListener(async (tabId, info, tab) => {
-    await chrome.sidePanel.setOptions({
-      tabId,
-      path: 'sidepanel.html',
-      enabled: true,
-    });
-  });
-
-  // chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
-  //   if (info.favIconUrl) {
-  //     chrome.tabs.sendMessage(tabId, {
-  //       type: 'routeUpdate',
-  //       data: tab,
-  //     });
-  //   }
+  // https://wxt.dev/guide/directory-structure/entrypoints/sidepanel.html
+  // browser.tabs.onUpdated.addListener(async (tabId, info, tab) => {
+  // await chrome.sidePanel.setOptions({
+  //   tabId,
+  //   path: 'sidepanel.html',
+  //   enabled: true,
+  // });
   // });
 
   // 单击直接打开 panel
   chrome.sidePanel
     .setPanelBehavior({ openPanelOnActionClick: true })
     .catch((error) => console.error(error));
+
+  browser.tabs.onUpdated.addListener(async (tabId, info, tab) => {
+    // 页面路由发生变化通知侧边栏前端页面更新
+    if (info.status === 'complete') {
+      await chrome.tabs.sendMessage(tabId, {
+        type: 'routeUpdate',
+      });
+    }
+  });
+
+  // browser.tabs.onUpdated.addListener((tabId, info, tab) => {
+  //   if (!tab.url) return;
+  //   const url = new URL(tab.url);
+  //   const domains = [
+  //     'https://www.google.com',
+  //     'https://www.bing.com',
+  //     'chrome://',
+  //   ];
+  //   if (domains.includes(url.origin)) return;
+  //   chrome.sidePanel.setOptions({
+  //     tabId,
+  //     path: 'sidepanel.html',
+  //     enabled: true,
+  //   });
+  // });
 
   // 右键菜单
   browser.runtime.onInstalled.addListener(() => {
@@ -134,8 +151,13 @@ export default defineBackground(() => {
         });
         break;
       case 'usewiki2':
+        // @see: https://developer.chrome.com/docs/extensions/reference/api/sidePanel?hl=zh-cn
+        // 右键打开侧边栏
         chrome.sidePanel
-          .open({ tabId: tab?.id! })
+          .open({
+            tabId: tab?.id!,
+            // windowId: tab?.windowId,
+          })
           .catch((error) => console.error(error));
         break;
       default:

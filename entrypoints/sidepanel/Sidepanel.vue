@@ -64,6 +64,10 @@ password.value = auth.password;
 
 dynamicTags.value = Object.values(await tagStorage.getValue());
 
+const openOptionsPage = () => {
+  chrome.runtime.openOptionsPage();
+};
+
 // 获取页面文章内容(-- content.ts), 可以手动触发函数， 重新提取页面文章内容
 async function getContent(
   options = {
@@ -169,11 +173,13 @@ const handleInputConfirm = async () => {
   inputValue.value = '';
 };
 
-// browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-//   if (request.info === 'tiddlywiki-send-message') {
-//     console.log(request.message)
-//   }
-// })
+// 监听路由变化，自动更新页面
+browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+  if (request.type === 'routeUpdate') {
+    // TODO: 弹窗提示页面更新
+    await getContent();
+  }
+});
 
 const vanillaStatus: IStatus = {
   username: '',
@@ -366,6 +372,8 @@ const toggleInfoDialog = () => {
   <div
     className="fixed inset-0 -z-50 size-full bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
   <div class="inset-x-0 top-0 fixed">
+    <!-- https://developer.chrome.com/docs/extensions/develop/ui/options-page?hl=zh-cn -->
+    <!-- <el-button @click="openOptionsPage">open </el-button> -->
     <div
       class="backdrop-blur-sm z-[999] flex justify-end items-center inset-x-0 gap-1 p-2 px-6">
       <!-- <el-badge
@@ -478,6 +486,7 @@ const toggleInfoDialog = () => {
               </template>
             </el-popover>
           </div>
+
           <article
             class="prose-gray max-w-none prose-sm flex-wrap prose-img:max-w-[300px] prose-img:my-0 prose-img:rounded-md prose-video:max-w-[300px] prose-video:max-h-[300px] prose-video:my-0 prose-h2:my-2 prose-img:max-h-[300px] overflow-x-hidden h-[calc(100vh-160px)]">
             <el-scrollbar styl>
