@@ -7,9 +7,9 @@
 > 此插件目前没有上架商店， 如果从本地安装或者更新遇到问题, 建议删除插件后重新安装.
 
 > [!TIP]
-> UseWiki2: usewiki 的 vue 版本，但是带来了更多功能。
+> ~~UseWiki2: usewiki 的 vue 版本，但是带来了更多功能。~~
 
-> 将当前网页文章转换成 Markdown 文件，支持保存到本地，TiddlyWiki5 ~~支持 AI 整理润色~~。
+> 将当前网页文章转换成 Markdown 文件，支持保存到TiddlyWiki5。 ~~支持 AI 整理润色~~。
 
 ![usewiki2](banner03.png)
 
