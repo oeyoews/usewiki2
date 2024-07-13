@@ -14,5 +14,6 @@ export default {
     welcomePage: 'welcome.html',
     sidePanelPage: 'sidepanel.html',
     optionsPage: 'options.html',
+    devPage: 'https://blog.oeyoews.top',
   },
 };

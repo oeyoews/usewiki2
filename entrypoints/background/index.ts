@@ -14,6 +14,15 @@ export default defineBackground(() => {
   // browser.tabs.onActivated
   browser.runtime.onInstalled.addListener(function (details) {
     if (details.reason === 'install') {
+      if (process.env.NODE_ENV === 'development') {
+        chrome.tabs.create({ url: pages.devPage });
+        browser.notifications.create({
+          type: 'basic',
+          iconUrl: 'tw256.png',
+          title: 'Usewiki2',
+          message: '开发模式',
+        });
+      }
       // chrome.sidePanel.setOptions({ path: pages.optionsPage });
       // 首次安装调转到欢迎页面
       // chrome.tabs.create({ url: pages.welcomePage, });
@@ -118,6 +127,11 @@ export default defineBackground(() => {
 
   // 页面路由发生变化通知侧边栏前端页面更新
   browser.tabs.onUpdated.addListener((tabId, info, tab) => {
+    // chrome.sidePanel.setOptions({
+    //   tabId,
+    //   path: pages.sidePanelPage,
+    //   enabled: true,
+    // });
     if (info.status === 'complete') {
       chrome.tabs.sendMessage(tabId, {
         type: 'routeUpdate',
@@ -125,6 +139,7 @@ export default defineBackground(() => {
     }
   });
 
+  // 部分页面不开启侧边栏
   browser.tabs.onUpdated.addListener((tabId, info, tab) => {
     if (!tab.url) return;
     const url = new URL(tab.url);

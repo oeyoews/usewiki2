@@ -43,3 +43,5 @@
 
 <!-- * append to content
 * options html(or new tab) -->
+
+<!-- https://github.com/wxt-dev/wxt/issues/137 -->
