@@ -54,6 +54,7 @@ const password = ref('');
 
 const aihtml = ref('');
 const infoDialogStatus = ref(false);
+const setupDialogStatus = ref(false);
 
 port.value = await portStorage.getValue();
 
@@ -426,6 +427,11 @@ const toggleInfoDialog = () => {
               详情</el-dropdown-item
             >
             <el-dropdown-item
+              :icon="WI.LetsIconsSettingAltLine"
+              @click="setupDialogStatus = true">
+              配置</el-dropdown-item
+            >
+            <el-dropdown-item
               :icon="WI.ZondiconsCopy"
               @click="copyMd(md)"
               >复制
@@ -532,12 +538,10 @@ const toggleInfoDialog = () => {
       </ElTabPane>
 
       <!-- setup -->
-      <ElTabPane>
-        <template #label>
-          <WI.LetsIconsSettingAltLine />
-          <span class="ml-1">配置</span>
-        </template>
-
+      <el-dialog
+        v-model="setupDialogStatus"
+        width="90%"
+        align-center>
         <div class="items-center mx-2">
           <div>
             <h2>登录</h2>
@@ -584,16 +588,6 @@ const toggleInfoDialog = () => {
             </div>
           </div>
 
-          <h2>连接TiddlyWiki5</h2>
-          <el-switch
-            size="large"
-            :before-change="checkTwStatus"
-            :loading="isChecking"
-            inline-prompt
-            v-model="isCheckTw5"
-            :inactive-icon="WI.SimpleIconsTiddlywiki"
-            :active-icon="WI.SimpleIconsTiddlywiki" />
-
           <div>
             <h2>端口号</h2>
             <div class="flex gap-2">
@@ -610,7 +604,7 @@ const toggleInfoDialog = () => {
                     size="large"
                     v-model="port"
                     placeholder="端口"
-                    style="width: 150px">
+                    style="width: 98px">
                     <template v-for="(port, index) in ports">
                       <el-option
                         :label="`端口${index + 1} (${port})`"
@@ -667,6 +661,16 @@ const toggleInfoDialog = () => {
             </div>
           </div>
 
+          <h2>连接TiddlyWiki5</h2>
+          <el-switch
+            size="large"
+            :before-change="checkTwStatus"
+            :loading="isChecking"
+            inline-prompt
+            v-model="isCheckTw5"
+            :inactive-icon="WI.SimpleIconsTiddlywiki"
+            :active-icon="WI.SimpleIconsTiddlywiki" />
+
           <!-- https://console.groq.com/keys -->
           <!-- <div class="hidden">
             <h2>GROQ API</h2>
@@ -689,7 +693,8 @@ const toggleInfoDialog = () => {
             </div>
         </div> -->
         </div>
-      </ElTabPane>
+      </el-dialog>
+      <!-- </ElTabPane> -->
 
       <el-dialog
         v-model="infoDialogStatus"
