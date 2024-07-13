@@ -13,9 +13,14 @@ export default defineBackground(() => {
     if (details.reason === 'install') {
       // browser.tabs.create({ url: chrome.extension.getURL('index.html') });
       browser.notifications.create({
-        type: 'basic',
+        type: 'image',
+        // eventTime: new Date().getTime(),
         title: constant.default_name,
         iconUrl: constant.tiddlywiki_icon,
+        imageUrl: 'https://github.com/oeyoews/usewiki2/raw/main/banner03.png',
+        // @ts-ignore
+        buttons: [{ title: '关闭' }],
+        silent: true,
         message: '欢迎使用' + constant.default_name,
       });
     }
@@ -78,7 +83,9 @@ export default defineBackground(() => {
         iconUrl: 'tw256.png',
         title: 'Usewiki2',
         message: '恭喜你，发现了一个 TiddlyWiki 网站',
-        // buttons: [{ title: 'Keep it Flowing.' }],
+        // @ts-ignore
+        silent: true,
+        buttons: [{ title: '关闭' }],
         priority: 0,
       });
 
@@ -90,44 +97,62 @@ export default defineBackground(() => {
     }
   });
 
-  // https://wxt.dev/guide/directory-structure/entrypoints/sidepanel.html
-  // browser.tabs.onUpdated.addListener(async (tabId, info, tab) => {
-  // await chrome.sidePanel.setOptions({
-  //   tabId,
-  //   path: 'sidepanel.html',
-  //   enabled: true,
-  // });
-  // });
-
   // 单击直接打开 panel
   chrome.sidePanel
     .setPanelBehavior({ openPanelOnActionClick: true })
     .catch((error) => console.error(error));
 
-  browser.runtime.onInstalled.addListener(() => {
-    browser.tabs.onUpdated.addListener((tabId, info, tab) => {
-      // 页面路由发生变化通知侧边栏前端页面更新
-      chrome.tabs.sendMessage(tabId, {
-        type: 'routeUpdate',
-      });
+  // https://wxt.dev/guide/directory-structure/entrypoints/sidepanel.html
+  browser.tabs.onUpdated.addListener(async (tabId, info, tab) => {
+    await chrome.sidePanel.setOptions({
+      tabId,
+      path: 'sidepanel.html',
+      enabled: true,
     });
   });
 
-  // browser.tabs.onUpdated.addListener((tabId, info, tab) => {
-  //   if (!tab.url) return;
-  //   const url = new URL(tab.url);
-  //   const domains = [
-  //     'https://www.google.com',
-  //     'https://www.bing.com',
-  //     'chrome://',
-  //   ];
-  //   if (domains.includes(url.origin)) return;
-  //   chrome.sidePanel.setOptions({
-  //     tabId,
-  //     path: 'sidepanel.html',
-  //     enabled: true,
-  //   });
-  // });
+  // 页面路由发生变化通知侧边栏前端页面更新
+  browser.runtime.onInstalled.addListener(() => {
+    browser.tabs.onUpdated.addListener((tabId, info, tab) => {
+      if (info.status === 'complete') {
+        chrome.tabs.sendMessage(tabId, {
+          type: 'routeUpdate',
+        });
+      }
+    });
+  });
+
+  browser.tabs.onUpdated.addListener((tabId, info, tab) => {
+    console.log(tab.url);
+    if (!tab.url) {
+      chrome.sidePanel.setOptions({
+        tabId,
+        path: 'sidepanel.html',
+        enabled: false,
+      });
+      return;
+    }
+    const url = new URL(tab.url);
+    const domains = [
+      'https://www.google.com',
+      'https://www.bing.com',
+      'https://baidu.com',
+    ];
+    // || url.origin.startsWith('chrome://')
+    if (!domains.includes(url.origin)) {
+      chrome.sidePanel.setOptions({
+        tabId,
+        path: 'sidepanel.html',
+        enabled: true,
+      });
+    } else {
+      chrome.sidePanel.setOptions({
+        tabId,
+        path: 'sidepanel.html',
+        enabled: false,
+      });
+    }
+  });
 
   // 右键菜单
   browser.runtime.onInstalled.addListener(() => {
