@@ -104,13 +104,13 @@ export default defineBackground(() => {
     .setPanelBehavior({ openPanelOnActionClick: true })
     .catch((error) => console.error(error));
 
-  browser.tabs.onUpdated.addListener(async (tabId, info, tab) => {
-    // 页面路由发生变化通知侧边栏前端页面更新
-    if (info.status === 'complete') {
-      await chrome.tabs.sendMessage(tabId, {
+  browser.runtime.onInstalled.addListener(() => {
+    browser.tabs.onUpdated.addListener((tabId, info, tab) => {
+      // 页面路由发生变化通知侧边栏前端页面更新
+      chrome.tabs.sendMessage(tabId, {
         type: 'routeUpdate',
       });
-    }
+    });
   });
 
   // browser.tabs.onUpdated.addListener((tabId, info, tab) => {

@@ -80,6 +80,7 @@ async function getContent(
   const tab = tabs[0];
   link.value = tab.url!;
   faviconUrl.value = tab.favIconUrl!;
+  // TODO: 这一步会出现 Could not establish connection. Receiving end does not exist.
   // 向content.ts发送消息， 并且接受响应
   const response = await browser.tabs.sendMessage(tab.id!, {
     type: 'get-doc',
@@ -174,11 +175,15 @@ const handleInputConfirm = async () => {
 };
 
 // 监听路由变化，自动更新页面
-browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
-  if (request.type === 'routeUpdate') {
-    // Feature: 弹窗提示页面更新
-    await getContent();
-  }
+onMounted(async () => {
+  browser.runtime.onMessage.addListener(
+    async (request, sender, sendResponse) => {
+      if (request.type === 'routeUpdate') {
+        // Feature: 弹窗提示页面更新
+        await getContent();
+      }
+    }
+  );
 });
 
 const vanillaStatus: IStatus = {
@@ -499,9 +504,8 @@ const toggleInfoDialog = () => {
       </ElTabPane>
 
       <!-- edit -->
-      <ElTabPane
-        name="edit"
-        :disabled="!isCheckTw5">
+      <!-- :disabled="!isCheckTw5" -->
+      <ElTabPane name="edit">
         <template #label>
           <WI.FaRegularEdit />
           <span class="ml-1">编辑</span>
