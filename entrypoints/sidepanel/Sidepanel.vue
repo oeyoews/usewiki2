@@ -455,7 +455,7 @@ const toggleInfoDialog = () => {
       <!-- preview -->
       <ElTabPane
         name="preview"
-        class="overflow-y-auto h-[calc(100vh-60px)]">
+        class="overflow-y-auto h-[calc(100vh-105px)]">
         <template #label>
           <WI.FaFileTextO /> <span class="ml-1">预览</span>
         </template>
@@ -471,7 +471,7 @@ const toggleInfoDialog = () => {
               </template>
               <!-- 默认显示的内容 -->
               <template #reference>
-                <h2 class="line-clamp-2">
+                <h2 class="line-clamp-1">
                   <a
                     :href="link"
                     target="_blank"
@@ -489,7 +489,7 @@ const toggleInfoDialog = () => {
 
           <article
             class="prose-gray max-w-none prose-sm flex-wrap prose-img:max-w-[300px] prose-img:my-0 prose-img:rounded-md prose-video:max-w-[300px] prose-video:max-h-[300px] prose-video:my-0 prose-h2:my-2 prose-img:max-h-[300px] overflow-x-hidden h-[calc(100vh-160px)]">
-            <el-scrollbar styl>
+            <el-scrollbar>
               <div
                 v-html="html"
                 class="mx-2 overflow-x-hidden"></div>
@@ -523,7 +523,7 @@ const toggleInfoDialog = () => {
           :autosize="{ minRows: 4, maxRows: 27 }"
           type="textarea"
           spellcheck="false"
-          class="w-full border-none"
+          class="w-full border-none overflow-y"
           resize="none" />
       </ElTabPane>
 
@@ -728,6 +728,34 @@ const toggleInfoDialog = () => {
 
 ::v-deep(.el-tabs--border-card) {
   border-radius: 0 0 10px 10px;
-  /* border: none; */
+}
+
+.el-textarea {
+  /*滚动条整体部分*/
+  ::v-deep(.el-textarea__inner::-webkit-scrollbar) {
+    width: 3px;
+    height: 7px;
+  }
+  /*滚动条的轨道*/
+  :deep(.el-textarea__inner::-webkit-scrollbar-track) {
+    background-color: #ffffff;
+  }
+  /*滚动条里面的小方块，能向上向下移动*/
+  :deep(.el-textarea__inner::-webkit-scrollbar-thumb) {
+    background-color: rgba(144, 147, 153, 0.3);
+    border-radius: 5px;
+    border: 1px solid #f1f1f1;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  }
+  :deep(.el-textarea__inner::-webkit-scrollbar-thumb:hover) {
+    background-color: rgba(144, 147, 153, 0.3);
+  }
+  .el-textarea__inner::-webkit-scrollbar-thumb:active {
+    background-color: rgba(144, 147, 153, 0.3);
+  }
+  /*边角，即两个滚动条的交汇处*/
+  .el-textarea__inner::-webkit-scrollbar-corner {
+    background-color: #ffffff;
+  }
 }
 </style>
