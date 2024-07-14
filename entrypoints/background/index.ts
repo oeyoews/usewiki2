@@ -12,17 +12,20 @@ export default defineBackground(() => {
   // browser.runtime.onStartup.addListener(() => { })
   const { pages } = constant;
 
-  // browser.tabs.onActivated
   browser.runtime.onInstalled.addListener(function (details) {
+    // 创建右键菜单
+    menus.map((menu) => {
+      browser.contextMenus.create(menu as Menus.CreateCreatePropertiesType);
+    });
     if (details.reason === 'install') {
       if (isDev) {
         chrome.tabs.create({ url: pages.devPage });
-        browser.notifications.create({
-          type: 'basic',
-          iconUrl: 'tw256.png',
-          title: 'Usewiki2',
-          message: '开发模式',
-        });
+        // browser.notifications.create({
+        //   type: 'basic',
+        //   iconUrl: 'tw256.png',
+        //   title: 'Usewiki2',
+        //   message: '开发模式',
+        // });
       }
       // chrome.sidePanel.setOptions({ path: pages.optionsPage });
       // 首次安装调转到欢迎页面
@@ -60,6 +63,7 @@ export default defineBackground(() => {
     });
   });
 
+  // 地址栏注册关键字
   browser.omnibox.onInputChanged.addListener(function (text, suggest) {
     suggest([
       {
@@ -73,6 +77,7 @@ export default defineBackground(() => {
     ]);
   });
 
+  // 监听地址栏
   browser.omnibox.onInputEntered.addListener(function (text, suggest) {
     switch (text.trim()) {
       case 'open':
@@ -119,33 +124,6 @@ export default defineBackground(() => {
     }
   });
 
-  // https://wxt.dev/guide/directory-structure/entrypoints/sidepanel.html
-
-  // browser.tabs.onActivated.addListener(async ({ tabId }) => {
-  //   const { path } = await chrome.sidePanel.getOptions({ tabId });
-  //   if (path === pages.optionsPage) {
-  //     chrome.sidePanel.setOptions({ path: pages.sidePanelPage });
-  //   }
-  // });
-
-  // 页面路由发生变化通知侧边栏前端页面更新
-  setTimeout(() => {
-    // console.log('延迟一秒监听器启动');
-    browser.tabs.onUpdated.addListener((tabId, info, tab) => {
-      // chrome.sidePanel.setOptions({
-      //   tabId,
-      //   path: pages.sidePanelPage,
-      //   enabled: true,
-      // });
-      if (info.status === 'complete') {
-        chrome.tabs.sendMessage(tabId, {
-          type: 'routeUpdate',
-        });
-      }
-    });
-  }, 1000);
-
-  // 部分页面不开启侧边栏
   browser.tabs.onUpdated.addListener((tabId, info, tab) => {
     if (!tab.url) return;
     const url = new URL(tab.url);
@@ -154,8 +132,9 @@ export default defineBackground(() => {
       'https://www.bing.com',
       'https://baidu.com',
     ];
-    // || url.origin.startsWith('chrome://')
-    if (!domains.includes(url.origin)) {
+
+    // 部分页面不开启侧边栏
+    if (!domains.includes(url.origin) && !tab.url?.startsWith('chrome://')) {
       chrome.sidePanel.setOptions({
         tabId,
         path: pages.sidePanelPage,
@@ -166,14 +145,16 @@ export default defineBackground(() => {
         tabId,
         enabled: false,
       });
+      return;
     }
-  });
 
-  // 右键菜单
-  browser.runtime.onInstalled.addListener(() => {
-    menus.map((menu) => {
-      browser.contextMenus.create(menu as Menus.CreateCreatePropertiesType);
-    });
+    // 页面路由发生变化通知侧边栏前端页面更新
+    if (info.status === 'complete') {
+      chrome.tabs.sendMessage(tabId, {
+        type: 'routeUpdate',
+        data: tab.url,
+      });
+    }
   });
 
   chrome.contextMenus.onClicked.addListener((info, tab) => {
