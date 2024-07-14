@@ -10,6 +10,8 @@ export function resetGROQAPIKEY() {
   });
 }
 
+export const isDev = process.env.NODE_ENV === 'development';
+
 export function saveGROQAPIKEY(GROQ_APIKEY: string) {
   if (!GROQ_APIKEY) {
     notify({

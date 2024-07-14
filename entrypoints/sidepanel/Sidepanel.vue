@@ -17,6 +17,7 @@ import save2TiddlyWiki from '@/utils/save2TiddlyWiki';
 import { html2md, md2html } from '@/utils/parser';
 import { ElButton, ElMessage as notify } from 'element-plus';
 import { checkStatus } from '@/utils/checkStatus';
+import { isDev } from '@/utils/utils';
 import {
   isCheckTw5Storage,
   tagStorage,
@@ -26,6 +27,7 @@ import {
 } from '@/utils/storage';
 // import getAI from '@/utils/openai';
 
+const loading = ref(false);
 const textOver = ref(false);
 const isOnline = ref(false);
 const ports = [8000, 8080, 8001, 8081];
@@ -57,6 +59,8 @@ const aihtml = ref('');
 const infoDialogStatus = ref(false);
 const setupDialogStatus = ref(false);
 
+loading.value = true;
+
 port.value = await portStorage.getValue();
 
 const auth = await authStorage.getValue();
@@ -65,7 +69,7 @@ username.value = auth.username;
 password.value = auth.password;
 
 // devmode
-if (process.env.NODE_ENV === 'development') {
+if (isDev) {
   port.value = constant.devPort;
   username.value = constant.devUsername;
   password.value = constant.devUsername;
@@ -90,6 +94,7 @@ async function getContent(
     tip: false,
   }
 ) {
+  loading.value = true;
   html.value = '';
   const tabs = await browser.tabs.query({ active: true, currentWindow: true });
 
@@ -103,9 +108,10 @@ async function getContent(
     message: '获取文章',
   });
 
-  html.value = response.content;
+  html.value = response?.content;
+  loading.value = false;
   md.value = await html2md(html.value);
-  title.value = response.title;
+  title.value = response?.title;
   if (title.value.length > 30) {
     textOver.value = true;
   }
@@ -123,7 +129,10 @@ onMounted(async () => {
   // const bg = chrome.extension.getBackgroundPage();
   // // @ts-ignore
   // bg!.popUp();
-  const isDark = await isDarkModeStorage.getValue();
+  let isDark = await isDarkModeStorage.getValue();
+  if (isDev) {
+    isDark = true;
+  }
   if (isDark) {
     document.documentElement.classList.add('dark');
   }
@@ -394,6 +403,7 @@ const toggleInfoDialog = () => {
 </script>
 
 <template>
+  <!-- 网格背景 -->
   <div
     className="fixed inset-0 -z-50 size-full bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
   <div class="inset-x-0 top-0 fixed">
@@ -490,8 +500,11 @@ const toggleInfoDialog = () => {
         <template #label>
           <WI.FaFileTextO /> <span class="ml-1">预览</span>
         </template>
-        <div v-if="title">
-          <div class="flex items-center justify-center gap-2">
+
+        <div>
+          <div
+            class="flex items-center justify-center gap-2"
+            v-if="title">
             <el-popover
               :width="300"
               raw-content
@@ -518,14 +531,45 @@ const toggleInfoDialog = () => {
             </el-popover>
           </div>
 
-          <article
+          <div
             class="prose-gray max-w-none prose-sm flex-wrap prose-img:max-w-[300px] prose-img:my-0 prose-img:rounded-md prose-video:max-w-[300px] prose-video:max-h-[300px] prose-video:my-0 prose-h2:my-2 prose-img:max-h-[300px] overflow-x-hidden h-[calc(100vh-160px)]">
-            <el-scrollbar>
-              <div
-                v-html="html"
-                class="mx-2 overflow-x-hidden"></div>
-            </el-scrollbar>
-          </article>
+            <div class="h-full overflow-x-hidden article">
+              <el-scrollbar>
+                <el-skeleton
+                  :loading="loading"
+                  animated
+                  :count="4"
+                  :throttle="100">
+                  <template #template>
+                    <div class="px-3 py-5">
+                      <el-skeleton-item
+                        variant="text"
+                        class="!w-1/2" />
+                      <el-skeleton-item
+                        variant="p"
+                        class="w-1/2 h-24" />
+                      <div class="flex justify-between items-center">
+                        <el-skeleton-item
+                          variant="text"
+                          class="mr-4" />
+                        <el-skeleton-item
+                          variant="text"
+                          class="!w-1/4" />
+                      </div>
+                    </div>
+                  </template>
+                </el-skeleton>
+                <!-- <el-backtop
+                  target=".article"
+                  :visibility-height="10"
+                  :right="100"
+                  :bottom="100" /> -->
+                <div
+                  v-html="html"
+                  class="mx-2 overflow-x-hidden"></div>
+              </el-scrollbar>
+            </div>
+          </div>
         </div>
       </ElTabPane>
 
