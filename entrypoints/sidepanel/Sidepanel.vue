@@ -111,8 +111,16 @@ async function getContent(
   html.value = response?.content;
   loading.value = false;
   md.value = await html2md(html.value);
+  if (!response?.title) {
+    notify({
+      message: '暂无标题',
+      type: 'warning',
+      duration: 750,
+    });
+    return;
+  }
   title.value = response?.title;
-  if (title.value.length > 30) {
+  if (title.value?.length > 30) {
     textOver.value = true;
   }
   // console.log(html.value);
