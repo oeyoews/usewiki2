@@ -25,6 +25,7 @@ export default defineBackground(() => {
         //   iconUrl: 'tw256.png',
         //   title: 'Usewiki2',
         //   message: '开发模式',
+        //   buttons: [{ title: '关闭' }],
         // });
       }
       // chrome.sidePanel.setOptions({ path: pages.optionsPage });
@@ -168,6 +169,13 @@ export default defineBackground(() => {
       // 页面路由发生变化通知侧边栏前端页面更新
     });
   }, 1000);
+
+  // browser.notifications.onButtonClicked.addListener((e) => {
+  //   console.log(e, 'button');
+  // });
+  // browser.notifications.onClicked.addListener((e) => {
+  //   console.log(e, 'clicked');
+  // });
 
   chrome.contextMenus.onClicked.addListener((info, tab) => {
     const { menuItemId } = info;
