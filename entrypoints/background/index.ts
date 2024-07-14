@@ -126,22 +126,7 @@ export default defineBackground(() => {
 
   setTimeout(() => {
     browser.tabs.onUpdated.addListener((tabId, info, tab) => {
-      if (!tab.url) return;
-      const url = new URL(tab.url);
-      const domains = [
-        'https://www.google.com',
-        'https://www.bing.com',
-        'https://baidu.com',
-      ];
-
-      // 部分页面不开启侧边栏
-      if (!domains.includes(url.origin) && !tab.url?.startsWith('chrome://')) {
-        chrome.sidePanel.setOptions({
-          tabId,
-          path: pages.sidePanelPage,
-          enabled: true,
-        });
-      } else {
+      if (!tab.url || tab.url === 'null') {
         chrome.sidePanel.setOptions({
           tabId,
           enabled: false,
@@ -149,13 +134,38 @@ export default defineBackground(() => {
         return;
       }
 
-      // 页面路由发生变化通知侧边栏前端页面更新
-      if (info.status === 'complete') {
-        chrome.tabs.sendMessage(tabId, {
-          type: 'routeUpdate',
-          data: tab.url,
-        });
+      const url = new URL(tab.url);
+      const domains = [
+        'https://www.google.com',
+        'https://www.bing.com',
+        'https://www.baidu.com',
+      ];
+
+      const origin = tab.url;
+
+      switch (true) {
+        case origin.startsWith('https://') && !domains.includes(url.origin):
+          chrome.sidePanel.setOptions({
+            tabId,
+            enabled: true,
+            path: pages.sidePanelPage,
+          });
+          if (info.status === 'complete') {
+            chrome.tabs.sendMessage(tabId, {
+              type: 'routeUpdate',
+              // data: origin
+            });
+          }
+          break;
+
+        default:
+          chrome.sidePanel.setOptions({
+            tabId,
+            enabled: false,
+          });
       }
+
+      // 页面路由发生变化通知侧边栏前端页面更新
     });
   }, 1000);
 

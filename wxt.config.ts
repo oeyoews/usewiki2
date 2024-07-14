@@ -77,7 +77,7 @@ export default defineConfig({
     },
     // NOTE: 这会影响网络请求，比如获取 status, 开发环境下无影响
     host_permissions: ['<all_urls>'],
-    // host_permissions: ['https://*/*'],
+    // host_permissions: ['https://*/*', 'http://*/*'],
     // optional_permissions: ['https://google.com/**', 'https://bing.com/'],
     // https://developer.chrome.com/docs/extensions/reference/api/sidePanel
     // sidebar_action: {
