@@ -4,6 +4,7 @@ import { type Menus } from 'wxt/browser';
 import constant from '../../utils/constant';
 import open from './open';
 import save from './save';
+import { isDev } from '@/utils/utils';
 
 // https://github.com/GoogleChrome/chrome-extensions-samples/blob/main/functional-samples/cookbook.sidepanel-multiple/service-worker.js
 // background 不能直接访问dom, 只能和content 通信, content(主进程) 类似一个桥梁
@@ -14,7 +15,7 @@ export default defineBackground(() => {
   // browser.tabs.onActivated
   browser.runtime.onInstalled.addListener(function (details) {
     if (details.reason === 'install') {
-      if (process.env.NODE_ENV === 'development') {
+      if (isDev) {
         chrome.tabs.create({ url: pages.devPage });
         browser.notifications.create({
           type: 'basic',
@@ -31,17 +32,19 @@ export default defineBackground(() => {
         .setPanelBehavior({ openPanelOnActionClick: true })
         .catch((error) => console.error(error));
 
-      browser.notifications.create({
-        type: 'image',
-        // eventTime: new Date().getTime(),
-        title: constant.default_name,
-        iconUrl: constant.tiddlywiki_icon,
-        imageUrl: 'https://github.com/oeyoews/usewiki2/raw/main/banner03.png',
-        // @ts-ignore
-        buttons: [{ title: '关闭' }],
-        silent: true,
-        message: '欢迎使用' + constant.default_name,
-      });
+      if (!isDev) {
+        browser.notifications.create({
+          type: 'image',
+          // eventTime: new Date().getTime(),
+          title: constant.default_name,
+          iconUrl: constant.tiddlywiki_icon,
+          imageUrl: 'https://github.com/oeyoews/usewiki2/raw/main/banner03.png',
+          // @ts-ignore
+          buttons: [{ title: '关闭' }],
+          silent: true,
+          message: '欢迎使用' + constant.default_name,
+        });
+      }
     }
   });
 
@@ -126,18 +129,21 @@ export default defineBackground(() => {
   // });
 
   // 页面路由发生变化通知侧边栏前端页面更新
-  browser.tabs.onUpdated.addListener((tabId, info, tab) => {
-    // chrome.sidePanel.setOptions({
-    //   tabId,
-    //   path: pages.sidePanelPage,
-    //   enabled: true,
-    // });
-    if (info.status === 'complete') {
-      chrome.tabs.sendMessage(tabId, {
-        type: 'routeUpdate',
-      });
-    }
-  });
+  setTimeout(() => {
+    // console.log('延迟一秒监听器启动');
+    browser.tabs.onUpdated.addListener((tabId, info, tab) => {
+      // chrome.sidePanel.setOptions({
+      //   tabId,
+      //   path: pages.sidePanelPage,
+      //   enabled: true,
+      // });
+      if (info.status === 'complete') {
+        chrome.tabs.sendMessage(tabId, {
+          type: 'routeUpdate',
+        });
+      }
+    });
+  }, 1000);
 
   // 部分页面不开启侧边栏
   browser.tabs.onUpdated.addListener((tabId, info, tab) => {
