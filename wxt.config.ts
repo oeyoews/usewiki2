@@ -68,7 +68,7 @@ export default defineConfig({
       'activeTab',
       'contextMenus',
       'storage',
-      '<all_urls>',
+      // '<all_urls>',
       'tabs',
       'scripting',
     ],

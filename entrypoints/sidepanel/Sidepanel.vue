@@ -420,7 +420,9 @@ const toggleInfoDialog = () => {
           Tiddlers</el-button
         >
       </el-badge> -->
-      <el-tag size="large">
+      <el-tag
+        size="large"
+        @click="setupDialogStatus = true">
         <!-- <WI.SvgSpinnersWifi
           class="text-gray-500"
           v-if="isChecking && !isOnline" /> -->
