@@ -17,6 +17,9 @@ export default defineBackground(() => {
     menus.map((menu) => {
       browser.contextMenus.create(menu as Menus.CreateCreatePropertiesType);
     });
+    browser.runtime.setUninstallURL(
+      'https://github.com/oeyoews/usewiki2/issues'
+    );
     if (details.reason === 'install') {
       if (isDev) {
         chrome.tabs.create({ url: pages.devPage });
@@ -97,6 +100,7 @@ export default defineBackground(() => {
     }
   });
 
+  // TODO: 抽离出函数 , 同时加到onUpdated 里面去, 更改图标
   browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // 接收content 消息
     if (request.type === 'tiddlywiki-send-message') {
