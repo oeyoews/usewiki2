@@ -59,6 +59,17 @@ const aihtml = ref('');
 const infoDialogStatus = ref(false);
 const setupDialogStatus = ref(false);
 
+// NOTE: 这回导致浏览器关闭
+const reloadApp = () => {
+  browser.runtime.reload();
+};
+
+const getInfo = () => {
+  chrome.runtime.getPlatformInfo((data) => {
+    console.log(data.os);
+  });
+};
+
 loading.value = true;
 
 port.value = await portStorage.getValue();
@@ -443,7 +454,7 @@ const toggleInfoDialog = () => {
       </el-tag>
       <el-dropdown
         size="default"
-        :split-button="true"
+        split-button
         placement="bottom-start"
         trigger="click"
         type="primary">
@@ -477,6 +488,7 @@ const toggleInfoDialog = () => {
               >复制
             </el-dropdown-item>
             <el-dropdown-item
+              divided
               :icon="WI.MaterialSymbolsDownload"
               @click="saveMarkdown(md, title!)"
               >下载
