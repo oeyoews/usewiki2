@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import Info from './components/Info.vue';
 import 'element-plus/es/components/message/style/css';
 import 'element-plus/theme-chalk/dark/css-vars.css';
 import 'element-plus/es/components/notification/style/css';
+import 'element-plus/es/components/message-box/style/css';
+import GridBg from '@/components/GridBg.vue';
+import Actions from './components/Actions.vue';
+import Info from './components/Info.vue';
 import { formattime } from '@/utils/formattime';
 import * as utils from '@/utils/utils';
-import AI from '@/utils/ai';
 import constant from '@/utils/constant';
 import { copyMd } from '@/utils/copyMd';
 // @ts-ignore
@@ -37,8 +39,6 @@ const ports = [8000, 8080, 8001, 8081];
 const editRef = ref<HTMLInputElement>();
 const isChecking = ref(false);
 const currentTab = ref<ITabs>('preview');
-const aimd = ref('');
-const isAIChecking = ref(false);
 const isCheckTw5 = ref(false); // 是否连接tw
 const inputVisible = ref(false);
 const InputRef = ref();
@@ -53,17 +53,6 @@ const password = ref('');
 const aihtml = ref('');
 const infoDialogStatus = ref(false);
 const setupDialogStatus = ref(false);
-
-// NOTE: 这回导致浏览器关闭
-const reloadApp = () => {
-  browser.runtime.reload();
-};
-
-const getInfo = () => {
-  chrome.runtime.getPlatformInfo((data) => {
-    console.log(data.os);
-  });
-};
 
 loading.value = true;
 
@@ -216,33 +205,6 @@ const debounceEdit = debounce(async function () {
   html.value = await md2html(md.value);
 }, 300);
 
-async function ai2md() {
-  if (isAIChecking.value) {
-    notify({
-      message: '正在润色中 ...',
-      type: 'warning',
-    });
-    return;
-  }
-  isAIChecking.value = true;
-
-  const chatCompletion = await AI(md.value);
-  if (!chatCompletion) {
-    isAIChecking.value = false;
-    return;
-  }
-  const mes = chatCompletion!.choices[0].message;
-  notify({
-    message: 'GROQ 润色成功',
-    type: 'success',
-  });
-  currentTab.value = 'aipreview';
-  aimd.value = mes.content;
-  aihtml.value = await md2html(aimd.value);
-
-  isAIChecking.value = false;
-}
-
 async function savePort(port: number) {
   if (!port) {
     notify({
@@ -301,46 +263,48 @@ async function saveAuth(option: { username: string; password: string }) {
   }
 }
 
-// async function toggleDarkMode() {
-//   isDarkMode.value = !isDarkMode.value;
-//   await isDarkModeStorage.setValue(isDarkMode.value);
-//   const DARK = 'dark';
-//   if (isDarkMode.value) {
-//     document.documentElement.classList.add(DARK);
-//   } else {
-//     document.documentElement.classList.remove(DARK);
-//   }
-// }
-
-const toggleInfoDialog = () => {
-  infoDialogStatus.value = !infoDialogStatus.value;
+const handleCommand = async (cmd: string) => {
+  switch (cmd) {
+    case 'journal':
+      addJournal();
+      break;
+    case 'info':
+      infoDialogStatus.value = !infoDialogStatus.value;
+      break;
+    case 'setup':
+      setupDialogStatus.value = true;
+      break;
+    case 'copy':
+      copyMd(md.value);
+      break;
+    case 'download':
+      saveMarkdown(md.value, title.value!);
+      break;
+    case 'refresh':
+      getContent({ tip: true });
+      break;
+    case 'darkmode':
+      await toggleDark();
+      break;
+    default:
+      break;
+  }
 };
 </script>
 
 <template>
-  <!-- 网格背景 -->
-  <div
-    className="fixed inset-0 -z-50 size-full bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
   <div class="inset-x-0 top-0 fixed">
-    <!-- https://developer.chrome.com/docs/extensions/develop/ui/options-page?hl=zh-cn -->
-    <!-- <el-button @click="openOptionsPage">open </el-button> -->
-    <!-- <el-button @click="togglePage">toggle </el-button> -->
+    <GridBg />
     <div
       class="backdrop-blur-sm z-[999] flex justify-end items-center inset-x-0 gap-1 p-2 px-6">
-      <!-- <el-badge
-        :value="1"
-        type="primary">
-        <el-button>
-          <WI.SimpleIconsTiddlywiki />
-          Tiddlers</el-button
-        >
-      </el-badge> -->
+      <!-- 下拉框 -->
+      <Actions
+        :isCheckTw5="isCheckTw5"
+        :handleCommand="handleCommand"
+        :save="debounceSave" />
       <el-tag
         size="large"
         @click="setupDialogStatus = true">
-        <!-- <WI.SvgSpinnersWifi
-          class="text-gray-500"
-          v-if="isChecking && !isOnline" /> -->
         <WI.RiWifiFill
           class="text-emerald-600"
           v-if="isOnline" />
@@ -348,64 +312,9 @@ const toggleInfoDialog = () => {
           class="text-rose-600"
           v-else />
       </el-tag>
-      <el-dropdown
-        size="default"
-        split-button
-        placement="bottom-start"
-        trigger="click"
-        type="primary">
-        <span
-          class="el-dropdown-link flex items-center"
-          @click="debounceSave">
-          <WI.SimpleIconsTiddlywiki class="mr-2" />
-          保存
-        </span>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item
-              :icon="WI.PhPencil"
-              @click="addJournal"
-              v-if="isCheckTw5"
-              >日记
-            </el-dropdown-item>
-            <el-dropdown-item
-              :icon="WI.MaterialSymbolsInfoOutline"
-              @click="toggleInfoDialog">
-              详情</el-dropdown-item
-            >
-            <el-dropdown-item
-              :icon="WI.LetsIconsSettingAltLine"
-              @click="setupDialogStatus = true">
-              配置</el-dropdown-item
-            >
-            <el-dropdown-item
-              :icon="WI.ZondiconsCopy"
-              @click="copyMd(md)"
-              >复制
-            </el-dropdown-item>
-            <el-dropdown-item
-              divided
-              :icon="WI.MaterialSymbolsDownload"
-              @click="saveMarkdown(md, title!)"
-              >下载
-            </el-dropdown-item>
-            <el-dropdown-item
-              :icon="WI.MdiCloudRefreshVariant"
-              @click="getContent({ tip: true })"
-              >刷新
-            </el-dropdown-item>
-            <el-dropdown-item
-              :icon="WI.FluentDarkTheme24Filled"
-              @click="toggleDark"
-              >切换
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
     </div>
   </div>
 
-  <!-- <div class="h-[50px]"></div> -->
   <div class="mx-2 fixed top-[50px] w-[95%]">
     <ElTabs
       stretch
@@ -477,11 +386,6 @@ const toggleInfoDialog = () => {
                     </div>
                   </template>
                 </el-skeleton>
-                <!-- <el-backtop
-                  target=".article"
-                  :visibility-height="10"
-                  :right="100"
-                  :bottom="100" /> -->
                 <div
                   v-html="html"
                   class="mx-2 overflow-x-hidden"></div>
@@ -652,31 +556,8 @@ const toggleInfoDialog = () => {
             v-model="isCheckTw5"
             :inactive-icon="WI.SimpleIconsTiddlywiki"
             :active-icon="WI.SimpleIconsTiddlywiki" />
-
-          <!-- https://console.groq.com/keys -->
-          <!-- <div class="hidden">
-            <h2>GROQ API</h2>
-            <div class="flex gap-1">
-              <ElInput
-                v-model.trim="GROQ_APIKEY"
-                placeholder="**************"
-                type="password" />
-              <ElButton @click="utils.saveGROQAPIKEY(GROQ_APIKEY)"
-                >保存</ElButton
-              >
-
-              <el-popconfirm
-                title="你确定要重置API吗 ?"
-                @confirm="utils.resetGROQAPIKEY">
-                <template #reference>
-                  <ElButton>重置</ElButton>
-                </template>
-              </el-popconfirm>
-            </div>
-        </div> -->
         </div>
       </el-dialog>
-      <!-- </ElTabPane> -->
 
       <el-dialog
         v-model="infoDialogStatus"
@@ -694,6 +575,16 @@ const toggleInfoDialog = () => {
 ::v-deep(.el-dialog) {
   border-radius: 15px;
 }
+
+::v-deep(.el-tabs__content) {
+  height: calc(100vh - 110px);
+  padding: 5px 10px;
+}
+
+::v-deep(.el-tabs--border-card) {
+  border-radius: 0 0 10px 10px;
+}
+
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
@@ -710,43 +601,5 @@ const toggleInfoDialog = () => {
 }
 .dark::view-transition-new(root) {
   z-index: 1;
-}
-
-::v-deep(.el-tabs__content) {
-  height: calc(100vh - 110px);
-  padding: 5px 10px;
-}
-
-::v-deep(.el-tabs--border-card) {
-  border-radius: 0 0 10px 10px;
-}
-
-.el-textarea {
-  /*滚动条整体部分*/
-  ::v-deep(.el-textarea__inner::-webkit-scrollbar) {
-    width: 3px;
-    height: 7px;
-  }
-  /*滚动条的轨道*/
-  ::v-deep(.el-textarea__inner::-webkit-scrollbar-track) {
-    background-color: #ffffff;
-  }
-  /*滚动条里面的小方块，能向上向下移动*/
-  ::v-deep(.el-textarea__inner::-webkit-scrollbar-thumb) {
-    background-color: rgba(144, 147, 153, 0.3);
-    border-radius: 5px;
-    border: 1px solid #f1f1f1;
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-  }
-  ::v-deep(.el-textarea__inner::-webkit-scrollbar-thumb:hover) {
-    background-color: rgba(144, 147, 153, 0.3);
-  }
-  .el-textarea__inner::-webkit-scrollbar-thumb:active {
-    background-color: rgba(144, 147, 153, 0.3);
-  }
-  /*边角，即两个滚动条的交汇处*/
-  .el-textarea__inner::-webkit-scrollbar-corner {
-    background-color: #ffffff;
-  }
 }
 </style>

@@ -1,4 +1,4 @@
-import { ElMessage as notify } from 'element-plus';
+import { ElMessage as notify, ElMessageBox } from 'element-plus';
 
 function saveMarkdown(markdown: string, title: string) {
   if (!markdown || !title) {
@@ -8,20 +8,34 @@ function saveMarkdown(markdown: string, title: string) {
     });
     return;
   }
-  const blob = new Blob([markdown], { type: 'text/markdown' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = `${title}.md`;
+  ElMessageBox.confirm('确定下载吗？', 'Warning', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    title: '提示',
+    type: 'warning',
+  })
+    .then(() => {
+      const blob = new Blob([markdown], { type: 'text/markdown' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${title}.md`;
 
-  document.body.appendChild(link);
-  link.click();
+      document.body.appendChild(link);
+      link.click();
 
-  URL.revokeObjectURL(link.href);
+      URL.revokeObjectURL(link.href);
 
-  notify({
-    message: '下载成功',
-    type: 'success',
-  });
+      notify({
+        message: '下载成功',
+        type: 'success',
+      });
+    })
+    .catch(() => {
+      // ElMessage({
+      //   type: 'info',
+      //   message: 'Delete canceled',
+      // });
+    });
 }
 
 export default saveMarkdown;
