@@ -300,8 +300,8 @@ const handleCommand = async (cmd: string) => {
       <!-- 下拉框 -->
       <Actions
         :isCheckTw5="isCheckTw5"
-        :handleCommand="handleCommand"
-        :save="debounceSave" />
+        :command="handleCommand"
+        :default-command="debounceSave" />
       <el-tag
         size="large"
         @click="setupDialogStatus = true">

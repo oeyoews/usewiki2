@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import * as WI from '@/utils/icons';
 interface IProps {
-  handleCommand: any;
+  command: any;
+  /** check tw5 */
   isCheckTw5: boolean;
-  save: any;
+  defaultCommand: any;
 }
-withDefaults(defineProps<IProps>(), {
-  isCheckTw5: false,
-  hanleCommand: () => {},
-  save: () => {},
-});
+defineProps<IProps>();
 </script>
 
 <template>
@@ -18,8 +15,8 @@ withDefaults(defineProps<IProps>(), {
     split-button
     placement="bottom-start"
     trigger="hover"
-    @command="handleCommand"
-    @click="save"
+    @command="command"
+    @click="defaultCommand"
     type="primary">
     <span class="el-dropdown-link flex items-center">
       <WI.SimpleIconsTiddlywiki class="mr-2" />

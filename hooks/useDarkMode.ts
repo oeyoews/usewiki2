@@ -16,7 +16,6 @@ export function useDarkMode() {
 
     const DARK = 'dark';
     isDarkMode.value = !isDarkMode.value;
-    console.log(isDarkMode);
     await isDarkModeStorage.setValue(isDarkMode.value);
     if (!isAppearanceTransition || !event) {
       return;
