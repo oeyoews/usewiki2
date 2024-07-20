@@ -18,6 +18,7 @@ import { html2md, md2html } from '@/utils/parser';
 import { ElButton, ElMessage as notify } from 'element-plus';
 import { checkStatus } from '@/utils/checkStatus';
 import { isDev } from '@/utils/utils';
+import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   isCheckTw5Storage,
   tagStorage,
@@ -27,12 +28,12 @@ import {
 } from '@/utils/storage';
 // import getAI from '@/utils/openai';
 
+const { isDarkMode, toggleDark } = useDarkMode();
 const loading = ref(false);
 const textOver = ref(false);
 const isOnline = ref(false);
 const ports = [8000, 8080, 8001, 8081];
 // const devMode = import.meta.env.DEV;
-const isDarkMode = ref(false);
 const editRef = ref<HTMLInputElement>();
 const isChecking = ref(false);
 const currentTab = ref<ITabs>('preview');
@@ -151,9 +152,6 @@ onMounted(async () => {
   let isDark = await isDarkModeStorage.getValue();
   if (isDev) {
     isDark = true;
-  }
-  if (isDark) {
-    document.documentElement.classList.add('dark');
   }
   if (isDark) {
     isDarkMode.value = true;
@@ -364,57 +362,6 @@ async function saveAuth(option: { username: string; password: string }) {
 //     document.documentElement.classList.remove(DARK);
 //   }
 // }
-
-const isAppearanceTransition =
-  // @ts-ignore
-  document.startViewTransition &&
-  !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-/**
- * Credit to [@hooray](https://github.com/hooray)
- * @see https://github.com/vuejs/vitepress/pull/2347
- */
-async function toggleDark(event?: MouseEvent) {
-  const DARK = 'dark';
-  isDarkMode.value = !isDarkMode.value;
-  await isDarkModeStorage.setValue(isDarkMode.value);
-  if (!isAppearanceTransition || !event) {
-    return;
-  }
-  const x = event.clientX;
-  const y = event.clientY;
-  const endRadius = Math.hypot(
-    Math.max(x, innerWidth - x),
-    Math.max(y, innerHeight - y)
-  );
-  // @ts-expect-error: Transition API
-  const transition = document.startViewTransition(async () => {
-    if (isDarkMode.value) {
-      document.documentElement.classList.add(DARK);
-    } else {
-      document.documentElement.classList.remove(DARK);
-    }
-    await nextTick();
-  });
-  transition.ready.then(() => {
-    const clipPath = [
-      `circle(0px at ${x}px ${y}px)`,
-      `circle(${endRadius}px at ${x}px ${y}px)`,
-    ];
-    document.documentElement.animate(
-      {
-        clipPath: isDarkMode.value ? [...clipPath].reverse() : clipPath,
-      },
-      {
-        duration: 250,
-        easing: 'ease-in',
-        pseudoElement: isDarkMode.value
-          ? '::view-transition-old(root)'
-          : '::view-transition-new(root)',
-      }
-    );
-  });
-}
 
 const toggleInfoDialog = () => {
   infoDialogStatus.value = !infoDialogStatus.value;
