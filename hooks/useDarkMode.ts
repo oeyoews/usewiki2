@@ -48,7 +48,7 @@ export function useDarkMode() {
           clipPath: isDarkMode.value ? [...clipPath].reverse() : clipPath,
         },
         {
-          duration: 250,
+          duration: 450,
           easing: 'ease-in',
           pseudoElement: isDarkMode.value
             ? '::view-transition-old(root)'
@@ -62,27 +62,8 @@ export function useDarkMode() {
     isDarkMode.value = await isDarkModeStorage.getValue();
   });
 
-  watch(isDarkMode, (newVal) => {
-    if (newVal) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  });
-
   return {
     isDarkMode,
     toggleDark,
   };
 }
-
-// async function toggleDarkMode() {
-//   isDarkMode.value = !isDarkMode.value;
-//   await isDarkModeStorage.setValue(isDarkMode.value);
-//   const DARK = 'dark';
-//   if (isDarkMode.value) {
-//     document.documentElement.classList.add(DARK);
-//   } else {
-//     document.documentElement.classList.remove(DARK);
-//   }
-// }

@@ -263,7 +263,7 @@ async function saveAuth(option: { username: string; password: string }) {
   }
 }
 
-const handleCommand = async (cmd: string) => {
+const handleCommand = async (cmd: string, components: any, e: MouseEvent) => {
   switch (cmd) {
     case 'journal':
       addJournal();
@@ -284,7 +284,7 @@ const handleCommand = async (cmd: string) => {
       getContent({ tip: true });
       break;
     case 'darkmode':
-      await toggleDark();
+      await toggleDark(e);
       break;
     default:
       break;
