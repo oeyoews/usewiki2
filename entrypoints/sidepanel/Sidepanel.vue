@@ -14,7 +14,7 @@ import { debounce } from '@/utils/debounce';
 import * as WI from '@/utils/icons';
 import saveMarkdown from '@/utils/saveMarkdown';
 import save2TiddlyWiki from '@/utils/save2TiddlyWiki';
-import { html2md, md2html } from '@/utils/parser';
+import { md2html } from '@/utils/parser';
 import { ElButton, ElMessage as notify } from 'element-plus';
 import { checkStatus } from '@/utils/checkStatus';
 import { isDev } from '@/utils/utils';
@@ -26,11 +26,11 @@ import {
   authStorage,
   isDarkModeStorage,
 } from '@/utils/storage';
-// import getAI from '@/utils/openai';
+import { useContent } from '@/hooks/useContent';
 
+const { loading, html, md, link, faviconUrl, title, getContent } = useContent();
 const { isDarkMode, toggleDark } = useDarkMode();
-const loading = ref(false);
-const textOver = ref(false);
+
 const isOnline = ref(false);
 const ports = [8000, 8080, 8001, 8081];
 // const devMode = import.meta.env.DEV;
@@ -38,13 +38,7 @@ const editRef = ref<HTMLInputElement>();
 const isChecking = ref(false);
 const currentTab = ref<ITabs>('preview');
 const aimd = ref('');
-const html = ref('');
-const md = ref('');
-const link = ref('');
-const faviconUrl = ref('');
-const title = ref('');
 const isAIChecking = ref(false);
-const GROQ_APIKEY = ref('');
 const isCheckTw5 = ref(false); // 是否连接tw
 const inputVisible = ref(false);
 const InputRef = ref();
@@ -99,51 +93,6 @@ dynamicTags.value = Object.values(await tagStorage.getValue());
 //     path: constant.pages.optionsPage,
 //   });
 // };
-
-// 获取页面文章内容(-- content.ts), 可以手动触发函数， 重新提取页面文章内容
-async function getContent(
-  options = {
-    tip: false,
-  }
-) {
-  loading.value = true;
-  html.value = '';
-  const tabs = await browser.tabs.query({ active: true, currentWindow: true });
-
-  const tab = tabs[0];
-  link.value = tab.url!;
-  faviconUrl.value = tab.favIconUrl!;
-  // TODO: 这一步会出现 Could not establish connection. Receiving end does not exist.
-  // 向content.ts发送消息， 并且接受响应
-  const response = await browser.tabs.sendMessage(tab.id!, {
-    type: 'get-doc',
-    message: '获取文章',
-  });
-
-  html.value = response?.content;
-  loading.value = false;
-  md.value = await html2md(html.value);
-  if (!response?.title) {
-    notify({
-      message: '暂无标题',
-      type: 'warning',
-      duration: 750,
-    });
-    return;
-  }
-  title.value = response?.title;
-  if (title.value?.length > 30) {
-    textOver.value = true;
-  }
-  // console.log(html.value);
-  if (options.tip) {
-    notify({
-      message: '刷新成功',
-      type: 'success',
-      duration: 750,
-    });
-  }
-}
 
 onMounted(async () => {
   // const bg = chrome.extension.getBackgroundPage();
