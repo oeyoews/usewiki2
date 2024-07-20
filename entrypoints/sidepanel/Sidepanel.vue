@@ -50,7 +50,6 @@ const username = ref('');
 /** tiddlywiki 登录认证 密码*/
 const password = ref('');
 
-const aihtml = ref('');
 const infoDialogStatus = ref(false);
 const setupDialogStatus = ref(false);
 
