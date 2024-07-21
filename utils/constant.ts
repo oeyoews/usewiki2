@@ -9,6 +9,7 @@ export default {
   default_tag: '剪藏',
   default_port: 8080,
   devPort: 8000,
+  ports: [8000, 8080, 8001, 8081],
   devUsername: 'oeyoews',
   default_name: 'Usewiki2',
   tiddlywiki_icon: 'tw256.png',

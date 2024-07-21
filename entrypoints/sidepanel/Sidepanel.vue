@@ -72,16 +72,6 @@ if (isDev) {
 
 dynamicTags.value = Object.values(await tagStorage.getValue());
 
-// const openOptionsPage = () => {
-//   chrome.runtime.openOptionsPage();
-// };
-
-// const togglePage = () => {
-//   chrome.sidePanel.setOptions({
-//     path: constant.pages.optionsPage,
-//   });
-// };
-
 onMounted(async () => {
   // const bg = chrome.extension.getBackgroundPage();
   // // @ts-ignore
@@ -100,8 +90,7 @@ onMounted(async () => {
   getContent();
 
   isCheckTw5.value = await isCheckTw5Storage.getValue();
-  // devmode
-  if (process.env.NODE_ENV === 'development') {
+  if (isDev) {
     isCheckTw5.value = true;
   }
 
