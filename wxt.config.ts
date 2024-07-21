@@ -1,5 +1,5 @@
 import { defineConfig } from 'wxt';
-import vue from '@vitejs/plugin-vue';
+// import vue from '@vitejs/plugin-vue';
 import Icons from 'unplugin-icons/vite';
 import path from 'path';
 
@@ -10,6 +10,7 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
+  modules: ['@wxt-dev/module-vue'],
   imports: {
     addons: {
       vueTemplate: true,
@@ -23,7 +24,7 @@ export default defineConfig({
       },
     },
     plugins: [
-      vue(),
+      // vue(),
       Icons({
         autoInstall: true,
       }),

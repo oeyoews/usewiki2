@@ -61,7 +61,11 @@ const showInput = () => emit('showInput');
           @keyup.enter="handleInputConfirm"
           @blur="handleInputConfirm" />
 
-        <ElButton v-else class="button-new-tag" size="small" @click="showInput">
+        <ElButton
+          v-else
+          class="button-new-tag"
+          size="small"
+          @click="showInput">
           +
         </ElButton>
       </div>

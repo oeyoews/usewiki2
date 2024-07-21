@@ -21,7 +21,9 @@ export default defineBackground(() => {
       'https://github.com/oeyoews/usewiki2/issues'
     );
     if (details.reason === 'install') {
+      // @deprecated https://wxt.dev/guide/directory-structure/web-ext-config.html
       if (isDev) {
+        return;
         chrome.tabs.create({ url: pages.devPage });
         // browser.notifications.create({
         //   type: 'basic',
