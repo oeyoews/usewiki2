@@ -40,6 +40,7 @@ export default defineBackground(() => {
         .catch((error) => console.error(error));
 
       if (!isDev) {
+        return;
         browser.notifications.create({
           type: 'image',
           // eventTime: new Date().getTime(),
@@ -108,6 +109,7 @@ export default defineBackground(() => {
       browser.action.setIcon({
         path: 'tw32.png',
       });
+      return;
 
       // 首次打开提示，然后存储，不再提示
       browser.notifications.create({
