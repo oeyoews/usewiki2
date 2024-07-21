@@ -1,6 +1,11 @@
 <!-- history -->
 <script setup lang="ts">
-import { LogosChrome, LogosMicrosoftEdge } from '@/utils/icons';
+import {
+  MaterialSymbolsHouseOutlineRounded,
+  MaterialSymbolsSearchRounded,
+  LogosChrome,
+  LogosBing,
+} from '@/utils/icons';
 const props = defineProps<{
   port: number;
 }>();
@@ -13,33 +18,19 @@ const engines = [
   {
     name: 'Google',
     value: 'https://www.google.com/search?q=',
-    icon: 'LogosChrome',
+    icon: LogosChrome,
   },
   {
     name: 'Bing',
     value: 'https://www.bing.com/search?q=',
-    icon: 'LogosMicrosoftEdge',
+    icon: LogosBing,
   },
-];
-const getIcon = (name: string) => {
-  switch (name) {
-    case 'Google':
-      return LogosChrome;
-    case 'Bing':
-      return LogosMicrosoftEdge;
-    default:
-      return LogosChrome;
-  }
-};
+] as const;
 
 const getCurrentIcon = (value: string) => {
-  const icon = engines.find((engine) => engine.value === value)?.icon;
-  if (icon === 'LogosChrome') {
-    return LogosChrome;
-  } else {
-    return LogosMicrosoftEdge;
-  }
+  return engines.find((engine) => engine.value === value)?.icon;
 };
+
 const searchEngine = ref(engines[0].value);
 const openweb = (url: string) => {
   if (!url.startsWith('http')) {
@@ -78,19 +69,23 @@ const openweb = (url: string) => {
                     :label="engine.name"
                     :value="engine.value">
                     <div class="flex items-center gap-2">
-                      <component :is="getIcon(engine.name)" />
+                      <component :is="engine.icon" />
                       {{ engine.name }}
                     </div>
                   </el-option>
                 </el-select>
               </template>
             </el-input>
-            <el-button @click="openweb(targetLink)">搜索</el-button>
+            <el-button
+              @click="openweb(targetLink)"
+              class="aspect-square">
+              <material-symbols-search-rounded />
+            </el-button>
             <el-button
               @click="$emit('goHome')"
-              class="!ml-1"
-              >主页</el-button
-            >
+              class="!ml-1 aspect-square">
+              <material-symbols-house-outline-rounded />
+            </el-button>
           </div>
         </el-form-item>
       </el-form>

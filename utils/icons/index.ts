@@ -31,3 +31,7 @@ export { default as GameIconsHole } from '~icons/game-icons/hole';
 
 export { default as LogosChrome } from '~icons/logos/chrome';
 export { default as LogosMicrosoftEdge } from '~icons/logos/microsoft-edge';
+export { default as LogosBing } from '~icons/logos/bing';
+
+export { default as MaterialSymbolsHouseOutlineRounded } from '~icons/material-symbols/house-outline-rounded';
+export { default as MaterialSymbolsSearchRounded } from '~icons/material-symbols/search-rounded';
