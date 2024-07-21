@@ -28,3 +28,6 @@ export { default as MdiWifiOff } from '~icons/mdi/wifi-off';
 export { default as MingcuteUser4Line } from '~icons/mingcute/user-4-line';
 export { default as MynauiLockPassword } from '~icons/mynaui/lock-password';
 export { default as GameIconsHole } from '~icons/game-icons/hole';
+
+export { default as LogosChrome } from '~icons/logos/chrome';
+export { default as LogosMicrosoftEdge } from '~icons/logos/microsoft-edge';

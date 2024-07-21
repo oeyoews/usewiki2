@@ -126,6 +126,9 @@ importers:
       '@iconify-json/lets-icons':
         specifier: ^1.1.2
         version: 1.1.2
+      '@iconify-json/logos':
+        specifier: ^1.1.43
+        version: 1.1.43
       '@iconify-json/material-symbols':
         specifier: ^1.1.83
         version: 1.1.83
@@ -711,6 +714,9 @@ packages:
 
   '@iconify-json/lets-icons@1.1.2':
     resolution: {integrity: sha512-rju+DR2T5Up0y5CoNK9mpr4LVbAQISJEAXW5yHQQqPa8jqRYTTkJSc502H3QX4w91PUte9tAYNyv3hg5xk9how==}
+
+  '@iconify-json/logos@1.1.43':
+    resolution: {integrity: sha512-UtvL1yDHUr9dl1Tqihh6K9m5dmbYKOYyLf3i9aKhymSW76QjOCGjpgQc0PQ4GJCAdU1cAMu+WO61TgPxdonrlg==}
 
   '@iconify-json/material-symbols@1.1.83':
     resolution: {integrity: sha512-CBO1pPp6YRzqkM8XwRmWY9Vi19wYpkl7lS8XhLDUssDnjQaaYbmE4O1SWCBr1AVn1x48qmCWXLk4HKWLvvQpvA==}
@@ -4068,6 +4074,10 @@ snapshots:
       '@iconify/types': 2.0.0
 
   '@iconify-json/lets-icons@1.1.2':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/logos@1.1.43':
     dependencies:
       '@iconify/types': 2.0.0
 

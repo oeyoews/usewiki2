@@ -183,6 +183,37 @@ export default defineBackground(() => {
   //   console.log(e, 'clicked');
   // });
 
+  const RULE: chrome.declarativeNetRequest.Rule = {
+    id: 1,
+    priority: 1,
+    action: {
+      // @ts-ignore
+      type: 'modifyHeaders',
+      responseHeaders: [
+        // @ts-ignore
+        { header: 'X-Frame-Options', operation: 'remove' },
+        // @ts-ignore
+
+        { header: 'Frame-Options', operation: 'remove' },
+        // Uncomment the following line to suppress `frame-ancestors` error
+        // {header: 'Content-Security-Policy', operation: 'remove'},
+      ],
+    },
+    condition: {
+      // initiatorDomains: [chrome.runtime.id],
+      // requestDomains: iframeHosts,
+      // resourceTypes: ['sub_frame'],
+      urlFilter: '*',
+      // @ts-ignore
+      resourceTypes: ['main_frame', 'sub_frame', 'xmlhttprequest', 'websocket'],
+    },
+  };
+
+  chrome.declarativeNetRequest.updateDynamicRules({
+    removeRuleIds: [RULE.id],
+    addRules: [RULE],
+  });
+
   chrome.contextMenus.onClicked.addListener((info, tab) => {
     const { menuItemId } = info;
     switch (menuItemId as MenuIds) {

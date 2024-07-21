@@ -71,6 +71,7 @@ export default defineConfig({
       // '<all_urls>',
       'tabs',
       'scripting',
+      'declarativeNetRequestWithHostAccess',
     ],
     content_security_policy: {
       extension_pages: "script-src 'self'; object-src 'self'",

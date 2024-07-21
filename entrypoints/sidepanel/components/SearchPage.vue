@@ -1,0 +1,117 @@
+<!-- history -->
+<script setup lang="ts">
+import { LogosChrome, LogosMicrosoftEdge } from '@/utils/icons';
+const props = defineProps<{
+  port: number;
+}>();
+defineEmits(['goHome']);
+// const url = computed(() => `http://localhost:${props.port.toString()}`);
+// const url = watch(() => `http://localhost:${props.port.toString()}`);
+const link = ref(`http://localhost:${props.port.toString()}`);
+const targetLink = ref(link.value);
+const engines = [
+  {
+    name: 'Google',
+    value: 'https://www.google.com/search?q=',
+    icon: 'LogosChrome',
+  },
+  {
+    name: 'Bing',
+    value: 'https://www.bing.com/search?q=',
+    icon: 'LogosMicrosoftEdge',
+  },
+];
+const getIcon = (name: string) => {
+  switch (name) {
+    case 'Google':
+      return LogosChrome;
+    case 'Bing':
+      return LogosMicrosoftEdge;
+    default:
+      return LogosChrome;
+  }
+};
+
+const getCurrentIcon = (value: string) => {
+  const icon = engines.find((engine) => engine.value === value)?.icon;
+  if (icon === 'LogosChrome') {
+    return LogosChrome;
+  } else {
+    return LogosMicrosoftEdge;
+  }
+};
+const searchEngine = ref(engines[0].value);
+const openweb = (url: string) => {
+  if (!url.startsWith('http')) {
+    link.value = searchEngine.value + encodeURIComponent(url) + '&sidesearch=1';
+  } else {
+    link.value = url;
+  }
+};
+</script>
+
+<template>
+  <div class="m-2">
+    <div class="my-2">
+      <el-form size="default">
+        <el-form-item label="">
+          <div
+            class="flex w-full"
+            id="search-input">
+            <!-- clearable -->
+            <el-input
+              v-model="targetLink"
+              placeholder="TiddlyWiki5"
+              class="mr-1"
+              @keyup.enter="openweb(targetLink)">
+              <template #prepend>
+                <el-select
+                  v-model="searchEngine"
+                  placeholder="搜索引擎"
+                  style="width: 65px">
+                  <template #prefix>
+                    <component :is="getCurrentIcon(searchEngine)" />
+                  </template>
+                  <el-option
+                    v-for="engine in engines"
+                    :key="engine.name"
+                    :label="engine.name"
+                    :value="engine.value">
+                    <div class="flex items-center gap-2">
+                      <component :is="getIcon(engine.name)" />
+                      {{ engine.name }}
+                    </div>
+                  </el-option>
+                </el-select>
+              </template>
+            </el-input>
+            <el-button @click="openweb(targetLink)">搜索</el-button>
+            <el-button
+              @click="$emit('goHome')"
+              class="!ml-1"
+              >主页</el-button
+            >
+          </div>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="">
+      <!-- src="https://blog.oeyoews.top" -->
+      <!-- openweb("https://www.google.com/search?q=" + encodeURIComponent(query) + "&sidesearch=1", true); -->
+      <!-- https://stackoverflow.com/questions/15532791/getting-around-x-frame-options-deny-in-a-chrome-extension/69177790#69177790 -->
+      <!-- pagesidebar chrome extension -->
+      <iframe
+        class="h-[calc(100vh-60px)] w-full rounded-lg"
+        :src="link"
+        allow="camera; clipboard-write; fullscreen; microphone; geolocation"
+        allowfullscreen
+        frameborder="0"></iframe>
+    </div>
+  </div>
+</template>
+
+<style scoped lang="css">
+/* #search-input ::v-deep(.el-input__wrapper) { */
+/* border-radius: 59px !important; */
+/* } */
+</style>

@@ -21,6 +21,7 @@ import { ElButton, ElMessage as notify } from 'element-plus';
 import { checkStatus } from '@/utils/checkStatus';
 import { isDev } from '@/utils/utils';
 import { useDarkMode } from '@/hooks/useDarkMode';
+import SearchPage from './components/SearchPage.vue';
 import {
   isCheckTw5Storage,
   tagStorage,
@@ -30,6 +31,7 @@ import {
 } from '@/utils/storage';
 import { useContent } from '@/hooks/useContent';
 
+const isHome = ref(true);
 const { loading, html, md, link, faviconUrl, title, getContent } = useContent();
 const { isDarkMode, toggleDark } = useDarkMode();
 
@@ -278,14 +280,31 @@ const handleCommand = async (cmd: string, components: any, e: MouseEvent) => {
       break;
   }
 };
+
+const onGoHome = () => {
+  console.log('go home');
+  isHome.value = true;
+};
 </script>
 
 <template>
   <div class="inset-x-0 top-0 fixed">
     <GridBg />
+    <SearchPage
+      :port="port"
+      @go-home="onGoHome"
+      v-if="!isHome" />
     <div
-      class="backdrop-blur-sm z-[999] flex justify-end items-center inset-x-0 gap-1 p-2 px-6">
+      class="backdrop-blur-sm z-[999] flex justify-end items-center inset-x-0 gap-1 p-2 px-6"
+      v-if="isHome">
       <!-- 下拉框 -->
+      <el-button
+        @click="isHome = false"
+        size="default"
+        type="primary"
+        plain
+        >进入太微</el-button
+      >
       <Actions
         :isCheckTw5="isCheckTw5"
         :command="handleCommand"
@@ -303,7 +322,9 @@ const handleCommand = async (cmd: string, components: any, e: MouseEvent) => {
     </div>
   </div>
 
-  <div class="mx-2 fixed top-[50px] w-[95%]">
+  <div
+    class="mx-2 fixed top-[50px] w-[95%]"
+    v-if="isHome">
     <ElTabs
       stretch
       type="border-card"
