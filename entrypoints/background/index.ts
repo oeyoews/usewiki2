@@ -21,40 +21,37 @@ export default defineBackground(() => {
       'https://github.com/oeyoews/usewiki2/issues'
     );
     if (details.reason === 'install') {
+      chrome.sidePanel
+        .setPanelBehavior({ openPanelOnActionClick: true })
+        .catch((error) => console.error(error));
       // @deprecated https://wxt.dev/guide/directory-structure/web-ext-config.html
-      if (isDev) {
-        return;
-        chrome.tabs.create({ url: pages.devPage });
-        // browser.notifications.create({
-        //   type: 'basic',
-        //   iconUrl: 'tw256.png',
-        //   title: 'Usewiki2',
-        //   message: '开发模式',
-        //   buttons: [{ title: '关闭' }],
-        // });
-      }
+      // if (isDev) {
+      //   chrome.tabs.create({ url: pages.devPage });
+      //   // browser.notifications.create({
+      //   //   type: 'basic',
+      //   //   iconUrl: 'tw256.png',
+      //   //   title: 'Usewiki2',
+      //   //   message: '开发模式',
+      //   //   buttons: [{ title: '关闭' }],
+      //   // });
+      // }
       // chrome.sidePanel.setOptions({ path: pages.optionsPage });
       // 首次安装调转到欢迎页面
       // chrome.tabs.create({ url: pages.welcomePage, });
       // 单击直接打开 panel
-      chrome.sidePanel
-        .setPanelBehavior({ openPanelOnActionClick: true })
-        .catch((error) => console.error(error));
-
-      if (!isDev) {
-        return;
-        browser.notifications.create({
-          type: 'image',
-          // eventTime: new Date().getTime(),
-          title: constant.default_name,
-          iconUrl: constant.tiddlywiki_icon,
-          imageUrl: 'https://github.com/oeyoews/usewiki2/raw/main/banner03.png',
-          // @ts-ignore
-          buttons: [{ title: '关闭' }],
-          silent: true,
-          message: '欢迎使用' + constant.default_name,
-        });
-      }
+      // if (!isDev) {
+      //   browser.notifications.create({
+      //     type: 'image',
+      //     // eventTime: new Date().getTime(),
+      //     title: constant.default_name,
+      //     iconUrl: constant.tiddlywiki_icon,
+      //     imageUrl: 'https://github.com/oeyoews/usewiki2/raw/main/banner03.png',
+      //     // @ts-ignore
+      //     buttons: [{ title: '关闭' }],
+      //     silent: true,
+      //     message: '欢迎使用' + constant.default_name,
+      //   });
+      // }
     }
   });
 

@@ -11,5 +11,5 @@
     ".gitignore": ".gitconfig",
     "wxt.config.ts": "auto-imports*.ts, components*.ts, tailwind.config.cjs, tsconfig.json, types.d.ts, postcss.config.cjs"
   },
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": true
 }

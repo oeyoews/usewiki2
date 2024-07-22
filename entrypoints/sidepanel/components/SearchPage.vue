@@ -42,66 +42,57 @@ const openweb = (url: string) => {
 </script>
 
 <template>
-  <div class="m-2">
-    <div class="my-2">
-      <el-form size="default">
-        <el-form-item label="">
-          <div
-            class="flex w-full"
-            id="search-input">
-            <!-- clearable -->
-            <el-input
-              v-model="targetLink"
-              placeholder="TiddlyWiki5"
-              class="mr-1"
-              @keyup.enter="openweb(targetLink)">
-              <template #prepend>
-                <el-select
-                  v-model="searchEngine"
-                  placeholder="搜索引擎"
-                  style="width: 65px">
-                  <template #prefix>
-                    <component :is="getCurrentIcon(searchEngine)" />
-                  </template>
-                  <el-option
-                    v-for="engine in engines"
-                    :key="engine.name"
-                    :label="engine.name"
-                    :value="engine.value">
-                    <div class="flex items-center gap-2">
-                      <component :is="engine.icon" />
-                      {{ engine.name }}
-                    </div>
-                  </el-option>
-                </el-select>
-              </template>
-            </el-input>
-            <el-button
-              @click="openweb(targetLink)"
-              class="aspect-square">
-              <material-symbols-search-rounded />
-            </el-button>
-            <el-button
-              @click="$emit('goHome')"
-              class="!ml-1 aspect-square">
-              <material-symbols-house-outline-rounded />
-            </el-button>
-          </div>
-        </el-form-item>
-      </el-form>
-    </div>
-    <div class="">
-      <!-- src="https://blog.oeyoews.top" -->
-      <!-- openweb("https://www.google.com/search?q=" + encodeURIComponent(query) + "&sidesearch=1", true); -->
-      <!-- https://stackoverflow.com/questions/15532791/getting-around-x-frame-options-deny-in-a-chrome-extension/69177790#69177790 -->
-      <!-- pagesidebar chrome extension -->
-      <iframe
-        class="h-[calc(100vh-60px)] w-full rounded-lg"
-        :src="link"
-        allow="camera; clipboard-write; fullscreen; microphone; geolocation"
-        allowfullscreen
-        frameborder="0"></iframe>
-    </div>
+  <div class="m-2 not-prose">
+    <el-form
+      size="default"
+      id="iframe-form">
+      <el-form-item label="">
+        <div class="flex w-full">
+          <el-button
+            @click="$emit('goHome')"
+            class="!mr-1 aspect-square">
+            <material-symbols-house-outline-rounded />
+          </el-button>
+          <el-input
+            v-model="targetLink"
+            placeholder="TiddlyWiki5"
+            class="mr-1"
+            :suffix-icon="MaterialSymbolsSearchRounded"
+            @keyup.enter="openweb(targetLink)">
+            <template #prepend>
+              <el-select
+                v-model="searchEngine"
+                placeholder="搜索引擎"
+                style="width: 60px">
+                <template #prefix>
+                  <component :is="getCurrentIcon(searchEngine)" />
+                </template>
+                <el-option
+                  v-for="engine in engines"
+                  :key="engine.name"
+                  :label="engine.name"
+                  :value="engine.value">
+                  <div class="flex items-center gap-2">
+                    <component :is="engine.icon" />
+                    {{ engine.name }}
+                  </div>
+                </el-option>
+              </el-select>
+            </template>
+          </el-input>
+        </div>
+      </el-form-item>
+    </el-form>
+    <!-- src="https://blog.oeyoews.top" -->
+    <!-- openweb("https://www.google.com/search?q=" + encodeURIComponent(query) + "&sidesearch=1", true); -->
+    <!-- https://stackoverflow.com/questions/15532791/getting-around-x-frame-options-deny-in-a-chrome-extension/69177790#69177790 -->
+    <!-- pagesidebar chrome extension -->
+    <iframe
+      class="h-[calc(100vh-60px)] w-full rounded-lg"
+      :src="link"
+      allow="camera; clipboard-write; fullscreen; microphone; geolocation"
+      allowfullscreen
+      frameborder="0"></iframe>
   </div>
 </template>
 
@@ -109,4 +100,7 @@ const openweb = (url: string) => {
 /* #search-input ::v-deep(.el-input__wrapper) { */
 /* border-radius: 59px !important; */
 /* } */
+#iframe-form ::v-deep(.el-form-item) {
+  margin-bottom: 8px;
+}
 </style>
