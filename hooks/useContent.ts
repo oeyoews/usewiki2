@@ -63,11 +63,12 @@ export function useContent() {
         });
       }
     } catch (error) {
-      notify({
-        message: '无法建立连接',
-        type: 'error',
-        duration: 750,
-      });
+      console.log(error);
+      // notify({
+      //   message: '无法建立连接',
+      //   type: 'error',
+      //   duration: 750,
+      // });
     } finally {
       loading.value = false;
     }

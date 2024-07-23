@@ -11,12 +11,22 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 // See https://wxt.dev/api/config.html
 export default defineConfig({
   modules: ['@wxt-dev/module-vue'],
+  // https://github.com/wxt-dev/wxt/pull/716/files
+  vue: {
+    vite: {
+      script: {
+        // propsDestructure: true,
+        // defineModel: true,
+      },
+    },
+  },
   imports: {
     addons: {
       vueTemplate: true,
     },
     presets: ['vue'],
   },
+
   vite: () => ({
     resolve: {
       alias: {

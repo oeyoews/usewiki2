@@ -9,10 +9,20 @@ import {
 const props = defineProps<{
   port: number;
 }>();
-defineEmits(['goHome']);
+// defineEmits(['goHome']);
+// const isHome = defineModel<boolean>('isHome', {
+//   required: true,
+//   default: false,
+//   type: Boolean,
+// });
+const isHome = defineModel('isHome');
 // const url = computed(() => `http://localhost:${props.port.toString()}`);
 // const url = watch(() => `http://localhost:${props.port.toString()}`);
 const link = ref(`http://localhost:${props.port.toString()}`);
+// defineExpose({
+//   link,
+//   demo: 99,
+// });
 const targetLink = ref(link.value);
 const engines = [
   {
@@ -39,6 +49,11 @@ const openweb = (url: string) => {
     link.value = url;
   }
 };
+
+const goHome = () => {
+  isHome.value = !isHome.value;
+  console.log('go home', isHome.value);
+};
 </script>
 
 <template>
@@ -48,8 +63,9 @@ const openweb = (url: string) => {
       id="iframe-form">
       <el-form-item label="">
         <div class="flex w-full">
+          <!-- @click="$emit('goHome')" -->
           <el-button
-            @click="$emit('goHome')"
+            @click="goHome"
             class="!mr-1 aspect-square">
             <material-symbols-house-outline-rounded />
           </el-button>

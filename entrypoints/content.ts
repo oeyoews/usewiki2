@@ -7,7 +7,10 @@ export default defineContentScript({
   // not work 还是 不能重和？??
   exclude: ['https://google.com/*', 'https://bing.com/*', 'chrome://*'],
   runAt: 'document_start',
-  main() {
+  main(ctx) {
+    ctx.onInvalidated(() => {
+      // console.log('更新')
+    });
     // 检查是否为 tiddlywiki site, 向bg 发送消息
     document.addEventListener('DOMContentLoaded', () => {
       const meta = document.querySelector('meta[name="generator"]');
@@ -28,8 +31,11 @@ export default defineContentScript({
 
     // 提取页面文章内容
     function getDoc() {
+      // 防止 parse 函数修改真实 dom
       const documentClone = document.cloneNode(true) as Document;
-      const reader = new Readability(documentClone);
+      const reader = new Readability(documentClone, {
+        // charThreshold: 100000,
+      });
       const article = reader.parse();
       return article;
     }
