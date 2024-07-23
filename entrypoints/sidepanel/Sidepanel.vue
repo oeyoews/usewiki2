@@ -296,7 +296,7 @@ const handleCommand = async (cmd: string, components: any, e: MouseEvent) => {
     <!-- ref="searchRef" -->
     <SearchPage
       v-model:is-home="isHome"
-      :port="port"
+      :port
       v-if="!isHome" />
     <div
       class="backdrop-blur-sm z-[999] flex justify-end items-center inset-x-0 gap-1 p-2 px-6"
@@ -310,7 +310,7 @@ const handleCommand = async (cmd: string, components: any, e: MouseEvent) => {
         >进入太微</el-button
       >
       <Actions
-        :isCheckTw5="isCheckTw5"
+        :isCheckTw5
         :command="handleCommand"
         :default-command="debounceSave" />
       <el-tag
@@ -376,7 +376,7 @@ const handleCommand = async (cmd: string, components: any, e: MouseEvent) => {
             <div class="h-full overflow-x-hidden article">
               <el-scrollbar>
                 <el-skeleton
-                  :loading="loading"
+                  :loading
                   animated
                   :count="4"
                   :throttle="100">
@@ -577,7 +577,7 @@ const handleCommand = async (cmd: string, components: any, e: MouseEvent) => {
         width="80%"
         align-center>
         <Info
-          :status="status"
+          :status
           :json="json" />
       </el-dialog>
     </ElTabs>
