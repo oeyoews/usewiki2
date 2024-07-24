@@ -6,7 +6,46 @@ interface IProps {
   isCheckTw5: boolean;
   defaultCommand: any;
 }
-defineProps<IProps>();
+const props = defineProps<IProps>();
+const actions = [
+  {
+    name: '日记',
+    icon: WI.PhPencil,
+    command: 'journal',
+    condition: props.isCheckTw5,
+  },
+  {
+    name: '详情',
+    icon: WI.MaterialSymbolsInfoOutline,
+    command: 'info',
+  },
+  {
+    name: '配置',
+    icon: WI.LetsIconsSettingAltLine,
+    comand: 'setup',
+  },
+  {
+    name: '下载',
+    icon: WI.MaterialSymbolsDownload,
+    command: 'download',
+    divided: true,
+  },
+  {
+    name: '复制',
+    icon: WI.ZondiconsCopy,
+    command: 'copy',
+  },
+  {
+    name: '切换',
+    icon: WI.FluentDarkTheme24Filled,
+    command: 'darkmode',
+  },
+  {
+    name: '刷新',
+    icon: WI.MdiCloudRefreshVariant,
+    command: 'refresh',
+  },
+];
 </script>
 
 <template>
@@ -25,41 +64,13 @@ defineProps<IProps>();
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item
-          :icon="WI.PhPencil"
-          command="journal"
-          v-if="isCheckTw5"
-          >日记
-        </el-dropdown-item>
-        <el-dropdown-item
-          :icon="WI.MaterialSymbolsInfoOutline"
-          command="info">
-          详情</el-dropdown-item
-        >
-        <el-dropdown-item
-          :icon="WI.LetsIconsSettingAltLine"
-          command="setup">
-          配置</el-dropdown-item
-        >
-        <el-dropdown-item
-          :icon="WI.ZondiconsCopy"
-          command="copy"
-          >复制
-        </el-dropdown-item>
-        <el-dropdown-item
-          divided
-          :icon="WI.MaterialSymbolsDownload"
-          command="download"
-          >下载
-        </el-dropdown-item>
-        <el-dropdown-item
-          :icon="WI.MdiCloudRefreshVariant"
-          command="refresh"
-          >刷新
-        </el-dropdown-item>
-        <el-dropdown-item
-          :icon="WI.FluentDarkTheme24Filled"
-          command="darkmode"
-          >切换
+          v-for="action in actions"
+          :command="action.command"
+          :divided="action.divided"
+          :icon="action.icon"
+          :v-if="action.condition ? action.condition : true"
+          :key="action.name">
+          {{ action.name }}
         </el-dropdown-item>
       </el-dropdown-menu>
     </template>
