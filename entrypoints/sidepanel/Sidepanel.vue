@@ -4,7 +4,7 @@ import 'element-plus/theme-chalk/dark/css-vars.css';
 import 'element-plus/es/components/notification/style/css';
 import 'element-plus/es/components/message-box/style/css';
 import GridBg from '@/components/GridBg.vue';
-import Actions from './components/Actions.vue';
+import Actions, { type ICommand } from './components/Actions.vue';
 import Info from './components/Info.vue';
 import { formattime } from '@/utils/formattime';
 import * as utils from '@/utils/utils';
@@ -32,6 +32,7 @@ import {
 import { useContent } from '@/hooks/useContent';
 
 const isHome = ref(true);
+const isRead = ref(true);
 const { loading, html, md, link, faviconUrl, title, getContent } = useContent();
 const { isDarkMode, toggleDark } = useDarkMode();
 
@@ -253,32 +254,27 @@ async function saveAuth(option: { username: string; password: string }) {
   }
 }
 
-const handleCommand = async (cmd: string, components: any, e: MouseEvent) => {
-  switch (cmd) {
-    case 'journal':
-      addJournal();
-      break;
-    case 'info':
+const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
+  const actions: Record<ICommand, Function> = {
+    tiddlywiki: () => {
+      isHome.value = !isHome.value;
+    },
+    journal: addJournal,
+    info: () => {
       infoDialogStatus.value = !infoDialogStatus.value;
-      break;
-    case 'setup':
+    },
+    setup: () => {
       setupDialogStatus.value = true;
-      break;
-    case 'copy':
-      copyMd(md.value);
-      break;
-    case 'download':
-      saveMarkdown(md.value, title.value!);
-      break;
-    case 'refresh':
-      getContent({ tip: true });
-      break;
-    case 'darkmode':
-      await toggleDark(e);
-      break;
-    default:
-      break;
-  }
+    },
+    copy: () => copyMd(md.value),
+    download: () => saveMarkdown(md.value, title.value!),
+    refresh: () => getContent({ tip: true }),
+    darkmode: () => toggleDark(e),
+    edit: () => {
+      isRead.value = !isRead.value;
+    },
+  };
+  actions[cmd](e);
 };
 
 // const onGoHome = () => {
@@ -302,13 +298,6 @@ const handleCommand = async (cmd: string, components: any, e: MouseEvent) => {
       class="backdrop-blur-sm z-[999] flex justify-end items-center inset-x-0 gap-1 p-2 px-6"
       v-if="isHome">
       <!-- 下拉框 -->
-      <el-button
-        @click="isHome = false"
-        size="default"
-        type="primary"
-        plain
-        >进入太微</el-button
-      >
       <Actions
         :isCheckTw5
         :command="handleCommand"
@@ -329,258 +318,239 @@ const handleCommand = async (cmd: string, components: any, e: MouseEvent) => {
   <div
     class="mx-2 fixed top-[50px] w-[95%]"
     v-if="isHome">
-    <ElTabs
-      stretch
-      type="border-card"
-      :model-value="currentTab">
-      <!-- preview -->
-      <ElTabPane
-        name="preview"
-        class="overflow-y-auto h-[calc(100vh-105px)]">
-        <template #label>
-          <WI.FaFileTextO /> <span class="ml-1">预览</span>
-        </template>
+    <div v-show="isRead">
+      <div
+        class="flex items-center justify-center gap-2"
+        v-if="title">
+        <el-popover
+          :width="300"
+          raw-content
+          :show-after="500">
+          <!-- 鼠标悬停时显示的内容 -->
+          <template #default>
+            {{ title }}
+          </template>
+          <!-- 默认显示的内容 -->
+          <template #reference>
+            <h2 class="line-clamp-1">
+              <a
+                :href="link"
+                target="_blank"
+                v-if="link && faviconUrl">
+                <img
+                  alt=""
+                  :src="faviconUrl"
+                  class="rounded-full size-4" />
+              </a>
+              {{ title }}
+            </h2>
+          </template>
+        </el-popover>
+      </div>
+
+      <div
+        class="prose-gray max-w-none prose-sm flex-wrap prose-img:max-w-[300px] prose-img:my-0 prose-img:rounded-md prose-video:max-w-[300px] prose-video:max-h-[300px] prose-video:my-0 prose-h2:my-2 prose-img:max-h-[300px] overflow-x-hidden h-[calc(100vh-160px)]">
+        <div class="h-full overflow-x-hidden article">
+          <el-scrollbar>
+            <el-skeleton
+              :loading
+              animated
+              :count="4"
+              :throttle="100">
+              <template #template>
+                <div class="px-3 py-5">
+                  <el-skeleton-item
+                    variant="text"
+                    class="!w-1/2" />
+                  <el-skeleton-item
+                    variant="p"
+                    class="w-1/2 h-24" />
+                  <div class="flex justify-between items-center">
+                    <el-skeleton-item
+                      variant="text"
+                      class="mr-4" />
+                    <el-skeleton-item
+                      variant="text"
+                      class="!w-1/4" />
+                  </div>
+                </div>
+              </template>
+            </el-skeleton>
+            <div
+              v-html="html"
+              class="mx-2 overflow-x-hidden"></div>
+          </el-scrollbar>
+        </div>
+      </div>
+    </div>
+
+    <!-- edit -->
+    <!-- :disabled="!isCheckTw5" -->
+    <div v-show="!isRead">
+      <ElInput
+        type="text"
+        size="large"
+        v-model="title"
+        class="mb-4" />
+
+      <ElInput
+        ref="editRef"
+        placeholder="写点什么吧 ..."
+        size="large"
+        v-model="md"
+        @keyup.enter.ctrl="handleSave"
+        @input="debounceEdit"
+        :autosize="{ minRows: 4, maxRows: 27 }"
+        type="textarea"
+        spellcheck="false"
+        class="w-full border-none overflow-y"
+        resize="none" />
+    </div>
+
+    <!-- setup -->
+    <el-dialog
+      v-model="setupDialogStatus"
+      width="90%"
+      align-center>
+      <div class="items-center mx-2">
+        <div>
+          <h2>登录</h2>
+          <div class="flex gap-2">
+            <el-form
+              size="large"
+              :spellcheck="false"
+              label-width="68px"
+              label-position="top">
+              <el-form-item label="用户名">
+                <ElInput
+                  v-model.trim.number="username"
+                  :prefix-icon="WI.MingcuteUser4Line"
+                  minlength="3"
+                  maxlength="20"
+                  show-word-limit
+                  placeholder="请输入用户名" />
+              </el-form-item>
+              <el-form-item label="密码">
+                <ElInput
+                  minlength="4"
+                  maxlength="20"
+                  :prefix-icon="WI.MynauiLockPassword"
+                  v-model.trim.number="password"
+                  type="password"
+                  placeholder="请输入密码"
+                  show-password />
+              </el-form-item>
+              <el-form-item label="">
+                <ElButton
+                  type="primary"
+                  plain
+                  :disabled="isChecking"
+                  @click="
+                    saveAuth({
+                      username,
+                      password,
+                    })
+                  ">
+                  保存
+                </ElButton>
+              </el-form-item>
+            </el-form>
+          </div>
+        </div>
 
         <div>
-          <div
-            class="flex items-center justify-center gap-2"
-            v-if="title">
-            <el-popover
-              :width="300"
-              raw-content
-              :show-after="500">
-              <!-- 鼠标悬停时显示的内容 -->
-              <template #default>
-                {{ title }}
-              </template>
-              <!-- 默认显示的内容 -->
-              <template #reference>
-                <h2 class="line-clamp-1">
-                  <a
-                    :href="link"
-                    target="_blank"
-                    v-if="link && faviconUrl">
-                    <img
-                      alt=""
-                      :src="faviconUrl"
-                      class="rounded-full size-4" />
-                  </a>
-                  {{ title }}
-                </h2>
-              </template>
-            </el-popover>
-          </div>
-
-          <div
-            class="prose-gray max-w-none prose-sm flex-wrap prose-img:max-w-[300px] prose-img:my-0 prose-img:rounded-md prose-video:max-w-[300px] prose-video:max-h-[300px] prose-video:my-0 prose-h2:my-2 prose-img:max-h-[300px] overflow-x-hidden h-[calc(100vh-160px)]">
-            <div class="h-full overflow-x-hidden article">
-              <el-scrollbar>
-                <el-skeleton
-                  :loading
-                  animated
-                  :count="4"
-                  :throttle="100">
-                  <template #template>
-                    <div class="px-3 py-5">
-                      <el-skeleton-item
-                        variant="text"
-                        class="!w-1/2" />
-                      <el-skeleton-item
-                        variant="p"
-                        class="w-1/2 h-24" />
-                      <div class="flex justify-between items-center">
-                        <el-skeleton-item
-                          variant="text"
-                          class="mr-4" />
-                        <el-skeleton-item
-                          variant="text"
-                          class="!w-1/4" />
-                      </div>
-                    </div>
+          <h2>端口号</h2>
+          <div class="flex gap-2">
+            <!-- :prefix-icon="WI.GameIconsHole" -->
+            <ElInput
+              v-model.trim.number="port"
+              size="large"
+              maxlength="5"
+              minlength="1"
+              @keyup.enter="savePort(port)"
+              placeholder="请输入端口号">
+              <template #prepend>
+                <el-select
+                  size="large"
+                  v-model="port"
+                  placeholder="端口"
+                  style="width: 98px">
+                  <template v-for="(port, index) in ports">
+                    <el-option
+                      :label="`端口${index + 1} (${port})`"
+                      :value="port" />
                   </template>
-                </el-skeleton>
-                <div
-                  v-html="html"
-                  class="mx-2 overflow-x-hidden"></div>
-              </el-scrollbar>
-            </div>
+                </el-select>
+              </template>
+            </ElInput>
+            <ElButton
+              size="large"
+              type="primary"
+              plain
+              @click="savePort(port)"
+              :disabled="isChecking"
+              >保存</ElButton
+            >
           </div>
         </div>
-      </ElTabPane>
 
-      <!-- edit -->
-      <!-- :disabled="!isCheckTw5" -->
-      <ElTabPane name="edit">
-        <template #label>
-          <WI.FaRegularEdit />
-          <span class="ml-1">编辑</span>
-        </template>
+        <div v-show="isCheckTw5">
+          <h2>标签</h2>
+          <!-- tag -->
+          <div class="flex gap-2">
+            <ElTag
+              size="large"
+              v-for="tag in dynamicTags"
+              :key="tag"
+              closable
+              :disable-transitions="false"
+              @close="handleClose(tag)">
+              <div class="flex items-center gap-2">
+                <WI.MdiTagOutline />
+                {{ tag }}
+              </div>
+            </ElTag>
+            <ElInput
+              size="large"
+              v-if="inputVisible"
+              ref="InputRef"
+              v-model="inputValue"
+              class="w-20"
+              @keyup.enter="handleInputConfirm"
+              @blur="handleInputConfirm" />
 
-        <ElInput
-          type="text"
-          size="large"
-          v-model="title"
-          class="mb-4" />
-
-        <ElInput
-          ref="editRef"
-          placeholder="写点什么吧 ..."
-          size="large"
-          v-model="md"
-          @keyup.enter.ctrl="handleSave"
-          @input="debounceEdit"
-          :autosize="{ minRows: 4, maxRows: 27 }"
-          type="textarea"
-          spellcheck="false"
-          class="w-full border-none overflow-y"
-          resize="none" />
-      </ElTabPane>
-
-      <!-- setup -->
-      <el-dialog
-        v-model="setupDialogStatus"
-        width="90%"
-        align-center>
-        <div class="items-center mx-2">
-          <div>
-            <h2>登录</h2>
-            <div class="flex gap-2">
-              <el-form
-                size="large"
-                :spellcheck="false"
-                label-width="68px"
-                label-position="top">
-                <el-form-item label="用户名">
-                  <ElInput
-                    v-model.trim.number="username"
-                    :prefix-icon="WI.MingcuteUser4Line"
-                    minlength="3"
-                    maxlength="20"
-                    show-word-limit
-                    placeholder="请输入用户名" />
-                </el-form-item>
-                <el-form-item label="密码">
-                  <ElInput
-                    minlength="4"
-                    maxlength="20"
-                    :prefix-icon="WI.MynauiLockPassword"
-                    v-model.trim.number="password"
-                    type="password"
-                    placeholder="请输入密码"
-                    show-password />
-                </el-form-item>
-                <el-form-item label="">
-                  <ElButton
-                    type="primary"
-                    plain
-                    :disabled="isChecking"
-                    @click="
-                      saveAuth({
-                        username,
-                        password,
-                      })
-                    ">
-                    保存
-                  </ElButton>
-                </el-form-item>
-              </el-form>
-            </div>
+            <ElButton
+              v-else
+              class="button-new-tag"
+              size="default"
+              type="primary"
+              plain
+              @click="showInput">
+              +
+            </ElButton>
           </div>
-
-          <div>
-            <h2>端口号</h2>
-            <div class="flex gap-2">
-              <!-- :prefix-icon="WI.GameIconsHole" -->
-              <ElInput
-                v-model.trim.number="port"
-                size="large"
-                maxlength="5"
-                minlength="1"
-                @keyup.enter="savePort(port)"
-                placeholder="请输入端口号">
-                <template #prepend>
-                  <el-select
-                    size="large"
-                    v-model="port"
-                    placeholder="端口"
-                    style="width: 98px">
-                    <template v-for="(port, index) in ports">
-                      <el-option
-                        :label="`端口${index + 1} (${port})`"
-                        :value="port" />
-                    </template>
-                  </el-select>
-                </template>
-              </ElInput>
-              <ElButton
-                size="large"
-                type="primary"
-                plain
-                @click="savePort(port)"
-                :disabled="isChecking"
-                >保存</ElButton
-              >
-            </div>
-          </div>
-
-          <div v-show="isCheckTw5">
-            <h2>标签</h2>
-            <!-- tag -->
-            <div class="flex gap-2">
-              <ElTag
-                size="large"
-                v-for="tag in dynamicTags"
-                :key="tag"
-                closable
-                :disable-transitions="false"
-                @close="handleClose(tag)">
-                <div class="flex items-center gap-2">
-                  <WI.MdiTagOutline />
-                  {{ tag }}
-                </div>
-              </ElTag>
-              <ElInput
-                size="large"
-                v-if="inputVisible"
-                ref="InputRef"
-                v-model="inputValue"
-                class="w-20"
-                @keyup.enter="handleInputConfirm"
-                @blur="handleInputConfirm" />
-
-              <ElButton
-                v-else
-                class="button-new-tag"
-                size="default"
-                type="primary"
-                plain
-                @click="showInput">
-                +
-              </ElButton>
-            </div>
-          </div>
-
-          <h2>连接TiddlyWiki5</h2>
-          <el-switch
-            size="large"
-            :before-change="checkTwStatus"
-            :loading="isChecking"
-            inline-prompt
-            v-model="isCheckTw5"
-            :inactive-icon="WI.SimpleIconsTiddlywiki"
-            :active-icon="WI.SimpleIconsTiddlywiki" />
         </div>
-      </el-dialog>
 
-      <el-dialog
-        v-model="infoDialogStatus"
-        width="80%"
-        align-center>
-        <Info
-          :status
-          :json="json" />
-      </el-dialog>
-    </ElTabs>
+        <h2>连接TiddlyWiki5</h2>
+        <el-switch
+          size="large"
+          :before-change="checkTwStatus"
+          :loading="isChecking"
+          inline-prompt
+          v-model="isCheckTw5"
+          :inactive-icon="WI.SimpleIconsTiddlywiki"
+          :active-icon="WI.SimpleIconsTiddlywiki" />
+      </div>
+    </el-dialog>
+
+    <el-dialog
+      v-model="infoDialogStatus"
+      width="80%"
+      align-center>
+      <Info
+        :status
+        :json="json" />
+    </el-dialog>
   </div>
 </template>
 

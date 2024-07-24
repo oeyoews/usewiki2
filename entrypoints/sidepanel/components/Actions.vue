@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import * as WI from '@/utils/icons';
+import type { FunctionalComponent } from 'vue';
 interface IProps {
   command: any;
   /** check tw5 */
@@ -7,7 +8,20 @@ interface IProps {
   defaultCommand: any;
 }
 const props = defineProps<IProps>();
-const actions = [
+
+type IAction<T> = {
+  name: string;
+  icon: FunctionalComponent;
+  command: T;
+  divided?: boolean;
+  condition?: boolean;
+};
+
+function defineAction<T extends string>(actions: Array<IAction<T>>) {
+  return actions;
+}
+
+const actions = defineAction([
   {
     name: '日记',
     icon: WI.PhPencil,
@@ -15,14 +29,24 @@ const actions = [
     condition: props.isCheckTw5,
   },
   {
+    name: '编辑',
+    icon: WI.CharmBookOpen,
+    command: 'edit',
+  },
+  {
     name: '详情',
     icon: WI.MaterialSymbolsInfoOutline,
     command: 'info',
   },
   {
+    name: '太微',
+    icon: WI.SimpleIconsTiddlywiki,
+    command: 'tiddlywiki',
+  },
+  {
     name: '配置',
     icon: WI.LetsIconsSettingAltLine,
-    comand: 'setup',
+    command: 'setup',
   },
   {
     name: '下载',
@@ -45,7 +69,9 @@ const actions = [
     icon: WI.MdiCloudRefreshVariant,
     command: 'refresh',
   },
-];
+]);
+
+export type ICommand = (typeof actions)[number]['command'];
 </script>
 
 <template>

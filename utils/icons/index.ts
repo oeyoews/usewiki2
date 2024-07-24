@@ -5,6 +5,7 @@ export { default as MdiContentCopy } from '~icons/mdi/content-copy';
 
 // info
 export { default as CharmGithub } from '~icons/charm/github';
+export { default as CharmBookOpen } from '~icons/charm/book-open';
 
 // tabs
 export { default as FaRegularEdit } from '~icons/fa-regular/edit';
