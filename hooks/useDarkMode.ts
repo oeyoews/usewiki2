@@ -9,6 +9,7 @@ export function useDarkMode() {
   const isDarkMode = ref<boolean>(false);
 
   const toggleDark = async (event?: MouseEvent) => {
+    console.log(event);
     const isAppearanceTransition =
       // @ts-ignore
       document.startViewTransition &&

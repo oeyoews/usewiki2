@@ -103,7 +103,7 @@ function onContextMenu(e: MouseEvent) {
       },
       {
         label: '切换',
-        onClick: actions.darkmode,
+        onClick: (e: MouseEvent) => actions.darkmode(e),
         icon: h(WI.FluentDarkTheme24Filled),
       },
       {
@@ -343,16 +343,13 @@ const actions: Record<ICommand, Function> = {
   copy: () => copyMd(md.value),
   download: () => saveMarkdown(md.value, title.value!),
   refresh: () => getContent({ tip: true }),
-  darkmode: () => toggleDark(mousePosition.value),
+  darkmode: (e: MouseEvent) => toggleDark(e || mousePosition.value),
   edit: () => {
     isRead.value = !isRead.value;
   },
 };
 
 const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
-  if (e) {
-    mousePosition.value = e;
-  }
   actions[cmd](e);
 };
 
