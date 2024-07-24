@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@imengyu/vue3-context-menu':
+        specifier: ^1.4.1
+        version: 1.4.1
       '@mozilla/readability':
         specifier: ^0.5.0
         version: 0.5.0
@@ -756,6 +759,9 @@ packages:
 
   '@iconify/utils@2.1.25':
     resolution: {integrity: sha512-Y+iGko8uv/Fz5bQLLJyNSZGOdMW0G7cnlEX1CiNcKsRXX9cq/y/vwxrIAtLCZhKHr3m0VJmsjVPsvnM4uX8YLg==}
+
+  '@imengyu/vue3-context-menu@1.4.1':
+    resolution: {integrity: sha512-34WInBVx0Mr0zSsRCQWG7ezHk0JzOuZqE4T8ywI82mbk/jfWBRtTkKHYSZbtmw2oYEfDFwCWdM/gur7QFAXYMA==}
 
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -4029,6 +4035,8 @@ snapshots:
       mlly: 1.7.1
     transitivePeerDependencies:
       - supports-color
+
+  '@imengyu/vue3-context-menu@1.4.1': {}
 
   '@isaacs/cliui@8.0.2':
     dependencies:

@@ -2,7 +2,7 @@
   "name": "usewiki2",
   "description": "Convert HTML to Markdown, and save to your computer, support nodejs tiddlywiki",
   "private": true,
-  "version": "4.8.4",
+  "version": "4.9.0",
   "type": "module",
   "scripts": {
     "dev": "wxt --mode development",
@@ -15,6 +15,7 @@
     "postinstall": "wxt prepare"
   },
   "dependencies": {
+    "@imengyu/vue3-context-menu": "^1.4.1",
     "@mozilla/readability": "^0.5.0",
     "@tailwindcss/typography": "^0.5.13",
     "dayjs": "^1.11.12",

@@ -11,6 +11,7 @@ export { default as CharmBookOpen } from '~icons/charm/book-open';
 export { default as FaRegularEdit } from '~icons/fa-regular/edit';
 export { default as TdesignSetting } from '~icons/tdesign/setting';
 export { default as FaFileTextO } from '~icons/fa/file-text-o';
+export { default as CharmMenuMeatball } from '~icons/charm/menu-meatball';
 
 // tools
 export { default as MaterialSymbolsDownload } from '~icons/material-symbols/download';

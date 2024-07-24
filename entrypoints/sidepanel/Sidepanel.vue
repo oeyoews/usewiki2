@@ -10,7 +10,7 @@ import { formattime } from '@/utils/formattime';
 import * as utils from '@/utils/utils';
 import constant from '@/utils/constant';
 import { copyMd } from '@/utils/copyMd';
-// @ts-ignore
+import '@imengyu/vue3-context-menu/lib/vue3-context-menu.css';
 import json from '../../package.json';
 import { debounce } from '@/utils/debounce';
 import * as WI from '@/utils/icons';
@@ -31,17 +31,20 @@ import {
 } from '@/utils/storage';
 import { useContent } from '@/hooks/useContent';
 
+// @ts-expect-error
+import ContextMenu from '@imengyu/vue3-context-menu';
+
 const isHome = ref(true);
 const isRead = ref(true);
 const { loading, html, md, link, faviconUrl, title, getContent } = useContent();
 const { isDarkMode, toggleDark } = useDarkMode();
+const mousePosition = ref<MouseEvent>();
 
 const isOnline = ref(false);
 const ports = [8000, 8080, 8001, 8081];
 // const devMode = import.meta.env.DEV;
 const editRef = ref<HTMLInputElement>();
 const isChecking = ref(false);
-const currentTab = ref<ITabs>('preview');
 const isCheckTw5 = ref(false); // 是否连接tw
 const inputVisible = ref(false);
 const InputRef = ref();
@@ -64,6 +67,78 @@ const auth = await authStorage.getValue();
 
 username.value = auth.username;
 password.value = auth.password;
+
+function onContextMenu(e: MouseEvent) {
+  e.preventDefault();
+  //show our menu
+  ContextMenu.showContextMenu({
+    x: e.x,
+    y: e.y,
+    theme: isDarkMode.value ? 'dark' : 'light',
+    // onClickOnOutside: () => {
+    //   notify('关闭');
+    // },
+    clickCloseOnOutside: true, // 点击关闭右键菜单
+    items: [
+      {
+        label: '保存',
+        onClick: handleSave,
+        icon: h(WI.FaRegularSave),
+        divided: true,
+      },
+      {
+        label: '刷新',
+        onClick: actions.refresh,
+        icon: h(WI.MdiCloudRefreshVariant),
+      },
+      {
+        label: '复制',
+        onClick: actions.copy,
+        icon: h(WI.MdiContentCopy),
+      },
+      {
+        label: '日记',
+        onClick: actions.journal,
+        icon: h(WI.PhPencil),
+      },
+      {
+        label: '切换',
+        onClick: actions.darkmode,
+        icon: h(WI.FluentDarkTheme24Filled),
+      },
+      {
+        label: '更多',
+        icon: h(WI.CharmMenuMeatball),
+        children: [
+          {
+            label: '配置',
+            onClick: actions.setup,
+            icon: h(WI.TdesignSetting),
+          },
+          {
+            label: '编辑',
+            onClick: actions.edit,
+            icon: h(WI.CharmBookOpen),
+          },
+          {
+            label: '详情',
+            onClick: actions.info,
+            icon: h(WI.MaterialSymbolsInfoOutline),
+          },
+          {
+            label: '太微',
+            onClick: actions.tiddlywiki,
+            icon: h(WI.SimpleIconsTiddlywiki),
+          },
+        ],
+      },
+      // {
+      //   label: 'A submenu',
+      //   children: [{ label: 'Item1' }, { label: 'Item2' }, { label: 'Item3' }],
+      // },
+    ],
+  });
+}
 
 // devmode
 if (isDev) {
@@ -121,8 +196,8 @@ function addJournal() {
   isCheckTw5.value = true;
   title.value = formattime(new Date(), 'YYYY/MM/DD') + `-${utils.randomChar()}`;
   dynamicTags.value = ['Journal'];
-  currentTab.value = 'edit';
   link.value = `#${title.value}`;
+  isRead.value = false;
 
   nextTick(() => {
     if (editRef.value) editRef.value.focus();
@@ -254,26 +329,30 @@ async function saveAuth(option: { username: string; password: string }) {
   }
 }
 
+const actions: Record<ICommand, Function> = {
+  tiddlywiki: () => {
+    isHome.value = !isHome.value;
+  },
+  journal: addJournal,
+  info: () => {
+    infoDialogStatus.value = !infoDialogStatus.value;
+  },
+  setup: () => {
+    setupDialogStatus.value = true;
+  },
+  copy: () => copyMd(md.value),
+  download: () => saveMarkdown(md.value, title.value!),
+  refresh: () => getContent({ tip: true }),
+  darkmode: () => toggleDark(mousePosition.value),
+  edit: () => {
+    isRead.value = !isRead.value;
+  },
+};
+
 const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
-  const actions: Record<ICommand, Function> = {
-    tiddlywiki: () => {
-      isHome.value = !isHome.value;
-    },
-    journal: addJournal,
-    info: () => {
-      infoDialogStatus.value = !infoDialogStatus.value;
-    },
-    setup: () => {
-      setupDialogStatus.value = true;
-    },
-    copy: () => copyMd(md.value),
-    download: () => saveMarkdown(md.value, title.value!),
-    refresh: () => getContent({ tip: true }),
-    darkmode: () => toggleDark(e),
-    edit: () => {
-      isRead.value = !isRead.value;
-    },
-  };
+  if (e) {
+    mousePosition.value = e;
+  }
   actions[cmd](e);
 };
 
@@ -317,7 +396,8 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
 
   <div
     class="mx-2 fixed top-[50px] w-[95%]"
-    v-if="isHome">
+    v-if="isHome"
+    @contextmenu="onContextMenu">
     <div v-show="isRead">
       <div
         class="flex items-center justify-center gap-2"
