@@ -154,12 +154,12 @@ export default defineBackground({
 
         switch (true) {
           case origin.startsWith('https://') && !domains.includes(url.origin):
-            chrome.sidePanel.setOptions({
-              tabId,
-              enabled: true,
-              path: pages.sidePanelPage,
-            });
             if (info.status === 'complete') {
+              chrome.sidePanel.setOptions({
+                tabId: 61, // HACK: 使用统一个ID, 确保只有一个侧边栏存在
+                enabled: true,
+                path: pages.sidePanelPage,
+              });
               chrome.tabs.sendMessage(tabId, {
                 type: 'routeUpdate',
                 // data: origin
