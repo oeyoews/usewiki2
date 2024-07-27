@@ -31,8 +31,8 @@ import {
 } from '@/utils/storage';
 import { useContent } from '@/hooks/useContent';
 
-// @ts-expect-error
 import ContextMenu from '@imengyu/vue3-context-menu';
+import { MenuBar } from '@imengyu/vue3-context-menu';
 
 const isHome = ref(true);
 const isRead = ref(true);
@@ -103,7 +103,7 @@ function onContextMenu(e: MouseEvent) {
       },
       {
         label: '切换',
-        onClick: (e: MouseEvent) => actions.darkmode(e),
+        onClick: (e: any) => actions.darkmode(e),
         icon: h(WI.FluentDarkTheme24Filled),
       },
       {
@@ -329,7 +329,10 @@ async function saveAuth(option: { username: string; password: string }) {
   }
 }
 
-const actions: Record<ICommand, Function> = {
+const actions: Record<
+  ICommand,
+  (e: MouseEvent | KeyboardEvent | undefined) => void
+> = {
   tiddlywiki: () => {
     isHome.value = !isHome.value;
   },
@@ -343,7 +346,7 @@ const actions: Record<ICommand, Function> = {
   copy: () => copyMd(md.value),
   download: () => saveMarkdown(md.value, title.value!),
   refresh: () => getContent({ tip: true }),
-  darkmode: (e: MouseEvent) => toggleDark(e || mousePosition.value),
+  darkmode: (e: any) => toggleDark(e || mousePosition.value),
   edit: () => {
     isRead.value = !isRead.value;
   },
@@ -359,6 +362,60 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
 // };
 
 // const searchRef = ref<InstanceType<typeof SearchPage> | null>(null);
+const menuData = {
+  items: [
+    {
+      label: 'File',
+      children: [
+        { label: 'New' },
+        { label: 'Open' },
+        {
+          label: 'Open recent',
+          children: [
+            { label: 'File 1....' },
+            { label: 'File 2....' },
+            { label: 'File 3....' },
+            { label: 'File 4....' },
+            { label: 'File 5....' },
+          ],
+        },
+        { label: 'Save', divided: true },
+        { label: 'Save as...' },
+        { label: 'Close' },
+        { label: 'Exit' },
+      ],
+    },
+    {
+      label: 'Edit',
+      children: [
+        { label: 'Undo' },
+        { label: 'Redo' },
+        { label: 'Cut', divided: true },
+        { label: 'Copy' },
+        { label: 'Find', divided: true },
+        { label: 'Replace' },
+      ],
+    },
+    {
+      label: 'View',
+      children: [
+        { label: 'Zoom in' },
+        { label: 'Zoom out' },
+        { label: 'Reset zoom' },
+        { label: 'Full screent', divided: true },
+        { label: 'Find', divided: true },
+        { label: 'Replace' },
+      ],
+    },
+    {
+      label: 'Help',
+      children: [{ label: 'About' }],
+    },
+  ],
+  zIndex: 3,
+  minWidth: 230,
+  theme: 'dark',
+};
 </script>
 
 <template>
@@ -373,6 +430,7 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
     <div
       class="backdrop-blur-sm z-[999] flex justify-end items-center inset-x-0 gap-1 p-2 px-6"
       v-if="isHome">
+      <!-- <MenuBar :options="menuData" /> -->
       <!-- 下拉框 -->
       <Actions
         :isCheckTw5
@@ -426,7 +484,7 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
       </div>
 
       <div
-        class="prose-gray max-w-none prose-sm flex-wrap prose-img:max-w-[300px] prose-img:my-0 prose-img:rounded-md prose-video:max-w-[300px] prose-video:max-h-[300px] prose-video:my-0 prose-h2:my-2 prose-img:max-h-[300px] overflow-x-hidden h-[calc(100vh-160px)]">
+        class="prose-gray max-w-none prose-sm flex-wrap prose-img:max-w-[300px] prose-img:my-0 prose-img:rounded-md prose-video:max-w-[300px] prose-video:max-h-[300px] prose-video:my-0 prose-h2:my-2 prose-img:max-h-[300px] overflow-x-hidden h-[calc(100vh-120px)]">
         <div class="h-full overflow-x-hidden article">
           <el-scrollbar>
             <el-skeleton
@@ -636,14 +694,14 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
   border-radius: 15px;
 }
 
-::v-deep(.el-tabs__content) {
+/* ::v-deep(.el-tabs__content) {
   height: calc(100vh - 110px);
   padding: 5px 10px;
 }
 
 ::v-deep(.el-tabs--border-card) {
   border-radius: 0 0 10px 10px;
-}
+} */
 
 ::view-transition-old(root),
 ::view-transition-new(root) {

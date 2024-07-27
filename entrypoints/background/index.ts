@@ -134,6 +134,7 @@ export default defineBackground({
 
     setTimeout(() => {
       browser.tabs.onUpdated.addListener((tabId, info, tab) => {
+        // console.log('update');
         if (!tab.url || tab.url === 'null') {
           chrome.sidePanel.setOptions({
             tabId,
