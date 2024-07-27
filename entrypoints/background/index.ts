@@ -134,12 +134,12 @@ export default defineBackground({
 
     setTimeout(() => {
       browser.tabs.onUpdated.addListener((tabId, info, tab) => {
-        // console.log('update');
         if (!tab.url || tab.url === 'null') {
-          // chrome.sidePanel.setOptions({
-          //   tabId,
-          //   enabled: false,
-          // });
+          console.log('none');
+          chrome.sidePanel.setOptions({
+            tabId: 61,
+            enabled: false,
+          });
           return;
         }
 
@@ -152,11 +152,13 @@ export default defineBackground({
 
         const origin = tab.url;
 
-        switch (true) {
-          case origin.startsWith('https://') && !domains.includes(url.origin):
-            if (info.status === 'complete') {
+        if (info.status === 'complete') {
+          switch (true) {
+            case origin.startsWith('https://') && !domains.includes(url.origin):
+              // console.log('update');
               chrome.sidePanel.setOptions({
-                tabId: 61, // HACK: 使用统一个ID, 确保只有一个侧边栏存在
+                // @deprecated HACK: 使用统一个ID, 确保只有一个侧边栏存在(会导致其他页面无法使用)
+                tabId: 61,
                 enabled: true,
                 path: pages.sidePanelPage,
               });
@@ -164,14 +166,15 @@ export default defineBackground({
                 type: 'routeUpdate',
                 // data: origin
               });
-            }
-            break;
+              break;
 
-          default:
-            chrome.sidePanel.setOptions({
-              tabId,
-              enabled: false,
-            });
+            default:
+              // console.log('close');
+              chrome.sidePanel.setOptions({
+                tabId: 61,
+                enabled: false,
+              });
+          }
         }
 
         // 页面路由发生变化通知侧边栏前端页面更新
@@ -243,7 +246,8 @@ export default defineBackground({
           // 右键打开侧边栏
           chrome.sidePanel
             .open({
-              tabId: tab?.id!,
+              // tabId: tab?.id!,
+              tabId: 61,
               // windowId: tab?.windowId,
             })
             .catch((error) => console.error(error));
