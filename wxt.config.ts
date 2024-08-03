@@ -2,6 +2,7 @@ import { defineConfig } from 'wxt';
 // import vue from '@vitejs/plugin-vue';
 import Icons from 'unplugin-icons/vite';
 import path from 'path';
+import vueDevTools from 'vite-plugin-vue-devtools';
 
 // @ts-ignore
 import AutoImport from 'unplugin-auto-import/vite';
@@ -35,6 +36,9 @@ export default defineConfig({
     },
     plugins: [
       // vue(),
+      vueDevTools({
+        appendTo: '/entrypoints/sidepanel/main.ts',
+      }),
       Icons({
         autoInstall: true,
       }),

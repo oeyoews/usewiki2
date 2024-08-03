@@ -422,6 +422,7 @@ const menuData = {
   <div class="inset-x-0 top-0 fixed">
     <GridBg />
     <!-- @go-home="onGoHome" -->
+    <!-- 使用v-if 如果拿不到ref, 可以借助nextTick -->
     <!-- ref="searchRef" -->
     <SearchPage
       v-model:is-home="isHome"

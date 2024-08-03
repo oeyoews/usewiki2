@@ -1,5 +1,7 @@
 ## Usewiki2
 
+<img src="./usewiki2.webp" />
+
 > [!IMPORTANT]
 > 此插件目前支持 Google Chrome, Edge, 暂时不会进行兼容 firefox 的适配工作.
 
