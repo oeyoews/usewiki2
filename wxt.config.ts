@@ -74,7 +74,7 @@ export default defineConfig({
     },
     name: 'Usewiki2',
     description: 'TiddlyWiki5 的浏览器扩展',
-    omnibox: { keyword: 'tw' },
+    omnibox: { keyword: '@tw' },
     permissions: [
       'sidePanel',
       'contextMenus',
