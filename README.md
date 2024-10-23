@@ -50,3 +50,8 @@
 * options html(or new tab) -->
 
 <!-- https://github.com/wxt-dev/wxt/issues/137 -->
+
+## Related Projects
+
+* [usewiki2](https://github.com/oeyoews/usewiki2)
+* [other tiddlywiki projects](https://github.com/stars/oeyoews/lists/tiddlywiki)
