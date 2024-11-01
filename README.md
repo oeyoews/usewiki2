@@ -53,5 +53,5 @@
 
 ## Related Projects
 
-* [usewiki2](https://github.com/oeyoews/usewiki2)
+* [usewiki2-vscode](https://github.com/oeyoews/usewiki2-vscode)
 * [other tiddlywiki projects](https://github.com/stars/oeyoews/lists/tiddlywiki)
