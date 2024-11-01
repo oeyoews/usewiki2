@@ -366,7 +366,7 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
 
 <template>
   <div class="inset-x-0 top-0 fixed">
-    <div class="absolute h-24 top-10 inset-x-0">
+    <div class="absolute h-24 top-10 inset-x-0 hidden dark:block">
       <Meteors :number="20" />
     </div>
     <GridBg />
@@ -663,11 +663,5 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
 }
 ::view-transition-new(root) {
   z-index: 2147483646;
-}
-.dark::view-transition-old(root) {
-  z-index: 2147483646;
-}
-.dark::view-transition-new(root) {
-  z-index: 1;
 }
 </style>

@@ -7,6 +7,7 @@ const {
 
 module.exports = withAnimations({
   content: ['entrypoints/**/*.{html,ts,vue}', 'components/**/*.{html,ts,vue}'],
+  darkMode: 'class',
   corePlugins: {
     preflight: false,
   },
@@ -149,7 +150,6 @@ module.exports = withAnimations({
       }),
     },
   },
-  darkMode: 'light',
   plugins: [addVariablesForColors, 'tailwindcss-animate', typography],
 });
 
