@@ -86,6 +86,7 @@ export default defineBackground({
     // 监听地址栏
     browser.omnibox.onInputEntered.addListener(function (text, suggest) {
       switch (text.trim()) {
+        case 'o':
         case 'open':
           open();
           break;
@@ -98,7 +99,6 @@ export default defineBackground({
           });
           break;
         default:
-          open();
       }
     });
 

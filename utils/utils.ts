@@ -1,6 +1,8 @@
 export function randomChar() {
   return Math.random().toString(36).slice(-8);
 }
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 export function resetGROQAPIKEY() {
   browser.storage.local.remove('GROQ_APIKEY');
@@ -25,4 +27,8 @@ export function saveGROQAPIKEY(GROQ_APIKEY: string) {
     type: 'success',
     message: '保存成功',
   });
+}
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
 }
