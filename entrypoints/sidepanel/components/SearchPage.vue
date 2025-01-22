@@ -66,6 +66,7 @@ const goHome = () => {
           <!-- @click="$emit('goHome')" -->
           <el-button
             @click="goHome"
+            size="small"
             class="!mr-1 aspect-square">
             <material-symbols-house-outline-rounded />
           </el-button>

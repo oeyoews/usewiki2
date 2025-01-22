@@ -528,6 +528,7 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
               <el-form-item label="">
                 <ElButton
                   type="primary"
+                  size="small"
                   plain
                   :disabled="isChecking"
                   @click="
