@@ -26,6 +26,7 @@ defineProps<{
     <ElLink
       href="https://github.com/oeyoews/usewiki2"
       target="_blank"
+      :underline="false"
       class="animate-bounce">
       <WI.CharmGithub />
     </ElLink>

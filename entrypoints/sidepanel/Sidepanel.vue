@@ -366,7 +366,7 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
 
 <template>
   <div class="inset-x-0 top-0 fixed">
-    <div class="absolute h-24 top-10 inset-x-0 hidden dark:block">
+    <div class="pointer-events-none absolute h-24 top-10 inset-x-0 hidden dark:block">
       <Meteors :number="20" />
     </div>
     <GridBg />
