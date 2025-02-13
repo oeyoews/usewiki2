@@ -459,7 +459,7 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
           </template>
           <!-- 默认显示的内容 -->
           <template #reference>
-            <h2 class="line-clamp-1">
+            <h2 class="line-clamp-1 select-none">
               <a
                 :href="link"
                 target="_blank"
@@ -467,7 +467,7 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
                 <img
                   alt=""
                   :src="faviconUrl"
-                  class="rounded-full size-4" />
+                  class="rounded-full size-4 mr-2" />
               </a>
               <span @dblclick="getAiTitle">
                 {{ title }}
