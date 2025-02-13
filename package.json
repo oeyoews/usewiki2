@@ -2,7 +2,7 @@
   "name": "usewiki2",
   "description": "Convert HTML to Markdown, and save to your computer, support nodejs tiddlywiki",
   "private": true,
-  "version": "5.0.3",
+  "version": "5.1.0",
   "type": "module",
   "scripts": {
     "dev": "wxt --mode development",
@@ -76,5 +76,8 @@
     "vite-plugin-vue-devtools": "^7.7.0",
     "vue-tsc": "^2.1.6",
     "wxt": "^0.19.25"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

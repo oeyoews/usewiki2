@@ -1,3 +1,4 @@
+<!-- deprecated -->
 <script lang="ts" setup>
 import * as WI from '@/utils/icons';
 

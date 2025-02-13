@@ -27,12 +27,14 @@ import {
   tagStorage,
   portStorage,
   authStorage,
+  aiStorage,
   isDarkModeStorage,
 } from '@/utils/storage';
 import { useContent } from '@/hooks/useContent';
 
 import ContextMenu from '@imengyu/vue3-context-menu';
 import Meteors from '@/components/Meteors.vue';
+import { useAi } from '@/hooks/useAi';
 
 const isHome = ref(true);
 const isRead = ref(true);
@@ -56,6 +58,9 @@ const username = ref('');
 /** tiddlywiki 登录认证 密码*/
 const password = ref('');
 
+const baseurl = ref('');
+const apiKey = ref('');
+
 const infoDialogStatus = ref(false);
 const setupDialogStatus = ref(false);
 
@@ -64,9 +69,29 @@ loading.value = true;
 port.value = await portStorage.getValue();
 
 const auth = await authStorage.getValue();
+const ai = await aiStorage.getValue();
 
+// auth
 username.value = auth.username;
 password.value = auth.password;
+
+// ai
+baseurl.value = ai.baseurl;
+apiKey.value = ai.apiKey;
+
+async function getAiTitle() {
+  if (!baseurl.value || !apiKey.value) return;
+  const data = {
+    content:
+      '你现在是一个标题优化助手，请你帮我优化 ' +
+      title.value +
+      ' 这个标题, 去除冗余信息,仅仅输出优化后的标题即可.',
+    baseurl: baseurl.value,
+    apiKey: apiKey.value,
+  };
+  title.value = (await useAi(data)) || title.value;
+  notify.success('标题优化成功');
+}
 
 function onContextMenu(e: MouseEvent) {
   e.preventDefault();
@@ -165,8 +190,9 @@ onMounted(async () => {
 });
 
 onMounted(async () => {
-  getContent();
-
+  getContent().then(() => {
+    getAiTitle();
+  });
   isCheckTw5.value = await isCheckTw5Storage.getValue();
   if (isDev) {
     isCheckTw5.value = true;
@@ -228,9 +254,11 @@ const handleInputConfirm = async () => {
 onMounted(async () => {
   browser.runtime.onMessage.addListener(
     async (request, sender, sendResponse) => {
+      // @ts-ignore
       if (request.type === 'routeUpdate') {
         // Feature: 弹窗提示页面更新
         await getContent();
+        await getAiTitle();
       }
     }
   );
@@ -329,6 +357,19 @@ async function saveAuth(option: { username: string; password: string }) {
   }
 }
 
+async function saveAi(option: { baseurl: string; apiKey: string }) {
+  // 检查用户名或者密码是否合法
+  if (!option.baseurl || !option.apiKey) {
+    return;
+  }
+  await aiStorage.setValue(option);
+  notify({
+    message: '保存成功, 请重启',
+    type: 'success',
+    duration: 1500,
+  });
+}
+
 const actions: Record<
   ICommand,
   (e: MouseEvent | KeyboardEvent | undefined) => void
@@ -366,7 +407,8 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
 
 <template>
   <div class="inset-x-0 top-0 fixed">
-    <div class="pointer-events-none absolute h-24 top-10 inset-x-0 hidden dark:block">
+    <div
+      class="pointer-events-none absolute h-24 top-10 inset-x-0 hidden dark:block">
       <Meteors :number="20" />
     </div>
     <GridBg />
@@ -427,7 +469,9 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
                   :src="faviconUrl"
                   class="rounded-full size-4" />
               </a>
-              {{ title }}
+              <span @dblclick="getAiTitle">
+                {{ title }}
+              </span>
             </h2>
           </template>
         </el-popover>
@@ -614,6 +658,48 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
               @click="showInput">
               +
             </ElButton>
+          </div>
+        </div>
+
+        <div>
+          <h2>Openai API</h2>
+          <div class="flex gap-2">
+            <el-form
+              size="large"
+              :spellcheck="false"
+              label-width="68px"
+              label-position="top">
+              <el-form-item label="baseurl">
+                <ElInput
+                  v-model.trim.string="baseurl"
+                  :prefix-icon="WI.MingcuteUser4Line"
+                  show-word-limit
+                  placeholder="https://api.openai.com" />
+              </el-form-item>
+              <el-form-item label="apiKey">
+                <ElInput
+                  :prefix-icon="WI.MynauiLockPassword"
+                  v-model.trim.string="apiKey"
+                  type="password"
+                  placeholder="sk-**********"
+                  show-password />
+              </el-form-item>
+              <el-form-item label="">
+                <ElButton
+                  type="primary"
+                  size="small"
+                  plain
+                  :disabled="isChecking"
+                  @click="
+                    saveAi({
+                      baseurl,
+                      apiKey,
+                    })
+                  ">
+                  保存
+                </ElButton>
+              </el-form-item>
+            </el-form>
           </div>
         </div>
 

@@ -121,8 +121,7 @@ const save2TiddlyWiki = async (
 
   try {
     const oldTiddler = await getTwFetch(`/${title}`);
-
-    // 条目已存在的情况
+    // 条目已存在的情况, NOTE: ai 重命名后无效, 会继续保存一个新的tiddler
     if (oldTiddler?.text === text) {
       notify({
         message: h('div', [

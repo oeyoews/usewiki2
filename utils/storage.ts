@@ -4,6 +4,16 @@ export const portStorage = storage.defineItem<number>('sync:port', {
   defaultValue: constant.default_port,
 });
 
+export const aiStorage = storage.defineItem<{
+  baseurl: string;
+  apiKey: string;
+}>('sync:ai', {
+  defaultValue: {
+    baseurl: '',
+    apiKey: '',
+  },
+});
+
 export const authStorage = storage.defineItem<{
   username: string;
   password: string;

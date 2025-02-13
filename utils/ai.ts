@@ -1,3 +1,4 @@
+// deprecated
 import Groq from 'groq-sdk';
 import { type ClientOptions } from 'groq-sdk';
 import { type ChatCompletionCreateParams } from 'groq-sdk/resources/chat/completions';
