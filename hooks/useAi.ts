@@ -1,3 +1,5 @@
+import { ElMessage as notify } from 'element-plus';
+
 /**
  * chatgpt
  * @param {Object} data - data
@@ -33,6 +35,10 @@ export async function useAi(data: any) {
 
   try {
     const res = await fetch(url, options);
+    if (res.status !== 200) {
+      notify.error(String(res.status));
+      return null;
+    }
     const stream = await res.json();
     // error log
     return stream.choices?.[0]?.message.content;

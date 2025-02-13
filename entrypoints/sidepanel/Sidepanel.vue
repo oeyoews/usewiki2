@@ -89,8 +89,11 @@ async function getAiTitle() {
     baseurl: baseurl.value,
     apiKey: apiKey.value,
   };
-  title.value = (await useAi(data)) || title.value;
-  notify.success('标题优化成功');
+  let renameTitle = await useAi(data);
+  if (renameTitle) {
+    title.value = renameTitle;
+    notify.success('标题优化成功');
+  }
 }
 
 function onContextMenu(e: MouseEvent) {
@@ -258,7 +261,7 @@ onMounted(async () => {
       if (request.type === 'routeUpdate') {
         // Feature: 弹窗提示页面更新
         await getContent();
-        await getAiTitle();
+        await getAiTitle(); // 并发太高
       }
     }
   );
