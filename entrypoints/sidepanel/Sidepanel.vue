@@ -83,11 +83,12 @@ async function getAiTitle() {
   if (!baseurl.value || !apiKey.value) return;
   const data = {
     content:
-      '你现在是一个标题优化助手，请你帮我优化 ' +
+      '你现在是一个标题优化助手，请你帮我优化: ' +
       title.value +
       ' 这个标题, 去除冗余信息,仅仅输出优化后的标题即可.',
     baseurl: baseurl.value,
     apiKey: apiKey.value,
+    // model: 'qwen2:0.5b',
   };
   let renameTitle = await useAi(data);
   if (renameTitle) {
@@ -261,7 +262,7 @@ onMounted(async () => {
       if (request.type === 'routeUpdate') {
         // Feature: 弹窗提示页面更新
         await getContent();
-        await getAiTitle(); // 并发太高
+        // await getAiTitle(); // 并发太高
       }
     }
   );

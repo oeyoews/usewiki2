@@ -1,5 +1,7 @@
 import { ElMessage as notify } from 'element-plus';
 
+// 403 NOTE: https://github.com/ollama/ollama/issues/4115
+
 /**
  * chatgpt
  * @param {Object} data - data
@@ -9,9 +11,14 @@ import { ElMessage as notify } from 'element-plus';
  * @param {string} data.apiKey - model
  */
 export async function useAi(data: any) {
-  if (!navigator.onLine) return;
+  if (!navigator.onLine) {
+    notify.error('无网络连接');
+    return;
+  }
   const baseurl = data.baseurl || 'https://api.openai.com';
   const url = `${baseurl}/v1/chat/completions`;
+
+  // v1/models 查询models 并保存(startup)
 
   const models = {
     gpt4: 'gpt-4',
@@ -25,6 +32,7 @@ export async function useAi(data: any) {
       accept: 'application/json',
       'content-type': 'application/json',
       authorization: `Bearer ${data.apiKey}`,
+      // "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
     },
     body: JSON.stringify({
       model: data.model || models.gpt4omini,
