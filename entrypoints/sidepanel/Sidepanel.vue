@@ -85,14 +85,14 @@ async function getAiTitle() {
     content:
       '你现在是一个标题优化助手，请你帮我优化: ' +
       title.value +
-      ' 这个标题, 去除冗余信息,仅仅输出优化后的标题即可.',
+      ' 这个标题, 去除冗余信息,并且如果标题中含有斜杠， 就替换成短横线，仅仅输出优化后的标题即可.',
     baseurl: baseurl.value,
     apiKey: apiKey.value,
     // model: 'qwen2:0.5b',
   };
   let renameTitle = await useAi(data);
   if (renameTitle) {
-    title.value = renameTitle;
+    title.value = renameTitle.replace(/\//g, '-');
     notify.success('标题优化成功');
   }
 }
