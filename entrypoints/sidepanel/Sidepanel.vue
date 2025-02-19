@@ -35,12 +35,15 @@ import { useContent } from '@/hooks/useContent';
 import ContextMenu from '@imengyu/vue3-context-menu';
 import Meteors from '@/components/Meteors.vue';
 import { useAi } from '@/hooks/useAi';
+import { ofetch } from 'ofetch';
 
 const isHome = ref(true);
 const isRead = ref(true);
 const { loading, html, md, link, faviconUrl, title, getContent } = useContent();
 const { isDarkMode, toggleDark } = useDarkMode();
 const mousePosition = ref<MouseEvent>();
+const allTags = ref([]);
+const newTags = ref([]);
 
 const isOnline = ref(false);
 const ports = [8000, 8080, 8001, 8081];
@@ -213,7 +216,7 @@ const handleSave = () =>
     md.value,
     port.value!,
     link.value,
-    dynamicTags.value,
+    [...dynamicTags.value, ...newTags.value],
     status,
     username,
     password
@@ -266,6 +269,29 @@ onMounted(async () => {
       }
     }
   );
+});
+
+onMounted(async () => {
+  const token = 'Basic ' + btoa(username.value + ':' + password.value);
+  const getTwTagsFetch = ofetch.create({
+    method: 'Get',
+    retry: 0,
+    baseURL: `http://localhost:${port.value}/recipes/default`,
+    headers: {
+      'Content-Type': 'application/json',
+      'x-requested-with': 'TiddlyWiki',
+      Authorization: token,
+    },
+    async onResponseError({ request, response, options }) {
+      console.log(response, request);
+    },
+  });
+  const res = await getTwTagsFetch('/tags.json', {
+    params: {
+      filter: '[!is[system]tags[]!prefix[$:/]]',
+    },
+  });
+  allTags.value = res;
 });
 
 const vanillaStatus: IStatus = {
@@ -479,6 +505,31 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
             </h2>
           </template>
         </el-popover>
+      </div>
+
+      <div class="mx-auto w-[80%]">
+        <el-select
+          ref="selectRef"
+          v-model="newTags"
+          multiple
+          filterable
+          allow-create
+          default-first-option
+          :reserve-keyword="false"
+          style="width: 100%"
+          placeholder="tags">
+          <template #label="{ label, value }">
+            <div style="display: flex; align-items: center">
+              <!-- <span v-html="tagIcon"></span> -->
+              <span style="margin-left: 4px">{{ value }}</span>
+            </div>
+          </template>
+          <el-option
+            v-for="item in allTags"
+            :key="item"
+            :label="item"
+            :value="item" />
+        </el-select>
       </div>
 
       <div
