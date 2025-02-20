@@ -271,12 +271,14 @@ onMounted(async () => {
   );
 });
 
+// TODO: 检查是否安装了插件
 onMounted(async () => {
   const token = 'Basic ' + btoa(username.value + ':' + password.value);
   const getTwTagsFetch = ofetch.create({
     method: 'Get',
     retry: 0,
-    baseURL: `http://localhost:${port.value}/recipes/default`,
+    // baseURL: `http://localhost:${port.value}/recipes/default`,
+    baseURL: `http://localhost:${port.value}`,
     headers: {
       'Content-Type': 'application/json',
       'x-requested-with': 'TiddlyWiki',
@@ -286,12 +288,15 @@ onMounted(async () => {
       console.log(response, request);
     },
   });
-  const res = await getTwTagsFetch('/tags.json', {
-    params: {
-      filter: '[!is[system]tags[]!prefix[$:/]]',
-    },
+  const path = encodeURIComponent(
+    '$:/plugins/oeyoews/neotw-tag-route/tags.json'
+  );
+  const res = await getTwTagsFetch(path, {
+    // params: {
+    //   filter: '[!is[system]tags[]!prefix[$:/]]',
+    // },
   });
-  allTags.value = res;
+  allTags.value = res.text.split(',');
 });
 
 const vanillaStatus: IStatus = {
