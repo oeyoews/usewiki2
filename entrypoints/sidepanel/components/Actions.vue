@@ -85,7 +85,7 @@ export type ICommand = (typeof actions)[number]['command'];
     type="primary">
     <span class="el-dropdown-link flex items-center">
       <WI.SimpleIconsTiddlywiki class="mr-2" />
-      保存
+      同步到太微
     </span>
     <template #dropdown>
       <el-dropdown-menu>
