@@ -173,29 +173,23 @@ function onContextMenu(e: MouseEvent) {
 }
 
 // TODO: 适配
-function addToTiddlyWikiAPP() {
+async function addToTiddlyWikiAPP() {
   const TWProtocol = 'tiddlywiki://';
   const tiddler = {
     title: title.value.replace(/[|]/g, '-'),
-    // title: encodeURIComponent(title.value.split('|').shift()),
-    // text: btoa(new TextEncoder().encode(md.value)), // 使用 TextEncoder 编码
-    text: JSON.stringify(md.value),
+    // text: md.value,
     created: new Date().toISOString().replace(/\D/g, ''),
     modified: new Date().toISOString().replace(/\D/g, ''),
     tag: '剪藏',
     type: 'text/markdown',
     // creator: "oeyoews",
   };
-
-  // 手动 encode 每个字段
-  const encoded = Object.entries(tiddler)
-    .map(
-      ([key, val]) => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`
-    )
-    .join('&');
-
-  const url = `${TWProtocol}?_source=web&${encoded}`;
-
+  const params = new URLSearchParams({
+    _source: 'web',
+    ...tiddler,
+  });
+  await navigator.clipboard.writeText(md.value);
+  const url = `${TWProtocol}?${params.toString()}`;
   openTWAPP(url);
 }
 
