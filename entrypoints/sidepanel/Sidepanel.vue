@@ -113,7 +113,7 @@ function onContextMenu(e: MouseEvent) {
     clickCloseOnOutside: true, // 点击关闭右键菜单
     items: [
       {
-        label: '保存',
+        label: '同步到太微',
         onClick: handleSave,
         icon: h(WI.FaRegularSave),
         divided: true,
@@ -169,6 +169,36 @@ function onContextMenu(e: MouseEvent) {
       //   children: [{ label: 'Item1' }, { label: 'Item2' }, { label: 'Item3' }],
       // },
     ],
+  });
+}
+
+// TODO: 适配
+async function addToTiddlyWikiAPP() {
+  const TWProtocol = 'tiddlywiki://';
+  const tiddler = {
+    title: title.value.replace(/[|]/g, '-'),
+    // text: md.value,
+    created: new Date().toISOString().replace(/\D/g, ''),
+    modified: new Date().toISOString().replace(/\D/g, ''),
+    tag: '剪藏',
+    type: 'text/markdown',
+    // creator: "oeyoews",
+  };
+  const params = new URLSearchParams({
+    _source: 'web',
+    ...tiddler,
+  });
+  await navigator.clipboard.writeText(md.value);
+  const url = `${TWProtocol}?${params.toString()}`;
+  openTWAPP(url);
+}
+
+function openTWAPP(url: string): void {
+  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
+    const currentTab = tabs[0];
+    if (currentTab && currentTab.id) {
+      browser.tabs.update(currentTab.id, { url: url });
+    }
   });
 }
 
@@ -459,6 +489,12 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
       v-if="isHome">
       <!-- <MenuBar :options="menuData" /> -->
       <!-- 下拉框 -->
+
+      <el-button
+        type="success"
+        @click="addToTiddlyWikiAPP">
+        添加到太微
+      </el-button>
       <Actions
         :isCheckTw5
         :command="handleCommand"
