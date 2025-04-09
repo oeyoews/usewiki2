@@ -35,6 +35,7 @@ export default defineContentScript({
       const documentClone = document.cloneNode(true) as Document;
       const reader = new Readability(documentClone, {
         // charThreshold: 100000,
+        charThreshold: 10,
       });
       const article = reader.parse();
       return article;

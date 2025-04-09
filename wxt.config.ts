@@ -34,6 +34,13 @@ export default defineConfig({
         '@/': `${path.resolve(__dirname)}/`,
       },
     },
+    build: {
+      rollupOptions: {
+        output: {
+          // manualChunks:
+        },
+      },
+    },
     plugins: [
       // vue(),
       vueDevTools({

@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@imengyu/vue3-context-menu": "^1.4.2",
-    "@mozilla/readability": "^0.5.0",
+    "@mozilla/readability": "^0.6.0",
     "@tailwindcss/typography": "^0.5.15",
     "@vueuse/motion": "^2.2.6",
     "animated-tailwindcss": "^4.0.0",
