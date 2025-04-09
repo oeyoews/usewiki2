@@ -28,6 +28,7 @@ const save2TiddlyWiki = async (
   // todo localhost
   const baseURL = `http://localhost:${port}/recipes/default/tiddlers`;
 
+  // TODO: use array
   const tags = tag
     .map(function (tag) {
       if (tag.includes(' ')) {

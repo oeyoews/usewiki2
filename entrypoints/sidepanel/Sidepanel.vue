@@ -180,13 +180,17 @@ async function addToTiddlyWikiAPP() {
     // text: md.value,
     created: new Date().toISOString().replace(/\D/g, ''),
     modified: new Date().toISOString().replace(/\D/g, ''),
-    tag: '剪藏',
     type: 'text/markdown',
     // creator: "oeyoews",
   };
+  // 或者逗号隔开处理
+  const tags = ['剪藏'];
   const params = new URLSearchParams({
     _source: 'web',
     ...tiddler,
+  });
+  tags.forEach((item) => {
+    params.append('tags', item);
   });
   await navigator.clipboard.writeText(md.value);
   const url = `${TWProtocol}?${params.toString()}`;
