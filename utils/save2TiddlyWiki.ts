@@ -28,17 +28,6 @@ const save2TiddlyWiki = async (
   // todo localhost
   const baseURL = `http://localhost:${port}/recipes/default/tiddlers`;
 
-  // TODO: use array
-  const tags = tag
-    .map(function (tag) {
-      if (tag.includes(' ')) {
-        return '[[' + tag + ']]';
-      } else {
-        return tag;
-      }
-    })
-    .join(' ');
-
   if (!status.value.tiddlywiki_version) {
     notify({
       message: '请先连接 TiddlyWiki',
@@ -56,7 +45,7 @@ const save2TiddlyWiki = async (
     url,
     created: currentTime,
     modified: currentTime,
-    tags,
+    tags: tag,
   };
 
   const token = 'Basic ' + btoa(username.value + ':' + password.value);

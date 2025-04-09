@@ -181,10 +181,12 @@ async function addToTiddlyWikiAPP() {
     created: new Date().toISOString().replace(/\D/g, ''),
     modified: new Date().toISOString().replace(/\D/g, ''),
     type: 'text/markdown',
-    // creator: "oeyoews",
+    creator: username.value || 'usewiki2',
+    modifier: username.value || 'usewiki2',
+    link: link.value,
   };
   // 或者逗号隔开处理
-  const tags = ['剪藏'];
+  const tags = [...dynamicTags.value, ...newTags.value];
   const params = new URLSearchParams({
     _source: 'web',
     ...tiddler,
