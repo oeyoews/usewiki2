@@ -1,21 +1,17 @@
 {
   "extends": "./.wxt/tsconfig.json",
   "compilerOptions": {
-    "lib": [
-      "ESNext",
-      "DOM"
-    ],
+    "lib": ["ESNext", "DOM"],
     "isolatedModules": true,
     "types": [
       "unplugin-icons/types/vue",
-      "chrome"
+      "chrome",
+      "@intlify/unplugin-vue-i18n/messages"
     ],
     "verbatimModuleSyntax": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     }
-  },
+  }
 }

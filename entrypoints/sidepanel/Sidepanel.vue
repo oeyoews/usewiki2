@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 import 'element-plus/es/components/message/style/css';
 import 'element-plus/theme-chalk/dark/css-vars.css';
 import 'element-plus/es/components/notification/style/css';
@@ -36,6 +37,14 @@ import ContextMenu from '@imengyu/vue3-context-menu';
 import Meteors from '@/components/Meteors.vue';
 import { useAi } from '@/hooks/useAi';
 import { ofetch } from 'ofetch';
+import type { ILocales, MessageSchema } from '@/src/i18n';
+
+const { t, locale } = useI18n<[messages: MessageSchema], ILocales>();
+
+const toggleLocale = () => {
+  locale.value = locale.value === 'zh' ? 'en' : 'zh';
+  localStorage.setItem('locale', locale.value);
+};
 
 const isHome = ref(true);
 const isRead = ref(true);
@@ -113,54 +122,59 @@ function onContextMenu(e: MouseEvent) {
     clickCloseOnOutside: true, // 点击关闭右键菜单
     items: [
       {
-        label: '同步到太微',
+        label: t('actions.sync'),
         onClick: handleSave,
         icon: h(WI.FaRegularSave),
         divided: true,
       },
       {
-        label: '刷新',
+        label: t('actions.refresh'),
         onClick: actions.refresh,
         icon: h(WI.MdiCloudRefreshVariant),
       },
       {
-        label: '复制',
+        label: t('actions.copy'),
         onClick: actions.copy,
         icon: h(WI.MdiContentCopy),
       },
       {
-        label: '日记',
+        label: t('actions.journal'),
         onClick: actions.journal,
         icon: h(WI.PhPencil),
       },
       {
-        label: '切换',
+        label: t('actions.darkmode'),
         onClick: (e: any) => actions.darkmode(e),
         icon: h(WI.FluentDarkTheme24Filled),
       },
       {
-        label: '更多',
+        label: t('actions.more'),
         icon: h(WI.CharmMenuMeatball),
         children: [
           {
-            label: '配置',
+            label: t('actions.settings'),
             onClick: actions.setup,
             icon: h(WI.TdesignSetting),
           },
           {
-            label: '编辑',
+            label: t('actions.edit'),
             onClick: actions.edit,
             icon: h(WI.CharmBookOpen),
           },
           {
-            label: '详情',
+            label: t('actions.info'),
             onClick: actions.info,
             icon: h(WI.MaterialSymbolsInfoOutline),
           },
           {
-            label: '太微',
+            label: t('actions.tiddlywiki'),
             onClick: actions.tiddlywiki,
             icon: h(WI.SimpleIconsTiddlywiki),
+          },
+          {
+            label: locale.value === 'zh' ? 'English' : 'Chinese',
+            onClick: toggleLocale,
+            icon: h(WI.MaterialIconThemeI18n),
           },
         ],
       },
@@ -499,7 +513,7 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
       <el-button
         type="success"
         @click="addToTiddlyWikiAPP">
-        添加到太微
+        {{ $t('actions.save') }}
       </el-button>
       <Actions
         :isCheckTw5
@@ -645,7 +659,7 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
       align-center>
       <div class="items-center mx-2">
         <div>
-          <h2>登录</h2>
+          <h2>{{ t('setup.login') }}</h2>
           <div class="flex gap-2">
             <el-form
               size="large"
@@ -804,7 +818,6 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
             </el-form>
           </div>
         </div>
-
         <h2>连接TiddlyWiki5</h2>
         <el-switch
           size="large"
