@@ -4,29 +4,17 @@ import zh from './locales/zh';
 
 export type MessageSchema = typeof en;
 
-export default createI18n<[MessageSchema], 'en' | 'zh'>({
+const messages = {
+  en,
+  zh,
+};
+
+export type ILocales = 'en' | 'zh';
+
+export default createI18n<[MessageSchema], ILocales>({
   legacy: false,
   locale: localStorage.getItem('locale') || 'zh',
   fallbackLocale: 'en',
-  messages: {
-    en,
-    zh,
-  },
+  globalInjection: true,
+  messages,
 });
-
-// type MessageSchema = typeof en;
-// export const i18n = useI18n<[MessageSchema], 'en' | 'zh'>({
-//   locale: localStorage.getItem('locale') || 'zh',
-//   fallbackLocale: 'en',
-//   messages: {
-//     en,
-//     zh,
-//   },
-// });
-
-// import messages from '@intlify/unplugin-vue-i18n/messages';
-
-// export default createI18n({
-//   locale: 'en',
-//   messages,
-// });

@@ -37,14 +37,13 @@ import ContextMenu from '@imengyu/vue3-context-menu';
 import Meteors from '@/components/Meteors.vue';
 import { useAi } from '@/hooks/useAi';
 import { ofetch } from 'ofetch';
+import type { ILocales, MessageSchema } from '@/src/i18n';
 
-const { t, locale } = useI18n({
-  inheritLocale: true,
-});
+const { t, locale } = useI18n<[messages: MessageSchema], ILocales>();
 
 const toggleLocale = () => {
-  // locale.value = locale.value === 'zh' ? 'en' : 'zh';
-  // localStorage.setItem('locale', locale.value);
+  locale.value = locale.value === 'zh' ? 'en' : 'zh';
+  localStorage.setItem('locale', locale.value);
 };
 
 const isHome = ref(true);
