@@ -1,6 +1,7 @@
 export default {
   actions: {
-    save: '同步到太微',
+    save: '保存到太微APP',
+    sync: '同步到 TiddlyWiki',
     refresh: '刷新',
     copy: '复制',
     journal: '日记',
@@ -10,6 +11,7 @@ export default {
     edit: '编辑',
     info: '详情',
     tiddlywiki: '太微',
+    download: '下载',
   },
   setup: {
     login: '登录',

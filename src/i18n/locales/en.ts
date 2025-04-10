@@ -1,6 +1,7 @@
 export default {
   actions: {
-    save: 'Save to TiddlyWiki',
+    save: 'Save to TiddlyWiki APP',
+    sync: 'Sync to TiddlyWiki',
     refresh: 'Refresh',
     copy: 'Copy',
     journal: 'Journal',
@@ -10,6 +11,7 @@ export default {
     edit: 'Edit',
     info: 'Info',
     tiddlywiki: 'TiddlyWiki',
+    download: 'Download',
   },
   setup: {
     login: 'Login',

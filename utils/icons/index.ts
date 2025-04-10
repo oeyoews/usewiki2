@@ -37,3 +37,4 @@ export { default as LogosBing } from '~icons/logos/bing';
 
 export { default as MaterialSymbolsHouseOutlineRounded } from '~icons/material-symbols/house-outline-rounded';
 export { default as MaterialSymbolsSearchRounded } from '~icons/material-symbols/search-rounded';
+export { default as MaterialIconThemeI18n } from '~icons/material-icon-theme/i18n';

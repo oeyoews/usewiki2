@@ -122,59 +122,59 @@ function onContextMenu(e: MouseEvent) {
     clickCloseOnOutside: true, // 点击关闭右键菜单
     items: [
       {
-        label: '同步到太微',
+        label: t('actions.sync'),
         onClick: handleSave,
         icon: h(WI.FaRegularSave),
         divided: true,
       },
       {
-        label: '刷新',
+        label: t('actions.refresh'),
         onClick: actions.refresh,
         icon: h(WI.MdiCloudRefreshVariant),
       },
       {
-        label: '复制',
+        label: t('actions.copy'),
         onClick: actions.copy,
         icon: h(WI.MdiContentCopy),
       },
       {
-        label: '日记',
+        label: t('actions.journal'),
         onClick: actions.journal,
         icon: h(WI.PhPencil),
       },
       {
-        label: '切换',
+        label: t('actions.darkmode'),
         onClick: (e: any) => actions.darkmode(e),
         icon: h(WI.FluentDarkTheme24Filled),
       },
       {
-        label: '更多',
+        label: t('actions.more'),
         icon: h(WI.CharmMenuMeatball),
         children: [
           {
-            label: '配置',
+            label: t('actions.settings'),
             onClick: actions.setup,
             icon: h(WI.TdesignSetting),
           },
           {
-            label: '编辑',
+            label: t('actions.edit'),
             onClick: actions.edit,
             icon: h(WI.CharmBookOpen),
           },
           {
-            label: '详情',
+            label: t('actions.info'),
             onClick: actions.info,
             icon: h(WI.MaterialSymbolsInfoOutline),
           },
           {
-            label: '太微',
+            label: t('actions.tiddlywiki'),
             onClick: actions.tiddlywiki,
             icon: h(WI.SimpleIconsTiddlywiki),
           },
           {
-            label: locale.value === 'zh' ? 'English' : '中文',
+            label: locale.value === 'zh' ? 'English' : 'Chinese',
             onClick: toggleLocale,
-            icon: h(WI.MaterialSymbolsGTranslate),
+            icon: h(WI.MaterialIconThemeI18n),
           },
         ],
       },

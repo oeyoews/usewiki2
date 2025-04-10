@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import * as WI from '@/utils/icons';
+import { useI18n } from 'vue-i18n';
+
 import type { FunctionalComponent } from 'vue';
 interface IProps {
   command: any;
@@ -16,6 +18,9 @@ type IAction<T> = {
   divided?: boolean;
   condition?: boolean;
 };
+import type { ILocales, MessageSchema } from '@/src/i18n';
+
+const { t, locale } = useI18n<[messages: MessageSchema], ILocales>();
 
 function defineAction<T extends string>(actions: Array<IAction<T>>) {
   return actions;
@@ -23,49 +28,49 @@ function defineAction<T extends string>(actions: Array<IAction<T>>) {
 
 const actions = defineAction([
   {
-    name: '日记',
+    name: t('actions.journal'),
     icon: WI.PhPencil,
     command: 'journal',
     condition: props.isCheckTw5,
   },
   {
-    name: '编辑',
+    name: t('actions.edit'),
     icon: WI.CharmBookOpen,
     command: 'edit',
   },
   {
-    name: '详情',
+    name: t('actions.info'),
     icon: WI.MaterialSymbolsInfoOutline,
     command: 'info',
   },
   {
-    name: '太微',
+    name: t('actions.tiddlywiki'),
     icon: WI.SimpleIconsTiddlywiki,
     command: 'tiddlywiki',
   },
   {
-    name: '配置',
+    name: t('actions.settings'),
     icon: WI.LetsIconsSettingAltLine,
     command: 'setup',
   },
   {
-    name: '下载',
+    name: t('actions.download'),
     icon: WI.MaterialSymbolsDownload,
     command: 'download',
     divided: true,
   },
   {
-    name: '复制',
+    name: t('actions.copy'),
     icon: WI.ZondiconsCopy,
     command: 'copy',
   },
   {
-    name: '切换',
+    name: t('actions.darkmode'),
     icon: WI.FluentDarkTheme24Filled,
     command: 'darkmode',
   },
   {
-    name: '刷新',
+    name: t('actions.refresh'),
     icon: WI.MdiCloudRefreshVariant,
     command: 'refresh',
   },
@@ -85,7 +90,7 @@ export type ICommand = (typeof actions)[number]['command'];
     type="primary">
     <span class="el-dropdown-link flex items-center">
       <WI.SimpleIconsTiddlywiki class="mr-2" />
-      同步到太微
+      {{ t('actions.sync') }}
     </span>
     <template #dropdown>
       <el-dropdown-menu>
