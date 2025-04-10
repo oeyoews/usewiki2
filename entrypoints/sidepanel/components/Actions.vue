@@ -20,7 +20,7 @@ type IAction<T> = {
 };
 import type { ILocales, MessageSchema } from '@/src/i18n';
 
-const { t, locale } = useI18n<[messages: MessageSchema], ILocales>();
+const { t } = useI18n<[messages: MessageSchema], ILocales>();
 
 function defineAction<T extends string>(actions: Array<IAction<T>>) {
   return actions;
@@ -89,7 +89,7 @@ export type ICommand = (typeof actions)[number]['command'];
     @click="defaultCommand"
     type="primary">
     <span class="el-dropdown-link flex items-center">
-      <WI.SimpleIconsTiddlywiki class="mr-2" />
+      <WI.SimpleIconsTiddlywiki class="mr-0.5" />
       {{ t('actions.sync') }}
     </span>
     <template #dropdown>
@@ -107,3 +107,9 @@ export type ICommand = (typeof actions)[number]['command'];
     </template>
   </el-dropdown>
 </template>
+
+<style scope>
+.el-button-group {
+  display: flex;
+}
+</style>

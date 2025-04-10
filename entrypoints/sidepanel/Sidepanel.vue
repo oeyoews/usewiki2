@@ -505,7 +505,7 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
       :port
       v-if="!isHome" />
     <div
-      class="backdrop-blur-sm z-[999] flex justify-end items-center inset-x-0 gap-1 p-2 px-6"
+      class="backdrop-blur-sm z-[999] flex justify-end items-center inset-x-0 gap-1 p-2"
       v-if="isHome">
       <!-- <MenuBar :options="menuData" /> -->
       <!-- 下拉框 -->
@@ -513,7 +513,7 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
       <el-button
         type="success"
         @click="addToTiddlyWikiAPP">
-        {{ $t('actions.save') }}
+        {{ t('actions.save') }}
       </el-button>
       <Actions
         :isCheckTw5

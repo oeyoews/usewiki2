@@ -1,7 +1,7 @@
 export default {
   actions: {
     save: '保存到太微APP',
-    sync: '同步到 TiddlyWiki',
+    sync: '同步到TW',
     refresh: '刷新',
     copy: '复制',
     journal: '日记',

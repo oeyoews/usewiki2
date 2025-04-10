@@ -1,7 +1,7 @@
 export default {
   actions: {
-    save: 'Save to TiddlyWiki APP',
-    sync: 'Sync to TiddlyWiki',
+    save: 'Save to TW APP',
+    sync: 'Sync to TW',
     refresh: 'Refresh',
     copy: 'Copy',
     journal: 'Journal',
