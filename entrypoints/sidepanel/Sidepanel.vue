@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 import 'element-plus/es/components/message/style/css';
 import 'element-plus/theme-chalk/dark/css-vars.css';
 import 'element-plus/es/components/notification/style/css';
@@ -36,6 +37,15 @@ import ContextMenu from '@imengyu/vue3-context-menu';
 import Meteors from '@/components/Meteors.vue';
 import { useAi } from '@/hooks/useAi';
 import { ofetch } from 'ofetch';
+
+const { t, locale } = useI18n({
+  inheritLocale: true,
+});
+
+const toggleLocale = () => {
+  // locale.value = locale.value === 'zh' ? 'en' : 'zh';
+  // localStorage.setItem('locale', locale.value);
+};
 
 const isHome = ref(true);
 const isRead = ref(true);
@@ -161,6 +171,11 @@ function onContextMenu(e: MouseEvent) {
             label: '太微',
             onClick: actions.tiddlywiki,
             icon: h(WI.SimpleIconsTiddlywiki),
+          },
+          {
+            label: locale.value === 'zh' ? 'English' : '中文',
+            onClick: toggleLocale,
+            icon: h(WI.MaterialSymbolsGTranslate),
           },
         ],
       },
@@ -499,7 +514,7 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
       <el-button
         type="success"
         @click="addToTiddlyWikiAPP">
-        添加到太微
+        {{ $t('actions.save') }}
       </el-button>
       <Actions
         :isCheckTw5
@@ -645,7 +660,7 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
       align-center>
       <div class="items-center mx-2">
         <div>
-          <h2>登录</h2>
+          <h2>{{ t('setup.login') }}</h2>
           <div class="flex gap-2">
             <el-form
               size="large"
@@ -804,7 +819,6 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
             </el-form>
           </div>
         </div>
-
         <h2>连接TiddlyWiki5</h2>
         <el-switch
           size="large"
