@@ -21,5 +21,33 @@ export default {
     tags: '标签',
     save: '保存',
     connect: '连接TiddlyWiki5',
+    ai: 'Openai API',
+    baseurl: 'baseurl',
+    apiKey: 'apiKey',
+    saveSuccess: '保存成功',
+    saveSuccessRestart: '保存成功, 请重启',
+    enterPort: '请输入端口号',
+    portRange: '端口号范围 0 - 65535',
+    enterUsername: '请输入用户名',
+    enterPassword: '请输入密码',
+    enterUsernameOrPassword: '请输入{field}',
+  },
+  search: {
+    placeholder: '太微',
+    searchEngine: '搜索引擎',
+  },
+  info: {
+    tiddlywikiVersion: '太微版本',
+    username: '用户名',
+  },
+  editor: {
+    placeholder: '写点什么吧 ...',
+    titleOptimization: '标题优化成功',
+    titleOptimizationPrompt:
+      '你现在是一个标题优化助手，请你帮我优化: {title} 这个标题, 去除冗余信息,并且如果标题中含有斜杠， 就替换成短横线，仅仅输出优化后的标题即可.',
+  },
+  common: {
+    welcome: '欢迎使用 usewiki2',
+    comingSoon: '敬请期待',
   },
 };

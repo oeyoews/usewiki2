@@ -6,6 +6,11 @@ import {
   LogosChrome,
   LogosBing,
 } from '@/utils/icons';
+import { useI18n } from 'vue-i18n';
+import type { ILocales, MessageSchema } from '@/src/i18n';
+
+const { t } = useI18n<[messages: MessageSchema], ILocales>();
+
 const props = defineProps<{
   port: number;
 }>();
@@ -71,14 +76,14 @@ const goHome = () => {
           </el-button>
           <el-input
             v-model="targetLink"
-            placeholder="TiddlyWiki5"
+            :placeholder="t('search.placeholder')"
             class="mr-1"
             :suffix-icon="MaterialSymbolsSearchRounded"
             @keyup.enter="openweb(targetLink)">
             <template #prepend>
               <el-select
                 v-model="searchEngine"
-                placeholder="搜索引擎"
+                :placeholder="t('search.searchEngine')"
                 style="width: 60px">
                 <template #prefix>
                   <component :is="getCurrentIcon(searchEngine)" />

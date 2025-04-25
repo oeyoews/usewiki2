@@ -94,10 +94,7 @@ apiKey.value = ai.apiKey;
 async function getAiTitle() {
   if (!baseurl.value || !apiKey.value) return;
   const data = {
-    content:
-      '你现在是一个标题优化助手，请你帮我优化: ' +
-      title.value +
-      ' 这个标题, 去除冗余信息,并且如果标题中含有斜杠， 就替换成短横线，仅仅输出优化后的标题即可.',
+    content: t('editor.titleOptimizationPrompt', { title: title.value }),
     baseurl: baseurl.value,
     apiKey: apiKey.value,
     // model: 'qwen2:0.5b',
@@ -105,7 +102,7 @@ async function getAiTitle() {
   let renameTitle = await useAi(data);
   if (renameTitle) {
     title.value = renameTitle.replace(/\//g, '-');
-    notify.success('标题优化成功');
+    notify.success(t('editor.titleOptimization'));
   }
 }
 
@@ -387,7 +384,7 @@ const debounceEdit = debounce(async function () {
 async function savePort(port: number) {
   if (!port) {
     notify({
-      message: '请输入端口号',
+      message: t('setup.enterPort'),
       type: 'warning',
     });
     return;
@@ -395,7 +392,7 @@ async function savePort(port: number) {
   // 检查端口号范围的合法性
   if (port < 0 || port > 65535) {
     notify({
-      message: '端口号范围 0 - 65535',
+      message: t('setup.portRange'),
       type: 'warning',
     });
     return;
@@ -414,7 +411,7 @@ async function savePort(port: number) {
     );
   } else {
     notify({
-      message: '保存成功',
+      message: t('setup.saveSuccess'),
       type: 'success',
       duration: 1500,
     });
@@ -425,7 +422,9 @@ async function saveAuth(option: { username: string; password: string }) {
   // 检查用户名或者密码是否合法
   if (!option.username || !option.password) {
     notify({
-      message: '请输入' + (option.username ? '密码' : '用户名'),
+      message: t('setup.enterUsernameOrPassword', {
+        field: option.username ? t('setup.password') : t('setup.username'),
+      }),
       type: 'warning',
     });
     return;
@@ -435,7 +434,7 @@ async function saveAuth(option: { username: string; password: string }) {
     await checkStatus(port, status, isChecking, username, password, isOnline);
   } else {
     notify({
-      message: '保存成功',
+      message: t('setup.saveSuccess'),
       type: 'success',
       duration: 1500,
     });
@@ -449,7 +448,7 @@ async function saveAi(option: { baseurl: string; apiKey: string }) {
   }
   await aiStorage.setValue(option);
   notify({
-    message: '保存成功, 请重启',
+    message: t('setup.saveSuccessRestart'),
     type: 'success',
     duration: 1500,
   });
@@ -578,8 +577,8 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
           default-first-option
           :reserve-keyword="false"
           style="width: 100%"
-          placeholder="tags">
-          <template #label="{ label, value }">
+          :placeholder="t('setup.tags')">
+          <template #label="{ value }">
             <div style="display: flex; align-items: center">
               <!-- <span v-html="tagIcon"></span> -->
               <span style="margin-left: 4px">{{ value }}</span>
@@ -640,7 +639,7 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
 
       <ElInput
         ref="editRef"
-        placeholder="写点什么吧 ..."
+        :placeholder="t('editor.placeholder')"
         size="large"
         v-model="md"
         @keyup.enter.ctrl="handleSave"
@@ -666,23 +665,23 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
               :spellcheck="false"
               label-width="68px"
               label-position="top">
-              <el-form-item label="用户名">
+              <el-form-item :label="t('setup.username')">
                 <ElInput
                   v-model.trim.number="username"
                   :prefix-icon="WI.MingcuteUser4Line"
                   minlength="3"
                   maxlength="20"
                   show-word-limit
-                  placeholder="请输入用户名" />
+                  :placeholder="t('setup.enterUsername')" />
               </el-form-item>
-              <el-form-item label="密码">
+              <el-form-item :label="t('setup.password')">
                 <ElInput
                   minlength="4"
                   maxlength="20"
                   :prefix-icon="WI.MynauiLockPassword"
                   v-model.trim.number="password"
                   type="password"
-                  placeholder="请输入密码"
+                  :placeholder="t('setup.enterPassword')"
                   show-password />
               </el-form-item>
               <el-form-item label="">
@@ -697,7 +696,7 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
                       password,
                     })
                   ">
-                  保存
+                  {{ t('setup.save') }}
                 </ElButton>
               </el-form-item>
             </el-form>
@@ -705,7 +704,7 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
         </div>
 
         <div>
-          <h2>端口号</h2>
+          <h2>{{ t('setup.port') }}</h2>
           <div class="flex gap-2">
             <!-- :prefix-icon="WI.GameIconsHole" -->
             <ElInput
@@ -714,16 +713,16 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
               maxlength="5"
               minlength="1"
               @keyup.enter="savePort(port)"
-              placeholder="请输入端口号">
+              :placeholder="t('setup.enterPort')">
               <template #prepend>
                 <el-select
                   size="large"
                   v-model="port"
-                  placeholder="端口"
+                  :placeholder="t('setup.port')"
                   style="width: 98px">
                   <template v-for="(port, index) in ports">
                     <el-option
-                      :label="`端口${index + 1} (${port})`"
+                      :label="`${t('setup.port')}${index + 1} (${port})`"
                       :value="port" />
                   </template>
                 </el-select>
@@ -735,13 +734,13 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
               plain
               @click="savePort(port)"
               :disabled="isChecking">
-              保存
+              {{ t('setup.save') }}
             </ElButton>
           </div>
         </div>
 
         <div v-show="isCheckTw5">
-          <h2>标签</h2>
+          <h2>{{ t('setup.tags') }}</h2>
           <!-- tag -->
           <div class="flex gap-2">
             <ElTag
@@ -778,21 +777,21 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
         </div>
 
         <div>
-          <h2>Openai API</h2>
+          <h2>{{ t('setup.ai') }}</h2>
           <div class="flex gap-2">
             <el-form
               size="large"
               :spellcheck="false"
               label-width="68px"
               label-position="top">
-              <el-form-item label="baseurl">
+              <el-form-item :label="t('setup.baseurl')">
                 <ElInput
                   v-model.trim.string="baseurl"
                   :prefix-icon="WI.MingcuteUser4Line"
                   show-word-limit
                   placeholder="https://api.openai.com" />
               </el-form-item>
-              <el-form-item label="apiKey">
+              <el-form-item :label="t('setup.apiKey')">
                 <ElInput
                   :prefix-icon="WI.MynauiLockPassword"
                   v-model.trim.string="apiKey"
@@ -812,13 +811,13 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
                       apiKey,
                     })
                   ">
-                  保存
+                  {{ t('setup.save') }}
                 </ElButton>
               </el-form-item>
             </el-form>
           </div>
         </div>
-        <h2>连接TiddlyWiki5</h2>
+        <h2>{{ t('setup.connect') }}</h2>
         <el-switch
           size="large"
           :before-change="checkTwStatus"

@@ -21,5 +21,33 @@ export default {
     tags: 'Tags',
     save: 'Save',
     connect: 'Connect to TiddlyWiki5',
+    ai: 'Openai API',
+    baseurl: 'baseurl',
+    apiKey: 'apiKey',
+    saveSuccess: 'Saved successfully',
+    saveSuccessRestart: 'Saved successfully, please restart',
+    enterPort: 'Please enter port number',
+    portRange: 'Port range 0 - 65535',
+    enterUsername: 'Please enter username',
+    enterPassword: 'Please enter password',
+    enterUsernameOrPassword: 'Please enter {field}',
+  },
+  search: {
+    placeholder: 'TiddlyWiki',
+    searchEngine: 'Search Engine',
+  },
+  info: {
+    tiddlywikiVersion: 'TiddlyWiki Version',
+    username: 'Username',
+  },
+  editor: {
+    placeholder: 'Write something...',
+    titleOptimization: 'Title optimization successful',
+    titleOptimizationPrompt:
+      'You are a title optimization assistant, please help me optimize: {title} this title, remove redundant information, and if the title contains slashes, replace them with hyphens, just output the optimized title.',
+  },
+  common: {
+    welcome: 'Welcome to usewiki2',
+    comingSoon: 'Coming soon',
   },
 };

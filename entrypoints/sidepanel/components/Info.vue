@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import * as WI from '@/utils/icons';
+import { useI18n } from 'vue-i18n';
+import type { ILocales, MessageSchema } from '@/src/i18n';
+
+const { t } = useI18n<[messages: MessageSchema], ILocales>();
+
 defineProps<{
   status: IStatus;
   json: { name: string; version: string };
@@ -11,12 +16,12 @@ defineProps<{
     <ElTag
       size="large"
       v-show="status.tiddlywiki_version">
-      TiddlyWiki5: {{ status.tiddlywiki_version }}
+      {{ t('info.tiddlywikiVersion') }}: {{ status.tiddlywiki_version }}
     </ElTag>
     <ElTag
       size="large"
       v-show="status.username">
-      Username: {{ status.username }}
+      {{ t('info.username') }}: {{ status.username }}
     </ElTag>
     <ElTag
       size="large"
