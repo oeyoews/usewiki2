@@ -549,10 +549,15 @@ const handleCommand = async (cmd: ICommand, _: any, e: MouseEvent) => {
         <el-popover
           :width="300"
           raw-content
-          :show-after="500">
+          :show-after="500"
+          popper-class="title-popover">
           <!-- 鼠标悬停时显示的内容 -->
           <template #default>
-            {{ title }}
+            <div class="max-h-[200px]">
+              <el-scrollbar>
+                {{ title }}
+              </el-scrollbar>
+            </div>
           </template>
           <!-- 默认显示的内容 -->
           <template #reference>
@@ -663,176 +668,180 @@ const handleCommand = async (cmd: ICommand, _: any, e: MouseEvent) => {
       v-model="setupDialogStatus"
       width="90%"
       align-center>
-      <div class="items-center mx-2">
-        <div>
-          <h2>{{ t('setup.login') }}</h2>
-          <div class="flex gap-2">
-            <el-form
-              size="large"
-              :spellcheck="false"
-              label-width="68px"
-              label-position="top">
-              <el-form-item :label="t('setup.username')">
-                <ElInput
-                  v-model.trim.number="username"
-                  :prefix-icon="WI.MingcuteUser4Line"
-                  minlength="3"
-                  maxlength="20"
-                  show-word-limit
-                  :placeholder="t('setup.enterUsername')" />
-              </el-form-item>
-              <el-form-item :label="t('setup.password')">
-                <ElInput
-                  minlength="4"
-                  maxlength="20"
-                  :prefix-icon="WI.MynauiLockPassword"
-                  v-model.trim.number="password"
-                  type="password"
-                  :placeholder="t('setup.enterPassword')"
-                  show-password />
-              </el-form-item>
-              <el-form-item label="">
-                <ElButton
-                  type="primary"
-                  size="small"
-                  plain
-                  :disabled="isChecking"
-                  @click="
-                    saveAuth({
-                      username,
-                      password,
-                    })
-                  ">
-                  {{ t('setup.save') }}
-                </ElButton>
-              </el-form-item>
-            </el-form>
+      <div class="items-center mx-2 setup-dialog-wrapper">
+        <el-scrollbar
+          height="70vh"
+          class="setup-dialog-content">
+          <div>
+            <h2>{{ t('setup.login') }}</h2>
+            <div class="flex gap-2">
+              <el-form
+                size="large"
+                :spellcheck="false"
+                label-width="68px"
+                label-position="top">
+                <el-form-item :label="t('setup.username')">
+                  <ElInput
+                    v-model.trim.number="username"
+                    :prefix-icon="WI.MingcuteUser4Line"
+                    minlength="3"
+                    maxlength="20"
+                    show-word-limit
+                    :placeholder="t('setup.enterUsername')" />
+                </el-form-item>
+                <el-form-item :label="t('setup.password')">
+                  <ElInput
+                    minlength="4"
+                    maxlength="20"
+                    :prefix-icon="WI.MynauiLockPassword"
+                    v-model.trim.number="password"
+                    type="password"
+                    :placeholder="t('setup.enterPassword')"
+                    show-password />
+                </el-form-item>
+                <el-form-item label="">
+                  <ElButton
+                    type="primary"
+                    size="small"
+                    plain
+                    :disabled="isChecking"
+                    @click="
+                      saveAuth({
+                        username,
+                        password,
+                      })
+                    ">
+                    {{ t('setup.save') }}
+                  </ElButton>
+                </el-form-item>
+              </el-form>
+            </div>
           </div>
-        </div>
 
-        <div>
-          <h2>{{ t('setup.port') }}</h2>
-          <div class="flex gap-2">
-            <!-- :prefix-icon="WI.GameIconsHole" -->
-            <ElInput
-              v-model.trim.number="port"
-              size="large"
-              maxlength="5"
-              minlength="1"
-              @keyup.enter="savePort(port)"
-              :placeholder="t('setup.enterPort')">
-              <template #prepend>
-                <el-select
-                  size="large"
-                  v-model="port"
-                  :placeholder="t('setup.port')"
-                  style="width: 98px">
-                  <template v-for="(port, index) in ports">
-                    <el-option
-                      :label="`${t('setup.port')}${index + 1} (${port})`"
-                      :value="port" />
-                  </template>
-                </el-select>
-              </template>
-            </ElInput>
-            <ElButton
-              size="large"
-              type="primary"
-              plain
-              @click="savePort(port)"
-              :disabled="isChecking">
-              {{ t('setup.save') }}
-            </ElButton>
+          <div>
+            <h2>{{ t('setup.port') }}</h2>
+            <div class="flex gap-2">
+              <!-- :prefix-icon="WI.GameIconsHole" -->
+              <ElInput
+                v-model.trim.number="port"
+                size="large"
+                maxlength="5"
+                minlength="1"
+                @keyup.enter="savePort(port)"
+                :placeholder="t('setup.enterPort')">
+                <template #prepend>
+                  <el-select
+                    size="large"
+                    v-model="port"
+                    :placeholder="t('setup.port')"
+                    style="width: 98px">
+                    <template v-for="(port, index) in ports">
+                      <el-option
+                        :label="`${t('setup.port')}${index + 1} (${port})`"
+                        :value="port" />
+                    </template>
+                  </el-select>
+                </template>
+              </ElInput>
+              <ElButton
+                size="large"
+                type="primary"
+                plain
+                @click="savePort(port)"
+                :disabled="isChecking">
+                {{ t('setup.save') }}
+              </ElButton>
+            </div>
           </div>
-        </div>
 
-        <div v-show="isCheckTw5">
-          <h2>{{ t('setup.tags') }}</h2>
-          <!-- tag -->
-          <div class="flex gap-2">
-            <ElTag
-              size="large"
-              v-for="tag in dynamicTags"
-              :key="tag"
-              closable
-              :disable-transitions="false"
-              @close="handleClose(tag)">
-              <div class="flex items-center gap-2">
-                <WI.MdiTagOutline />
-                {{ tag }}
-              </div>
-            </ElTag>
-            <ElInput
-              size="large"
-              v-if="inputVisible"
-              ref="InputRef"
-              v-model="inputValue"
-              class="w-20"
-              @keyup.enter="handleInputConfirm"
-              @blur="handleInputConfirm" />
+          <div v-show="isCheckTw5">
+            <h2>{{ t('setup.tags') }}</h2>
+            <!-- tag -->
+            <div class="flex gap-2">
+              <ElTag
+                size="large"
+                v-for="tag in dynamicTags"
+                :key="tag"
+                closable
+                :disable-transitions="false"
+                @close="handleClose(tag)">
+                <div class="flex items-center gap-2">
+                  <WI.MdiTagOutline />
+                  {{ tag }}
+                </div>
+              </ElTag>
+              <ElInput
+                size="large"
+                v-if="inputVisible"
+                ref="InputRef"
+                v-model="inputValue"
+                class="w-20"
+                @keyup.enter="handleInputConfirm"
+                @blur="handleInputConfirm" />
 
-            <ElButton
-              v-else
-              class="button-new-tag"
-              size="default"
-              type="primary"
-              plain
-              @click="showInput">
-              +
-            </ElButton>
+              <ElButton
+                v-else
+                class="button-new-tag"
+                size="default"
+                type="primary"
+                plain
+                @click="showInput">
+                +
+              </ElButton>
+            </div>
           </div>
-        </div>
 
-        <div>
-          <h2>{{ t('setup.ai') }}</h2>
-          <div class="flex gap-2">
-            <el-form
-              size="large"
-              :spellcheck="false"
-              label-width="68px"
-              label-position="top">
-              <el-form-item :label="t('setup.baseurl')">
-                <ElInput
-                  v-model.trim.string="baseurl"
-                  :prefix-icon="WI.MingcuteUser4Line"
-                  show-word-limit
-                  placeholder="https://api.openai.com" />
-              </el-form-item>
-              <el-form-item :label="t('setup.apiKey')">
-                <ElInput
-                  :prefix-icon="WI.MynauiLockPassword"
-                  v-model.trim.string="apiKey"
-                  type="password"
-                  placeholder="sk-**********"
-                  show-password />
-              </el-form-item>
-              <el-form-item label="">
-                <ElButton
-                  type="primary"
-                  size="small"
-                  plain
-                  :disabled="isChecking"
-                  @click="
-                    saveAi({
-                      baseurl,
-                      apiKey,
-                    })
-                  ">
-                  {{ t('setup.save') }}
-                </ElButton>
-              </el-form-item>
-            </el-form>
+          <div>
+            <h2>{{ t('setup.ai') }}</h2>
+            <div class="flex gap-2">
+              <el-form
+                size="large"
+                :spellcheck="false"
+                label-width="68px"
+                label-position="top">
+                <el-form-item :label="t('setup.baseurl')">
+                  <ElInput
+                    v-model.trim.string="baseurl"
+                    :prefix-icon="WI.MingcuteUser4Line"
+                    show-word-limit
+                    placeholder="https://api.openai.com" />
+                </el-form-item>
+                <el-form-item :label="t('setup.apiKey')">
+                  <ElInput
+                    :prefix-icon="WI.MynauiLockPassword"
+                    v-model.trim.string="apiKey"
+                    type="password"
+                    placeholder="sk-**********"
+                    show-password />
+                </el-form-item>
+                <el-form-item label="">
+                  <ElButton
+                    type="primary"
+                    size="small"
+                    plain
+                    :disabled="isChecking"
+                    @click="
+                      saveAi({
+                        baseurl,
+                        apiKey,
+                      })
+                    ">
+                    {{ t('setup.save') }}
+                  </ElButton>
+                </el-form-item>
+              </el-form>
+            </div>
           </div>
-        </div>
-        <h2>{{ t('setup.connect') }}</h2>
-        <el-switch
-          size="large"
-          :before-change="checkTwStatus"
-          :loading="isChecking"
-          inline-prompt
-          v-model="isCheckTw5"
-          :inactive-icon="WI.SimpleIconsTiddlywiki"
-          :active-icon="WI.SimpleIconsTiddlywiki" />
+          <h2>{{ t('setup.connect') }}</h2>
+          <el-switch
+            size="large"
+            :before-change="checkTwStatus"
+            :loading="isChecking"
+            inline-prompt
+            v-model="isCheckTw5"
+            :inactive-icon="WI.SimpleIconsTiddlywiki"
+            :active-icon="WI.SimpleIconsTiddlywiki" />
+        </el-scrollbar>
       </div>
     </el-dialog>
 
@@ -850,6 +859,22 @@ const handleCommand = async (cmd: ICommand, _: any, e: MouseEvent) => {
 <style scoped lang="css">
 ::v-deep(.el-dialog) {
   border-radius: 15px;
+}
+
+.setup-dialog-wrapper {
+  width: 100%;
+}
+
+.setup-dialog-content {
+  padding-right: 10px;
+}
+
+::v-deep(.title-popover .el-popover__content) {
+  max-height: 250px;
+}
+
+.info-dialog-wrapper {
+  width: 100%;
 }
 
 .editor-container {
