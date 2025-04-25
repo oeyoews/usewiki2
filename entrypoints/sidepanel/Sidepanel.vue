@@ -23,6 +23,7 @@ import { checkStatus } from '@/utils/checkStatus';
 import { isDev } from '@/utils/utils';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import SearchPage from './components/SearchPage.vue';
+import CodeMirrorEditor from '@/components/CodeMirrorEditor.vue';
 import {
   isCheckTw5Storage,
   tagStorage,
@@ -381,6 +382,12 @@ const debounceEdit = debounce(async function () {
   html.value = await md2html(md.value);
 }, 300);
 
+const handleEditorKeyUp = (event: KeyboardEvent) => {
+  if (event.ctrlKey && event.key === 'Enter') {
+    handleSave();
+  }
+};
+
 async function savePort(port: number) {
   if (!port) {
     notify({
@@ -477,7 +484,7 @@ const actions: Record<
   },
 };
 
-const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
+const handleCommand = async (cmd: ICommand, _: any, e: MouseEvent) => {
   actions[cmd](e);
 };
 
@@ -637,18 +644,18 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
         v-model="title"
         class="mb-4" />
 
-      <ElInput
-        ref="editRef"
-        :placeholder="t('editor.placeholder')"
-        size="large"
-        v-model="md"
-        @keyup.enter.ctrl="handleSave"
-        @input="debounceEdit"
-        :autosize="{ minRows: 4, maxRows: 27 }"
-        type="textarea"
-        spellcheck="false"
-        class="w-full border-none overflow-y"
-        resize="none" />
+      <div class="editor-container">
+        <h3 class="editor-title">{{ t('editor.markdownEditor') }}</h3>
+        <CodeMirrorEditor
+          ref="editRef"
+          v-model="md"
+          :placeholder="t('editor.placeholder')"
+          :dark-mode="isDarkMode"
+          :font-size="'16px'"
+          @change="debounceEdit"
+          @keyup="handleEditorKeyUp"
+          class="flex-1" />
+      </div>
     </div>
 
     <!-- setup -->
@@ -843,6 +850,21 @@ const handleCommand = async (cmd: ICommand, components: any, e: MouseEvent) => {
 <style scoped lang="css">
 ::v-deep(.el-dialog) {
   border-radius: 15px;
+}
+
+.editor-container {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 150px);
+}
+
+.editor-title {
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: var(--el-text-color-secondary);
 }
 
 /* ::v-deep(.el-tabs__content) {

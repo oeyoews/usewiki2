@@ -45,6 +45,7 @@ export default {
     titleOptimization: '标题优化成功',
     titleOptimizationPrompt:
       '你现在是一个标题优化助手，请你帮我优化: {title} 这个标题, 去除冗余信息,并且如果标题中含有斜杠， 就替换成短横线，仅仅输出优化后的标题即可.',
+    markdownEditor: 'Markdown 编辑器',
   },
   common: {
     welcome: '欢迎使用 usewiki2',

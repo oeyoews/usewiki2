@@ -45,6 +45,7 @@ export default {
     titleOptimization: 'Title optimization successful',
     titleOptimizationPrompt:
       'You are a title optimization assistant, please help me optimize: {title} this title, remove redundant information, and if the title contains slashes, replace them with hyphens, just output the optimized title.',
+    markdownEditor: 'Markdown Editor',
   },
   common: {
     welcome: 'Welcome to usewiki2',
