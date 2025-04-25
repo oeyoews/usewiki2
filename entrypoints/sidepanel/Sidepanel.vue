@@ -650,7 +650,7 @@ const handleCommand = async (cmd: ICommand, _: any, e: MouseEvent) => {
         class="mb-4" />
 
       <div class="editor-container">
-        <h3 class="editor-title">{{ t('editor.markdownEditor') }}</h3>
+        <!-- <h3 class="editor-title">{{ t('editor.markdownEditor') }}</h3> -->
         <CodeMirrorEditor
           ref="editRef"
           v-model="md"
@@ -883,7 +883,7 @@ const handleCommand = async (cmd: ICommand, _: any, e: MouseEvent) => {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 150px);
+  height: calc(100vh - 120px);
 }
 
 .editor-title {

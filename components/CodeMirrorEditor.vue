@@ -146,7 +146,7 @@ watch(
 // Get the extensions for the editor
 function getExtensions(): Extension[] {
   const extensions: Extension[] = [
-    lineNumbers(),
+    // lineNumbers(),
     markdown(),
     EditorView.lineWrapping,
     // 添加历史记录支持（撤销/重做）
