@@ -6,7 +6,8 @@
     "types": [
       "unplugin-icons/types/vue",
       "chrome",
-      "@intlify/unplugin-vue-i18n/messages"
+      "@intlify/unplugin-vue-i18n/messages",
+      "element-plus/global"
     ],
     "verbatimModuleSyntax": true,
     "baseUrl": ".",
