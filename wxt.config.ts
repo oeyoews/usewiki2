@@ -2,7 +2,7 @@ import { defineConfig } from 'wxt';
 // import vue from '@vitejs/plugin-vue';
 import Icons from 'unplugin-icons/vite';
 import path from 'path';
-import vueDevTools from 'vite-plugin-vue-devtools';
+// import vueDevTools from 'vite-plugin-vue-devtools';
 
 // @ts-ignore
 import AutoImport from 'unplugin-auto-import/vite';
@@ -12,6 +12,14 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 // See https://wxt.dev/api/config.html
 export default defineConfig({
   modules: ['@wxt-dev/module-vue'],
+  webExt: {
+    openDevtools: true,
+    openConsole: true,
+    startUrls: ['https://blog.oeyoews.top'],
+  },
+  // srcDir: 'src',
+  // publicDir: 'src/public',
+  // modulesDir: 'src/modules',
   // https://github.com/wxt-dev/wxt/pull/716/files
   vue: {
     vite: {
@@ -43,9 +51,9 @@ export default defineConfig({
     },
     plugins: [
       // vue(),
-      vueDevTools({
-        appendTo: '/entrypoints/sidepanel/main.ts',
-      }),
+      // vueDevTools({
+      //   appendTo: '/entrypoints/sidepanel/main.ts',
+      // }),
       Icons({
         autoInstall: true,
       }),
@@ -58,12 +66,12 @@ export default defineConfig({
     ],
   }),
   manifest: {
-    web_accessible_resources: [
-      {
-        resources: ['injected.js'],
-        matches: ['<all_urls>'],
-      },
-    ],
+    // web_accessible_resources: [
+    //   {
+    //     resources: ['injected.js'],
+    //     matches: ['<all_urls>'],
+    //   },
+    // ],
     // commands: {
     //   addtiddlywiki: {
     //     suggested_key: {

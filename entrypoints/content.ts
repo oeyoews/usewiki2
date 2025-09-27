@@ -1,4 +1,4 @@
-import { isProbablyReaderable, Readability } from '@mozilla/readability';
+import { Readability } from '@mozilla/readability';
 
 // 进入页面会执行的函数, 可以操作 DOM
 export default defineContentScript({

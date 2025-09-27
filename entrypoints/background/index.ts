@@ -1,10 +1,8 @@
 import { menus, type MenuIds } from './menu';
-import { type Menus } from 'wxt/browser';
 // import save2TiddlyWiki from '../../utils/save2TiddlyWiki';
 import constant from '../../utils/constant';
-import open from './open';
+import open from './openTiddlyWikiWeb';
 import save from './save';
-import { isDev } from '@/utils/utils';
 
 // https://github.com/GoogleChrome/chrome-extensions-samples/blob/main/functional-samples/cookbook.sidepanel-multiple/service-worker.js
 // background 不能直接访问dom, 只能和content 通信, content(主进程) 类似一个桥梁
@@ -17,7 +15,7 @@ export default defineBackground({
     browser.runtime.onInstalled.addListener(function (details) {
       // 创建右键菜单
       menus.map((menu) => {
-        browser.contextMenus.create(menu as Menus.CreateCreatePropertiesType);
+        browser.contextMenus.create(menu as Browser.contextMenus.CreateProperties);
       });
       browser.runtime.setUninstallURL(
         'https://github.com/oeyoews/usewiki2/issues'
@@ -27,16 +25,6 @@ export default defineBackground({
           .setPanelBehavior({ openPanelOnActionClick: true })
           .catch((error) => console.error(error));
         // @deprecated https://wxt.dev/guide/directory-structure/web-ext-config.html
-        // if (isDev) {
-        //   chrome.tabs.create({ url: pages.devPage });
-        //   // browser.notifications.create({
-        //   //   type: 'basic',
-        //   //   iconUrl: 'tw256.png',
-        //   //   title: 'Usewiki2',
-        //   //   message: '开发模式',
-        //   //   buttons: [{ title: '关闭' }],
-        //   // });
-        // }
         // chrome.sidePanel.setOptions({ path: pages.optionsPage });
         // 首次安装调转到欢迎页面
         // chrome.tabs.create({ url: pages.welcomePage, });
