@@ -5,7 +5,7 @@ import open from './openTiddlyWikiWeb';
 import save from './save';
 
 // https://github.com/GoogleChrome/chrome-extensions-samples/blob/main/functional-samples/cookbook.sidepanel-multiple/service-worker.js
-// background 不能直接访问dom, 只能和content 通信, content(主进程) 类似一个桥梁
+// Background cannot access DOM directly, can only communicate with content script (main process) as a bridge
 export default defineBackground({
   type: 'module', // !code ++
   main() {
@@ -13,7 +13,7 @@ export default defineBackground({
     const { pages } = constant;
 
     browser.runtime.onInstalled.addListener(function (details) {
-      // 创建右键菜单
+      // Create context menus
       menus.map((menu) => {
         browser.contextMenus.create(menu as Browser.contextMenus.CreateProperties);
       });
@@ -26,9 +26,9 @@ export default defineBackground({
           .catch((error) => console.error(error));
         // @deprecated https://wxt.dev/guide/directory-structure/web-ext-config.html
         // chrome.sidePanel.setOptions({ path: pages.optionsPage });
-        // 首次安装调转到欢迎页面
+        // Redirect to welcome page on first install
         // chrome.tabs.create({ url: pages.welcomePage, });
-        // 单击直接打开 panel
+        // Click to directly open panel
         // if (!isDev) {
         //   browser.notifications.create({
         //     type: 'image',
@@ -37,9 +37,9 @@ export default defineBackground({
         //     iconUrl: constant.tiddlywiki_icon,
         //     imageUrl: 'https://github.com/oeyoews/usewiki2/raw/main/banner03.png',
         //     // @ts-ignore
-        //     buttons: [{ title: '关闭' }],
+        //     buttons: [{ title: 'Close' }],
         //     silent: true,
-        //     message: '欢迎使用' + constant.default_name,
+        //     message: 'Welcome to ' + constant.default_name,
         //   });
         // }
       }
@@ -53,25 +53,24 @@ export default defineBackground({
     // https://developer.chrome.com/docs/extensions/reference/api/omnibox
     browser.omnibox.onInputStarted.addListener(function () {
       browser.omnibox.setDefaultSuggestion({
-        description: '输入<match>open</match>或者回车打开 TiddlyWiki',
+        description: 'Type <match>open</match> or press Enter to open TiddlyWiki',
       });
     });
 
-    // 地址栏注册关键字
     browser.omnibox.onInputChanged.addListener(function (text, suggest) {
       suggest([
         {
           content: 'doc',
-          description: '输入<match>doc</match>查看 TiddlyWiki 中文文档',
+          description: 'Type <match>doc</match> to view TiddlyWiki documentation',
         },
         // {
         //   content: 'save',
-        //   description: '输入<match>save</match>保存文章',
+        //   description: 'Type <match>save</match> to save article',
         // },
       ]);
     });
 
-    // 监听地址栏
+    // Listen for omnibox input
     browser.omnibox.onInputEntered.addListener(function (text, suggest) {
       switch (text.trim()) {
         case 'o':
@@ -90,9 +89,9 @@ export default defineBackground({
       }
     });
 
-    // TODO: 抽离出函数 , 同时加到onUpdated 里面去, 更改图标
+    // TODO: Extract to function, also add to onUpdated, change icon
     browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      // 接收content 消息
+      // Receive content script message
       if (request.type === 'tiddlywiki-send-message') {
         // https://stackoverflow.com/questions/14481107/typeerror-cannot-call-method-setbadgetext-of-undefined
         browser.action.setIcon({
@@ -100,15 +99,15 @@ export default defineBackground({
         });
         return;
 
-        // 首次打开提示，然后存储，不再提示
+        // First-time prompt, then store so it won't show again
         browser.notifications.create({
           type: 'basic',
           iconUrl: 'tw256.png',
           title: 'Usewiki2',
-          message: '恭喜你，发现了一个 TiddlyWiki 网站',
+          message: 'Congratulations, you discovered a TiddlyWiki website',
           // @ts-ignore
           silent: true,
-          buttons: [{ title: '关闭' }],
+          buttons: [{ title: 'Close' }],
           priority: 0,
         });
 
@@ -144,7 +143,7 @@ export default defineBackground({
             case origin.startsWith('https://') && !domains.includes(url.origin):
               // console.log('update');
               chrome.sidePanel.setOptions({
-                // @deprecated HACK: 使用统一个ID, 确保只有一个侧边栏存在(会导致其他页面无法使用)
+                // @deprecated HACK: Use a single ID to ensure only one side panel exists (may prevent other pages from using it)
                 tabId: 61,
                 enabled: true,
                 path: pages.sidePanelPage,
@@ -164,7 +163,7 @@ export default defineBackground({
           }
         }
 
-        // 页面路由发生变化通知侧边栏前端页面更新
+        // Notify side panel to update when page route changes
       });
     }, 1000);
 
@@ -230,7 +229,7 @@ export default defineBackground({
           break;
         case 'usewiki2':
           // @see: https://developer.chrome.com/docs/extensions/reference/api/sidePanel?hl=zh-cn
-          // 右键打开侧边栏
+          // Right-click to open side panel
           chrome.sidePanel
             .open({
               // tabId: tab?.id!,

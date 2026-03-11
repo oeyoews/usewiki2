@@ -1,17 +1,18 @@
 import { ElMessage as notify, ElMessageBox } from 'element-plus';
+import { t } from '@/src/i18n';
 
 function saveMarkdown(markdown: string, title: string) {
   if (!markdown || !title) {
     notify({
-      message: '内容为空',
+      message: t('notify.contentEmpty'),
       type: 'warning',
     });
     return;
   }
-  ElMessageBox.confirm('确定下载吗？', 'Warning', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    title: '提示',
+  ElMessageBox.confirm(t('notify.downloadConfirm'), 'Warning', {
+    confirmButtonText: t('notify.confirm'),
+    cancelButtonText: t('notify.cancel'),
+    title: t('notify.hint'),
     type: 'warning',
   })
     .then(() => {
@@ -26,31 +27,26 @@ function saveMarkdown(markdown: string, title: string) {
       URL.revokeObjectURL(link.href);
 
       notify({
-        message: '下载成功',
+        message: t('notify.downloadSuccess'),
         type: 'success',
       });
     })
-    .catch(() => {
-      // ElMessage({
-      //   type: 'info',
-      //   message: 'Delete canceled',
-      // });
-    });
+    .catch(() => {});
 }
 
 export default saveMarkdown;
 
 /* function saveMarkdownFile2() {
-  // 创建一个 Blob 对象，包含新的 Markdown 内容
+  // Create a Blob object containing the new Markdown content
   const blob = new Blob([md.value], { type: 'text/markdown' });
 
   async function saveFile(blob: Blob) {
     try {
       const options = {
-        suggestedName: title + '.md', // 设置默认文件名
+        suggestedName: title + '.md', // Set default file name
         types: [
           {
-            description: 'Markdown 文件 (.md)',
+            description: 'Markdown file (.md)',
             accept: {
               'text/markdown': ['.md'],
             },
@@ -62,13 +58,13 @@ export default saveMarkdown;
       const writable = await handle.createWritable();
       await writable.write(blob);
       await writable.close();
-      console.log('文件已保存');
+      console.log('File saved');
     } catch (err) {
-      console.error('保存文件时出错：', err);
+      console.error('Error saving file:', err);
     }
   }
 
-  // 调用 saveFile 函数并传入 Blob 对象
+  // Call saveFile function with the Blob object
   saveFile(blob);
 }
  */

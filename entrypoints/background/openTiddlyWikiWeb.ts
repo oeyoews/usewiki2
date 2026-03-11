@@ -12,7 +12,7 @@ export default async function () {
     browser.notifications.create({
       type: 'basic',
       title: constant.default_name,
-      message: '请先连接 TiddlyWiki',
+      message: chrome.i18n.getMessage('notifConnectFirst'),
       iconUrl: constant.tiddlywiki_icon,
     });
   }

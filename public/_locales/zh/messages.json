@@ -1,0 +1,38 @@
+{
+  "extName": {
+    "message": "Usewiki2",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "TiddlyWiki5 的浏览器扩展",
+    "description": "Extension description"
+  },
+  "extActionTitle": {
+    "message": "TiddlyWiki5 的浏览器扩展",
+    "description": "Action button tooltip"
+  },
+  "menuOpenTiddlyWiki": {
+    "message": "直接打开 TiddlyWiki",
+    "description": "Context menu: open TiddlyWiki directly"
+  },
+  "menuSavePage": {
+    "message": "保存当前页面到 TiddlyWiki",
+    "description": "Context menu: save page"
+  },
+  "menuOpenSidebar": {
+    "message": "在侧边栏打开 Usewiki2",
+    "description": "Context menu: open sidebar"
+  },
+  "menuReportBug": {
+    "message": "提交 Bug",
+    "description": "Context menu: report bug"
+  },
+  "notifConnectFirst": {
+    "message": "请先连接 TiddlyWiki",
+    "description": "Notification when TiddlyWiki is not connected"
+  },
+  "comingSoon": {
+    "message": "敬请期待",
+    "description": "Feature not yet available"
+  }
+}

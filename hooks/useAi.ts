@@ -1,4 +1,5 @@
 import { ElMessage as notify } from 'element-plus';
+import { t } from '@/src/i18n';
 
 // 403 NOTE: https://github.com/ollama/ollama/issues/4115
 
@@ -12,13 +13,11 @@ import { ElMessage as notify } from 'element-plus';
  */
 export async function useAi(data: any) {
   if (!navigator.onLine) {
-    notify.error('无网络连接');
+    notify.error(t('notify.noNetwork'));
     return;
   }
   const baseurl = data.baseurl || 'https://api.openai.com';
   const url = `${baseurl}/v1/chat/completions`;
-
-  // v1/models 查询models 并保存(startup)
 
   const models = {
     gpt4: 'gpt-4',
@@ -32,7 +31,6 @@ export async function useAi(data: any) {
       accept: 'application/json',
       'content-type': 'application/json',
       authorization: `Bearer ${data.apiKey}`,
-      // "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
     },
     body: JSON.stringify({
       model: data.model || models.gpt4omini,
@@ -48,7 +46,6 @@ export async function useAi(data: any) {
       return null;
     }
     const stream = await res.json();
-    // error log
     return stream.choices?.[0]?.message.content;
   } catch (e) {
     console.error(e);

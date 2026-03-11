@@ -78,7 +78,7 @@ export default defineConfig({
     //       default: 'Ctrl+Shift+F',
     //       mac: 'MacCtrl+Shift+F',
     //     },
-    //     description: '执行我的命令',
+    //     description: 'Execute my command',
     //   },
     // },
     icons: {
@@ -87,8 +87,9 @@ export default defineConfig({
       '48': 'icons/icon48.png',
       '128': 'icons/icon128.png',
     },
-    name: 'Usewiki2',
-    description: 'TiddlyWiki5 的浏览器扩展',
+    default_locale: 'zh',
+    name: '__MSG_extName__',
+    description: '__MSG_extDescription__',
     omnibox: { keyword: '@tw' },
     permissions: [
       'sidePanel',
@@ -106,7 +107,7 @@ export default defineConfig({
     content_security_policy: {
       extension_pages: "script-src 'self'; object-src 'self'",
     },
-    // NOTE: 这会影响网络请求，比如获取 status, 开发环境下无影响
+    // NOTE: This affects network requests, e.g. fetching status; no impact in dev environment
     host_permissions: ['<all_urls>'],
     // host_permissions: ['https://*/*', 'http://*/*'],
     // optional_permissions: ['https://google.com/**', 'https://bing.com/'],
@@ -117,7 +118,7 @@ export default defineConfig({
     // },
 
     action: {
-      default_title: 'TiddlyWiki5 的浏览器扩展',
+      default_title: '__MSG_extActionTitle__',
     },
     browser_action: {
       // default_popup: 'popup.html',

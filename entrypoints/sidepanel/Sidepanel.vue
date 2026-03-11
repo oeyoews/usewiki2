@@ -60,15 +60,15 @@ const ports = [8000, 8080, 8001, 8081];
 // const devMode = import.meta.env.DEV;
 const editRef = ref<HTMLInputElement>();
 const isChecking = ref(false);
-const isCheckTw5 = ref(false); // 是否连接tw
+const isCheckTw5 = ref(false); // whether to connect to TW
 const inputVisible = ref(false);
 const InputRef = ref();
 const inputValue = ref();
 const dynamicTags = ref();
 const port = ref<number>(8000);
-/** tiddlywiki 登录认证 用户名*/
+/** TiddlyWiki login auth username */
 const username = ref('');
-/** tiddlywiki 登录认证 密码*/
+/** TiddlyWiki login auth password */
 const password = ref('');
 
 const baseurl = ref('');
@@ -115,9 +115,9 @@ function onContextMenu(e: MouseEvent) {
     y: e.y,
     theme: isDarkMode.value ? 'dark' : 'light',
     // onClickOnOutside: () => {
-    //   notify('关闭');
+    //   notify('close');
     // },
-    clickCloseOnOutside: true, // 点击关闭右键菜单
+    clickCloseOnOutside: true, // Click outside to close context menu
     items: [
       {
         label: t('actions.sync'),
@@ -184,7 +184,7 @@ function onContextMenu(e: MouseEvent) {
   });
 }
 
-// TODO: 适配
+// TODO: Adapt
 async function addToTiddlyWikiAPP() {
   const TWProtocol = 'tiddlywiki://';
   const tiddler = {
@@ -197,7 +197,7 @@ async function addToTiddlyWikiAPP() {
     modifier: username.value || 'usewiki2',
     link: link.value,
   };
-  // 或者逗号隔开处理
+  // Or handle with comma separation
   const tags = [...dynamicTags.value, ...newTags.value];
   const params = new URLSearchParams({
     _source: 'web',
@@ -305,21 +305,21 @@ const handleInputConfirm = async () => {
   inputValue.value = '';
 };
 
-// 监听路由变化，自动更新页面
+// Listen for route changes, auto-update page
 onMounted(async () => {
   browser.runtime.onMessage.addListener(
     async (request, sender, sendResponse) => {
       // @ts-ignore
       if (request.type === 'routeUpdate') {
-        // Feature: 弹窗提示页面更新
+        // Feature: Popup notification for page update
         await getContent();
-        // await getAiTitle(); // 并发太高
+        // await getAiTitle(); // Too many concurrent requests
       }
     }
   );
 });
 
-// TODO: 检查是否安装了插件
+// TODO: Check if the plugin is installed
 onMounted(async () => {
   const token = 'Basic ' + btoa(username.value + ':' + password.value);
   const getTwTagsFetch = ofetch.create({
@@ -356,7 +356,7 @@ const vanillaStatus: IStatus = {
 const status = ref<IStatus>(vanillaStatus);
 
 async function checkTwStatus() {
-  // 关闭连接tw5时， 直接关闭， 不进行检查网络连接是否成功
+  // When disconnecting from TW5, close directly without checking network connection
   if (isCheckTw5.value) {
     status.value.tiddlywiki_version = '';
     status.value.username = '';
@@ -396,7 +396,7 @@ async function savePort(port: number) {
     });
     return;
   }
-  // 检查端口号范围的合法性
+  // Validate port number range
   if (port < 0 || port > 65535) {
     notify({
       message: t('setup.portRange'),
@@ -407,7 +407,7 @@ async function savePort(port: number) {
 
   await portStorage.setValue(port);
   if (isCheckTw5.value) {
-    // 更新status
+    // Update status
     await checkStatus(
       toRef(port),
       status,
@@ -426,7 +426,7 @@ async function savePort(port: number) {
 }
 
 async function saveAuth(option: { username: string; password: string }) {
-  // 检查用户名或者密码是否合法
+  // Validate username or password
   if (!option.username || !option.password) {
     notify({
       message: t('setup.enterUsernameOrPassword', {
@@ -449,7 +449,7 @@ async function saveAuth(option: { username: string; password: string }) {
 }
 
 async function saveAi(option: { baseurl: string; apiKey: string }) {
-  // 检查用户名或者密码是否合法
+  // Validate username or password
   if (!option.baseurl || !option.apiKey) {
     return;
   }
@@ -504,7 +504,7 @@ const handleCommand = async (cmd: ICommand, _: any, e: MouseEvent) => {
     </div>
     <GridBg />
     <!-- @go-home="onGoHome" -->
-    <!-- 使用v-if 如果拿不到ref, 可以借助nextTick -->
+    <!-- Use v-if; if ref is unavailable, use nextTick -->
     <!-- ref="searchRef" -->
     <SearchPage
       v-model:is-home="isHome"
@@ -514,7 +514,7 @@ const handleCommand = async (cmd: ICommand, _: any, e: MouseEvent) => {
       class="backdrop-blur-sm z-[999] flex justify-end items-center inset-x-0 gap-1 p-2"
       v-if="isHome">
       <!-- <MenuBar :options="menuData" /> -->
-      <!-- 下拉框 -->
+      <!-- Dropdown -->
 
       <el-button
         type="success"
@@ -551,7 +551,7 @@ const handleCommand = async (cmd: ICommand, _: any, e: MouseEvent) => {
           raw-content
           :show-after="500"
           popper-class="title-popover">
-          <!-- 鼠标悬停时显示的内容 -->
+          <!-- Content shown on hover -->
           <template #default>
             <div class="max-h-[200px]">
               <el-scrollbar>
@@ -559,7 +559,7 @@ const handleCommand = async (cmd: ICommand, _: any, e: MouseEvent) => {
               </el-scrollbar>
             </div>
           </template>
-          <!-- 默认显示的内容 -->
+          <!-- Default displayed content -->
           <template #reference>
             <h2 class="line-clamp-1 select-none">
               <a

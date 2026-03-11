@@ -3,12 +3,13 @@ export function randomChar() {
 }
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { t } from '@/src/i18n';
 
 export function resetGROQAPIKEY() {
   browser.storage.local.remove('GROQ_APIKEY');
   notify({
     type: 'success',
-    message: '已成功重置 GROQ API KEY',
+    message: t('notify.resetApiKeySuccess'),
   });
 }
 
@@ -18,14 +19,14 @@ export function saveGROQAPIKEY(GROQ_APIKEY: string) {
   if (!GROQ_APIKEY) {
     notify({
       type: 'error',
-      message: '请输入 GROQ API KEY',
+      message: t('notify.enterApiKeyPrompt'),
     });
     return;
   }
   browser.storage.sync.set({ GROQ_APIKEY });
   notify({
     type: 'success',
-    message: '保存成功',
+    message: t('notify.saveSuccess'),
   });
 }
 

@@ -1,6 +1,10 @@
 <!-- deprecated -->
 <script lang="ts" setup>
 import * as WI from '@/utils/icons';
+import { useI18n } from 'vue-i18n';
+import type { ILocales, MessageSchema } from '@/src/i18n';
+
+const { t } = useI18n<[messages: MessageSchema], ILocales>();
 
 const props = defineProps([
   'isCheckTw5',
@@ -26,23 +30,23 @@ const showInput = () => emit('showInput');
   <ElTabPane>
     <template #label>
       <WI.TdesignSetting />
-      <span class="ml-1">配置</span>
+      <span class="ml-1">{{ t('actions.settings') }}</span>
     </template>
 
     <div class="items-center">
-      <h2>连接到 Nodejs TiddlyWiki5</h2>
+      <h2>{{ t('setup.connectToTW5') }}</h2>
       <el-switch
         v-model="isCheckTw5"
         style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949" />
 
       <div>
-        <h2>Nodejs TiddlyWiki5 端口</h2>
+        <h2>{{ t('setup.tw5Port') }}</h2>
         <div class="flex gap-2">
           <ElInput v-model.trim.number="port" />
-          <ElButton @click="savePort(port!)">保存</ElButton>
+          <ElButton @click="savePort(port!)">{{ t('setup.save') }}</ElButton>
         </div>
       </div>
-      <h2>剪藏标签</h2>
+      <h2>{{ t('setup.clippingTags') }}</h2>
       <!-- tag -->
       <div class="flex gap-2">
         <ElTag
@@ -79,13 +83,13 @@ const showInput = () => emit('showInput');
             v-model.trim="GROQ_APIKEY"
             placeholder="**************"
             type="password" />
-          <ElButton @click="utils.saveGROQAPIKEY(GROQ_APIKEY)">保存</ElButton>
+          <ElButton @click="utils.saveGROQAPIKEY(GROQ_APIKEY)">{{ t('setup.save') }}</ElButton>
 
           <el-popconfirm
-            title="你确定要重置 API 吗 ?"
+            :title="t('setup.resetApiConfirm')"
             @confirm="utils.resetGROQAPIKEY">
             <template #reference>
-              <ElButton>重置</ElButton>
+              <ElButton>{{ t('setup.reset') }}</ElButton>
             </template>
           </el-popconfirm>
         </div>
