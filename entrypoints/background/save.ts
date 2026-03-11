@@ -4,7 +4,7 @@ export default function (tabId?: number) {
   browser.notifications.create({
     type: 'basic',
     title: constant.default_name,
-    message: '敬请期待',
+    message: chrome.i18n.getMessage('comingSoon'),
     iconUrl: constant.tiddlywiki_icon,
   });
   return;
@@ -14,14 +14,14 @@ export default function (tabId?: number) {
     tabId,
     {
       info: 'get-doc',
-      message: '获取文章',
+      message: 'get-doc',
     },
     async function (response: IArticle) {
       console.log(response);
       browser.notifications.create({
         type: 'basic',
         title: constant.default_name,
-        message: '敬请期待',
+        message: chrome.i18n.getMessage('comingSoon'),
         iconUrl: constant.tiddlywiki_icon,
       });
     }

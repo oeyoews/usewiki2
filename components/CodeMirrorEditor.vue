@@ -33,39 +33,38 @@ const handleKeyUp = (event: KeyboardEvent) => {
     emit('keyup', event);
   }
 
-  // 显示键位绑定帮助 (Ctrl+H)
+  // Show key bindings help (Ctrl+H)
   if (event.ctrlKey && event.key === 'h') {
     showKeyBindingsHelp();
   }
 };
 
-// 显示键位绑定帮助信息
+// Show key bindings help info
 const showKeyBindingsHelp = () => {
   const helpInfo = `
-Markdown 编辑器键位绑定:
+Markdown Editor Key Bindings:
 
-基本编辑:
-- Ctrl+Z: 撤销
-- Ctrl+Y/Ctrl+Shift+Z: 重做
-- Ctrl+X/C/V: 剪切/复制/粘贴
-- Ctrl+S: 保存
-- Tab: 缩进
-- Shift+Tab: 减少缩进
+Basic Editing:
+- Ctrl+Z: Undo
+- Ctrl+Y/Ctrl+Shift+Z: Redo
+- Ctrl+X/C/V: Cut/Copy/Paste
+- Ctrl+S: Save
+- Tab: Indent
+- Shift+Tab: Outdent
 
-Markdown 格式:
-- Ctrl+B: 加粗文本
-- Ctrl+I: 斜体文本
-- Ctrl+K: 插入链接
-- Ctrl+/: 切换注释
-- Alt+1: 一级标题
-- Alt+2: 二级标题
-- Alt+L: 无序列表
-- Alt+C: 代码块
+Markdown Formatting:
+- Ctrl+B: Bold text
+- Ctrl+I: Italic text
+- Ctrl+K: Insert link
+- Ctrl+/: Toggle comment
+- Alt+1: Heading 1
+- Alt+2: Heading 2
+- Alt+L: Unordered list
+- Alt+C: Code block
 
-- Ctrl+H: 显示此帮助
+- Ctrl+H: Show this help
 `;
 
-  // 使用 alert 显示帮助信息
   alert(helpInfo);
 };
 
@@ -149,18 +148,18 @@ function getExtensions(): Extension[] {
     // lineNumbers(),
     markdown(),
     EditorView.lineWrapping,
-    // 添加历史记录支持（撤销/重做）
+    // Add history support (undo/redo)
     history(),
-    // 添加默认键位绑定
+    // Add default key bindings
     keymap.of([
       ...defaultKeymap,
       ...historyKeymap,
-      indentWithTab, // 支持使用Tab键进行缩进
-      // 自定义键位绑定
+      indentWithTab, // Support Tab key for indentation
+      // Custom key bindings
       {
         key: 'Ctrl-s',
         run: () => {
-          // 触发保存事件
+          // Trigger save event
           emit(
             'keyup',
             new KeyboardEvent('keyup', { key: 'Enter', ctrlKey: true })
@@ -171,7 +170,7 @@ function getExtensions(): Extension[] {
       {
         key: 'Ctrl-/',
         run: (view) => {
-          // 切换注释 (简单实现，仅支持行注释)
+          // Toggle comment (simple implementation, line comments only)
           const selection = view.state.selection.main;
           const line = view.state.doc.lineAt(selection.from);
           const isCommented = line.text.trimStart().startsWith('//');
@@ -186,11 +185,11 @@ function getExtensions(): Extension[] {
           return true;
         },
       },
-      // Markdown 特定的键位绑定
+      // Markdown-specific key bindings
       {
         key: 'Ctrl-b',
         run: (view) => {
-          // 加粗文本
+          // Bold text
           const selection = view.state.selection.main;
           const selectedText = view.state.sliceDoc(
             selection.from,
@@ -211,7 +210,7 @@ function getExtensions(): Extension[] {
       {
         key: 'Ctrl-i',
         run: (view) => {
-          // 斜体文本
+          // Italic text
           const selection = view.state.selection.main;
           const selectedText = view.state.sliceDoc(
             selection.from,
@@ -232,13 +231,13 @@ function getExtensions(): Extension[] {
       {
         key: 'Ctrl-k',
         run: (view) => {
-          // 插入链接
+          // Insert link
           const selection = view.state.selection.main;
           const selectedText = view.state.sliceDoc(
             selection.from,
             selection.to
           );
-          const linkText = selectedText || '链接文本';
+          const linkText = selectedText || t('editor.linkText');
 
           view.dispatch({
             changes: {
@@ -257,7 +256,7 @@ function getExtensions(): Extension[] {
       {
         key: 'Alt-1',
         run: (view) => {
-          // 插入一级标题
+          // Insert heading 1
           const selection = view.state.selection.main;
           const line = view.state.doc.lineAt(selection.from);
           const hasHash = line.text.trimStart().startsWith('# ');
@@ -275,7 +274,7 @@ function getExtensions(): Extension[] {
       {
         key: 'Alt-2',
         run: (view) => {
-          // 插入二级标题
+          // Insert heading 2
           const selection = view.state.selection.main;
           const line = view.state.doc.lineAt(selection.from);
           const hasHash = line.text.trimStart().startsWith('## ');
@@ -293,7 +292,7 @@ function getExtensions(): Extension[] {
       {
         key: 'Alt-l',
         run: (view) => {
-          // 插入无序列表
+          // Insert unordered list
           const selection = view.state.selection.main;
           const line = view.state.doc.lineAt(selection.from);
           const hasList = line.text.trimStart().startsWith('- ');
@@ -311,7 +310,7 @@ function getExtensions(): Extension[] {
       {
         key: 'Alt-c',
         run: (view) => {
-          // 插入代码块
+          // Insert code block
           const selection = view.state.selection.main;
           const selectedText = view.state.sliceDoc(
             selection.from,

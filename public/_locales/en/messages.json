@@ -1,0 +1,38 @@
+{
+  "extName": {
+    "message": "Usewiki2",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Browser extension for TiddlyWiki5",
+    "description": "Extension description"
+  },
+  "extActionTitle": {
+    "message": "Browser extension for TiddlyWiki5",
+    "description": "Action button tooltip"
+  },
+  "menuOpenTiddlyWiki": {
+    "message": "Open TiddlyWiki",
+    "description": "Context menu: open TiddlyWiki directly"
+  },
+  "menuSavePage": {
+    "message": "Save current page to TiddlyWiki",
+    "description": "Context menu: save page"
+  },
+  "menuOpenSidebar": {
+    "message": "Open Usewiki2 in sidebar",
+    "description": "Context menu: open sidebar"
+  },
+  "menuReportBug": {
+    "message": "Report Bug",
+    "description": "Context menu: report bug"
+  },
+  "notifConnectFirst": {
+    "message": "Please connect to TiddlyWiki first",
+    "description": "Notification when TiddlyWiki is not connected"
+  },
+  "comingSoon": {
+    "message": "Coming soon",
+    "description": "Feature not yet available"
+  }
+}

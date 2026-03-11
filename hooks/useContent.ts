@@ -1,6 +1,7 @@
 import { ref } from 'vue';
 import { html2md, md2html } from '@/utils/parser';
 import { ElMessage as notify } from 'element-plus';
+import { t } from '@/src/i18n';
 
 export function useContent() {
   const loading = ref<boolean>(false);
@@ -21,7 +22,7 @@ export function useContent() {
 
     if (tabs.length === 0) {
       notify({
-        message: '无法获取活动的选项卡',
+        message: t('notify.noActiveTab'),
         type: 'error',
         duration: 750,
       });
@@ -36,18 +37,13 @@ export function useContent() {
     try {
       const response = await browser.tabs.sendMessage(tab.id!, {
         type: 'get-doc',
-        message: '获取文章',
+        message: 'get-doc',
       });
 
       html.value = response?.content || '';
       md.value = await html2md(html.value);
 
       if (!response?.title) {
-        // notify({
-        //   message: '暂无标题',
-        //   type: 'warning',
-        //   duration: 750,
-        // });
         loading.value = false;
         return;
       }
@@ -57,18 +53,13 @@ export function useContent() {
 
       if (options.tip) {
         notify({
-          message: '刷新成功',
+          message: t('notify.refreshSuccess'),
           type: 'success',
           duration: 750,
         });
       }
     } catch (error) {
       console.log(error);
-      // notify({
-      //   message: '无法建立连接',
-      //   type: 'error',
-      //   duration: 750,
-      // });
     } finally {
       loading.value = false;
     }

@@ -2,6 +2,7 @@ import { formattime } from './formattime';
 import { ElMessageBox, ElMessage as notify } from 'element-plus';
 import { ofetch } from 'ofetch';
 import constant from './constant';
+import { t } from '@/src/i18n';
 
 const save2TiddlyWiki = async (
   title: string,
@@ -15,13 +16,13 @@ const save2TiddlyWiki = async (
 ) => {
   if (!title) {
     notify({
-      message: '标题为空',
+      message: t('notify.titleEmpty'),
       type: 'warning',
     });
     return;
   }
   if (!text) {
-    notify({ message: '内容为空', type: 'warning' });
+    notify({ message: t('notify.contentEmpty'), type: 'warning' });
     return;
   }
 
@@ -30,7 +31,7 @@ const save2TiddlyWiki = async (
 
   if (!status.value.tiddlywiki_version) {
     notify({
-      message: '请先连接 TiddlyWiki',
+      message: t('notify.connectFirst'),
       type: 'warning',
     });
     return;
@@ -61,7 +62,7 @@ const save2TiddlyWiki = async (
     async onResponse({ request, response, options }) {
       if (response.ok) {
         notify({
-          message: '保存成功',
+          message: t('notify.saveSuccess'),
           type: 'success',
           duration: 1500,
         });
@@ -69,7 +70,7 @@ const save2TiddlyWiki = async (
     },
     async onResponseError({ request, response, options }) {
       notify({
-        message: '保存失败' + response._data,
+        message: t('notify.saveFailed') + response._data,
         type: 'error',
         duration: 2000,
       });
@@ -111,21 +112,23 @@ const save2TiddlyWiki = async (
 
   try {
     const oldTiddler = await getTwFetch(`/${title}`);
-    // 条目已存在的情况, NOTE: ai 重命名后无效, 会继续保存一个新的tiddler
     if (oldTiddler?.text === text) {
       notify({
         message: h('div', [
-          // h('span', { style: { fontWeight: 'bold' } }, title),
-          h('span', null, '无需重复保存！'),
+          h('span', null, t('notify.noRepeatSave')),
         ]),
         type: 'warning',
       });
     } else {
-      ElMessageBox.confirm(`确定要覆盖 ${title} 吗`, '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
+      ElMessageBox.confirm(
+        t('notify.confirmOverwrite', { title }),
+        t('notify.warning'),
+        {
+          confirmButtonText: t('notify.confirm'),
+          cancelButtonText: t('notify.cancel'),
+          type: 'warning',
+        }
+      )
         .then(() => {
           savetwFetch(`/${title}`, {
             body: tiddler,
@@ -133,7 +136,7 @@ const save2TiddlyWiki = async (
         })
         .catch(() => {
           notify({
-            message: '已取消保存',
+            message: t('notify.cancelledSave'),
             type: 'info',
           });
         });

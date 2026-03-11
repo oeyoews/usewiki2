@@ -11,10 +11,25 @@ const messages = {
 
 export type ILocales = 'en' | 'zh';
 
-export default createI18n<[MessageSchema], ILocales>({
+function getDefaultLocale(): ILocales {
+  const saved = localStorage.getItem('locale');
+  if (saved === 'en' || saved === 'zh') return saved;
+  const browserLang = navigator.language.toLowerCase();
+  return browserLang.startsWith('zh') ? 'zh' : 'en';
+}
+
+const i18n = createI18n<[MessageSchema], ILocales>({
   legacy: false,
-  locale: localStorage.getItem('locale') || 'zh',
-  fallbackLocale: 'en',
+  locale: getDefaultLocale(),
+  fallbackLocale: 'zh',
   globalInjection: true,
   messages,
 });
+
+export default i18n;
+
+/** Use this to access translations outside Vue components */
+export function t(key: string, params?: Record<string, unknown>) {
+  // @ts-ignore - accessing global composer
+  return i18n.global.t(key, params ?? {});
+}

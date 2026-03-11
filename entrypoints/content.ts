@@ -1,17 +1,17 @@
 import { Readability } from '@mozilla/readability';
 
-// 进入页面会执行的函数, 可以操作 DOM
+// Function executed when entering a page, can manipulate DOM
 export default defineContentScript({
   // matches: ['<all_urls>'],
   matches: ['https://*/*'],
-  // not work 还是 不能重和？??
+  // not work, still can't overlap?
   exclude: ['https://google.com/*', 'https://bing.com/*', 'chrome://*'],
   runAt: 'document_start',
   main(ctx) {
     ctx.onInvalidated(() => {
-      // console.log('更新')
+      // console.log('updated')
     });
-    // 检查是否为 tiddlywiki site, 向bg 发送消息
+    // Check if it's a TiddlyWiki site, send message to background
     document.addEventListener('DOMContentLoaded', () => {
       const meta = document.querySelector('meta[name="generator"]');
       // @ts-ignore
@@ -29,9 +29,9 @@ export default defineContentScript({
       }
     });
 
-    // 提取页面文章内容
+    // Extract page article content
     function getDoc() {
-      // 防止 parse 函数修改真实 dom
+      // Prevent parse function from modifying the real DOM
       const documentClone = document.cloneNode(true) as Document;
       const reader = new Readability(documentClone, {
         // charThreshold: 100000,
@@ -41,7 +41,7 @@ export default defineContentScript({
       return article;
     }
 
-    // 主进程监听消息
+    // Main process listens for messages
     browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
       // console.log(message);
       switch (message.type) {
@@ -50,7 +50,7 @@ export default defineContentScript({
           sendResponse(getDoc());
           break;
         case 'routeUpdate':
-          // 通知 popup 更新内容
+          // Notify popup to update content
           browser.runtime.sendMessage({ type: 'routeUpdate', data: getDoc() });
           break;
         default:
