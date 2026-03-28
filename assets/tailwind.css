@@ -333,6 +333,56 @@ html.dark .el-dialog__header {
   padding-bottom: 16px;
 }
 
+/* 配置全屏弹窗无标题栏：覆盖上方分割线（否则 html.dark .el-dialog__header 会压住 Tailwind 的 hidden） */
+.el-dialog.setup-dialog-surface .el-dialog__header {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border: none !important;
+}
+
+/* 全屏配置弹窗：根节点取消 EP 默认 padding；占满高度 + 纵向 flex，底部操作栏固定于视口下沿 */
+.el-dialog.setup-dialog-surface.is-fullscreen {
+  padding: 0 !important;
+  box-sizing: border-box;
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  max-height: 100vh;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.el-dialog.setup-dialog-surface.is-fullscreen .el-dialog__body {
+  flex: 1 1 0% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* 配置区 el-scrollbar：在 flex 子项内占满高度，避免 100% 高度塌陷 */
+.el-dialog.setup-dialog-surface .el-scrollbar {
+  height: 100%;
+  min-height: 0;
+}
+
+/* EP 自定义竖条叠在 wrap 右侧，给 view 留空避免压住卡片圆角/边框（竖条宽约 6px + right:2px） */
+.el-dialog.setup-dialog-surface .el-scrollbar__view {
+  padding-right: 12px;
+  box-sizing: border-box;
+}
+
+/* 暗色下与浅色一致：全屏配置弹窗不要额外描边/圆角/阴影，避免顶边留白视觉与 light 不一致 */
+html.dark .el-dialog.setup-dialog-surface.is-fullscreen {
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
 html.dark .el-dialog__title {
   color: var(--el-text-color-primary);
   font-weight: 600;
@@ -494,4 +544,19 @@ html.dark .el-popconfirm__main {
 ::-webkit-scrollbar-thumb,
 ::-webkit-scrollbar-track {
   border: 0;
+}
+
+/* View Transitions API：无法用工具类写在单文件组件上 */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2147483646;
 }
