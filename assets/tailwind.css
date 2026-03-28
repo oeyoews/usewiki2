@@ -370,9 +370,8 @@ html.dark .el-dialog__header {
   min-height: 0;
 }
 
-/* EP 自定义竖条叠在 wrap 右侧，给 view 留空避免压住卡片圆角/边框（竖条宽约 6px + right:2px） */
-.el-dialog.setup-dialog-surface .el-scrollbar__view {
-  padding-right: 12px;
+/* padding 放在 __view 上而非 __wrap：避免滚动容器带 padding 时 scrollTop 无法回到 0、顶部被裁切 */
+.el-dialog.setup-dialog-surface .el-scrollbar__wrap {
   box-sizing: border-box;
 }
 

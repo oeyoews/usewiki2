@@ -584,26 +584,20 @@ const handleCommand = async (cmd: ICommand, _: any, e: MouseEvent) => {
     </div>
 
     <!-- setup -->
-    <el-dialog
-      fullscreen
-      v-model="setupDialogStatus"
-      :show-close="false"
+    <el-dialog fullscreen v-model="setupDialogStatus" :show-close="false"
       class="setup-dialog-surface !m-0 !rounded-none !p-0 [&_.el-dialog]:flex [&_.el-dialog]:h-full [&_.el-dialog]:min-h-0 [&_.el-dialog]:flex-col [&_.el-dialog]:overflow-hidden [&_.el-dialog__header]:!hidden [&_.el-dialog__body]:box-border [&_.el-dialog__body]:flex [&_.el-dialog__body]:min-h-0 [&_.el-dialog__body]:flex-1 [&_.el-dialog__body]:flex-col [&_.el-dialog__body]:overflow-hidden [&_.el-dialog__body]:px-0 [&_.el-dialog__body]:pb-0 [&_.el-dialog__body]:pt-0">
-      <div class="flex h-full min-h-0 flex-1 flex-col overflow-hidden px-3 pb-0 pt-4 sm:px-4">
-        <div class="min-h-0 flex-1 overflow-hidden">
-          <el-scrollbar class="!h-full min-h-0" height="100%" wrap-class="overscroll-contain">
-            <section
-              class="mb-3 last:mb-2.5 rounded-[10px] border border-[var(--el-border-color-lighter)] bg-[var(--el-fill-color-blank)] p-3 shadow-[0_1px_2px_rgb(0_0_0_/_6%)] dark:shadow-[0_1px_3px_rgb(0_0_0_/_38%)]">
+      <div class="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
+        <el-scrollbar class="min-h-0 flex-1 !h-full" height="100%" wrap-class="overscroll-contain"
+          view-class="box-border px-3 pt-4 pb-0 sm:px-4">
+          <section
+            class="mb-3 last:mb-2.5 rounded-[10px] border border-[var(--el-border-color-lighter)] bg-[var(--el-fill-color-blank)] p-3 shadow-[0_1px_2px_rgb(0_0_0_/_6%)] dark:shadow-[0_1px_3px_rgb(0_0_0_/_38%)]">
             <h2
               class="mb-2.5 flex items-center gap-2 text-[13px] font-semibold leading-snug tracking-wide text-[var(--el-text-color-secondary)]">
               <WI.MdiLogin class="size-4 shrink-0 text-[var(--el-color-primary)]" aria-hidden="true" />
               {{ t('setup.login') }}
             </h2>
-            <el-form
-              class="w-full [&_.el-form-item]:mb-3 [&_.el-form-item:last-child]:mb-0"
-              size="default"
-              :spellcheck="false"
-              label-position="top">
+            <el-form class="w-full [&_.el-form-item]:mb-3 [&_.el-form-item:last-child]:mb-0" size="default"
+              :spellcheck="false" label-position="top">
               <el-form-item :label="t('setup.username')">
                 <ElInput v-model.trim="username" class="w-full" :prefix-icon="WI.MingcuteUser4Line" minlength="3"
                   maxlength="20" show-word-limit :placeholder="t('setup.enterUsername')" />
@@ -627,28 +621,17 @@ const handleCommand = async (cmd: ICommand, _: any, e: MouseEvent) => {
               {{ t('setup.portPreset') }}
             </p>
             <div class="mb-2 grid grid-cols-4 gap-1.5" role="group" :aria-label="t('setup.portPreset')">
-              <ElButton
-                v-for="presetPort in ports"
-                :key="presetPort"
-                size="small"
-                :type="port === presetPort ? 'primary' : 'default'"
-                :plain="port !== presetPort"
-                class="!m-0 min-w-0 w-full justify-center tabular-nums"
-                @click="port = presetPort">
+              <ElButton v-for="presetPort in ports" :key="presetPort" size="small"
+                :type="port === presetPort ? 'primary' : 'default'" :plain="port !== presetPort"
+                class="!m-0 min-w-0 w-full justify-center tabular-nums" @click="port = presetPort">
                 {{ presetPort }}
               </ElButton>
             </div>
-            <ElInput
-              class="w-full rounded-md"
-              v-model.trim.number="port"
-              size="default"
-              maxlength="5"
-              minlength="1" @keyup.enter="saveAllSettings" :placeholder="t('setup.enterPort')"
-              :aria-label="t('setup.port')" />
+            <ElInput class="w-full rounded-md" v-model.trim.number="port" size="default" maxlength="5" minlength="1"
+              @keyup.enter="saveAllSettings" :placeholder="t('setup.enterPort')" :aria-label="t('setup.port')" />
           </section>
 
-          <section
-            v-show="isCheckTw5"
+          <section v-show="isCheckTw5"
             class="mb-3 last:mb-2.5 rounded-[10px] border border-[var(--el-border-color-lighter)] bg-[var(--el-fill-color-blank)] p-3 shadow-[0_1px_2px_rgb(0_0_0_/_6%)] dark:shadow-[0_1px_3px_rgb(0_0_0_/_38%)]">
             <h2
               class="mb-2.5 flex items-center gap-2 text-[13px] font-semibold leading-snug tracking-wide text-[var(--el-text-color-secondary)]">
@@ -656,12 +639,7 @@ const handleCommand = async (cmd: ICommand, _: any, e: MouseEvent) => {
               {{ t('setup.tags') }}
             </h2>
             <div class="flex flex-wrap items-center gap-2">
-              <ElTag
-                v-for="tag in dynamicTags"
-                :key="tag"
-                size="small"
-                closable
-                :disable-transitions="false"
+              <ElTag v-for="tag in dynamicTags" :key="tag" size="small" closable :disable-transitions="false"
                 class="!m-0 inline-flex h-8 max-h-8 min-h-8 items-center border py-0 leading-none"
                 @close="handleClose(tag)">
                 <span class="inline-flex items-center gap-1.5">
@@ -669,20 +647,11 @@ const handleCommand = async (cmd: ICommand, _: any, e: MouseEvent) => {
                   {{ tag }}
                 </span>
               </ElTag>
-              <ElInput
-                v-if="inputVisible"
-                ref="InputRef"
-                v-model="inputValue"
-                size="small"
-                class="!m-0 h-8 w-[7.5rem] min-w-[5.5rem]"
-                @keyup.enter="handleInputConfirm"
+              <ElInput v-if="inputVisible" ref="InputRef" v-model="inputValue" size="small"
+                class="!m-0 h-8 w-[7.5rem] min-w-[5.5rem]" @keyup.enter="handleInputConfirm"
                 @blur="handleInputConfirm" />
 
-              <ElButton
-                v-else
-                size="small"
-                type="primary"
-                plain
+              <ElButton v-else size="small" type="primary" plain
                 class="!m-0 inline-flex h-8 w-8 min-h-8 min-w-8 items-center justify-center !p-0 font-semibold leading-none"
                 @click="showInput">
                 +
@@ -697,11 +666,8 @@ const handleCommand = async (cmd: ICommand, _: any, e: MouseEvent) => {
               <WI.MdiSparklesOutline class="size-4 shrink-0 text-[var(--el-color-primary)]" aria-hidden="true" />
               {{ t('setup.ai') }}
             </h2>
-            <el-form
-              class="w-full [&_.el-form-item]:mb-3 [&_.el-form-item:last-child]:mb-0"
-              size="default"
-              :spellcheck="false"
-              label-position="top">
+            <el-form class="w-full [&_.el-form-item]:mb-3 [&_.el-form-item:last-child]:mb-0" size="default"
+              :spellcheck="false" label-position="top">
               <el-form-item :label="t('setup.baseurl')">
                 <ElInput v-model.trim="baseurl" class="w-full" :prefix-icon="WI.MingcuteUser4Line" show-word-limit
                   placeholder="https://api.openai.com" />
@@ -723,20 +689,14 @@ const handleCommand = async (cmd: ICommand, _: any, e: MouseEvent) => {
             <el-switch size="default" :before-change="checkTwStatus" :loading="isChecking" inline-prompt
               v-model="isCheckTw5" :inactive-icon="WI.SimpleIconsTiddlywiki" :active-icon="WI.SimpleIconsTiddlywiki" />
           </section>
-          </el-scrollbar>
-        </div>
+        </el-scrollbar>
         <div
-          class="mt-auto shrink-0 border-t border-[var(--el-border-color-lighter)] bg-[var(--el-bg-color)] pt-2.5 pb-[max(0.25rem,env(safe-area-inset-bottom))] shadow-[0_-4px_12px_rgb(0_0_0_/_6%)] dark:shadow-[0_-4px_16px_rgb(0_0_0_/_35%)]">
+          class="mt-auto shrink-0 border-t border-[var(--el-border-color-lighter)] bg-[var(--el-bg-color)] px-3 pt-2.5 pb-[max(0.25rem,env(safe-area-inset-bottom))] shadow-[0_-4px_12px_rgb(0_0_0_/_6%)] dark:shadow-[0_-4px_16px_rgb(0_0_0_/_35%)] sm:px-4">
           <div class="flex items-stretch gap-2.5">
             <ElButton size="large" class="shrink-0" @click="setupDialogStatus = false">
               {{ t('setup.close') }}
             </ElButton>
-            <ElButton
-              type="primary"
-              size="large"
-              class="min-w-0 flex-1"
-              :loading="isChecking"
-              @click="saveAllSettings">
+            <ElButton type="primary" size="large" class="min-w-0 flex-1" :loading="isChecking" @click="saveAllSettings">
               {{ t('setup.save') }}
             </ElButton>
           </div>
