@@ -857,9 +857,7 @@ const handleCommand = async (cmd: ICommand, _: any, e: MouseEvent) => {
 </template>
 
 <style scoped lang="css">
-::v-deep(.el-dialog) {
-  border-radius: 15px;
-}
+/* Element Plus 深色变量与覆盖：`assets/tailwind.css` 中 @theme + html.dark */
 
 .setup-dialog-wrapper {
   width: 100%;

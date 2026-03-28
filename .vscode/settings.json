@@ -9,11 +9,256 @@
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
     ".gitignore": ".gitconfig",
-    "wxt.config.ts": "auto-imports*.ts, components*.ts, tailwind.config.cjs, tsconfig.json, types.d.ts, postcss.config.cjs"
+    "wxt.config.ts": "auto-imports*.ts, components*.ts, assets/tailwind.css, tsconfig.json, types.d.ts, postcss.config.cjs"
   },
   "editor.formatOnSave": true,
   "i18n-ally.localesPaths": [
     "src/i18n",
     "src/i18n/locales"
-  ]
+  ],
+  "extensions.experimental.affinity": {
+    "vscodevim.vim": 1
+  },
+  "vim.handleKeys": {
+    "<C-a>": false,
+    "<C-c>": false
+  },
+  "window.zoomLevel": 1.25,
+  "vim.leader": "<space>", // 空格作为 leader 键
+  "vim.insertModeKeyBindings": [
+    {
+      "before": [
+        "j",
+        "k"
+      ],
+      "after": [
+        "<Esc>"
+      ]
+    }
+  ],
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": [
+        "<space>",
+        "F"
+      ],
+      "commands": [
+        "workbench.action.quickOpen"
+      ]
+    }, // 空格+f 打开文件
+    {
+      "before": [
+        "<space>",
+        "o",
+        "g"
+      ],
+      "commands": [
+        "workbench.view.scm"
+      ]
+    }, // 空格+g 打开 git 面板
+    {
+      "before": [
+        "<space>",
+        "o",
+        "t"
+      ],
+      "commands": [
+        "workbench.action.terminal.toggleTerminal"
+      ]
+    }, // 空格+t 打开终端
+    {
+      "before": [
+        "<space>",
+        "c",
+        "f"
+      ],
+      "commands": [
+        "editor.action.formatDocument",
+        "workbench.action.files.save"
+      ]
+    } // 空格+s 格式化
+  ],
+  "editor.fontLigatures": true,
+  "editor.suggest.preview": true,
+  "editor.fontFamily": "\"Maple Mono NF CN\", \"JetBrains Mono\", Fira Code",
+  "debug.console.fontFamily": "\"Maple Mono\", \"JetBrains Mono\", Fira Code",
+  // "vim.enableNeovim": true,
+  // "vim.neovimPath": "/usr/local/bin/nvim",
+  // "vim.neovimConfigPath": "$HOME/.config/nvim/init.lua",
+  // "vim.neovimUseConfigFile": true,
+  "vim.vimrc.enable": true,
+  "vim.vimrc.path": "~/.ideavimrc",
+  "vim.camelCaseMotion.enable": true,
+  "vim.easymotion": false,
+  "vim.sneak": false,
+  "vim.sneakReplacesF": false,
+  "vim.useSystemClipboard": true,
+  "workbench.editor.pinnedTabSizing": "compact",
+  "workbench.colorCustomizations": {
+    "statusBar.background": "#292d3e",
+    "statusBar.noFolderBackground": "#292d3e",
+    "statusBar.debuggingBackground": "#292d3e",
+    "statusBar.foreground": "#8a968afa"
+  },
+  "[jsonc]": {
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.suggest.insertMode": "insert",
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "window.dialogStyle": "custom",
+  "git.enabled": true,
+  "explorer.confirmDelete": false,
+  "update.mode": "manual",
+  "update.showReleaseNotes": false,
+  "terminal.integrated.fontSize": 16,
+  "terminal.integrated.defaultProfile.linux": "zsh",
+  "editor.formatOnType": true,
+  "json.trace.server": "verbose",
+  "editor.tabSize": 4,
+  "editor.cursorStyle": "line",
+  "editor.insertSpaces": false,
+  "editor.wordSeparators": "/\\()\"':,.;<>~!@#$%^&*|+=[]{}`?-",
+  "editor.wordWrap": "on",
+  "grunt.autoDetect": "on",
+  "editor.mouseWheelZoom": true,
+  "editor.minimap.enabled": false,
+  "editor.suggestSelection": "first",
+  "editor.lineNumbers": "on",
+  "debug.console.fontSize": 16,
+  "debug.onTaskErrors": "prompt",
+  "editor.renderWhitespace": "trailing",
+  "workbench.sideBar.location": "left",
+  "files.trimTrailingWhitespace": true,
+  "debug.terminal.clearBeforeReusing": true,
+  "terminal.integrated.copyOnSelection": true,
+  "editor.snippetSuggestions": "inline",
+  "editor.inlineSuggest.enabled": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": "active",
+  "editor.matchBrackets": "always",
+  "workbench.editor.untitled.hint": "hidden",
+  "editor.unicodeHighlight.invisibleCharacters": true,
+  "editor.unicodeHighlight.ambiguousCharacters": true,
+  "editor.wrappingStrategy": "advanced",
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "name": "One Dark italic",
+        "scope": [
+          "comment",
+          "entity.other.attribute-name",
+          "keyword",
+          "markup.underline.link",
+          "storage.modifier",
+          "storage.type",
+          "string.url",
+          "variable.language.super",
+          "variable.language.this"
+        ],
+        "settings": {
+          "fontStyle": "italic"
+        }
+      },
+      {
+        "name": "One Dark italic reset",
+        "scope": [
+          "keyword.operator",
+          "keyword.other.type",
+          "storage.modifier.import",
+          "storage.modifier.package",
+          "storage.type.built-in",
+          "storage.type.function.arrow",
+          "storage.type.generic",
+          "storage.type.java",
+          "storage.type.primitive"
+        ],
+        "settings": {
+          "fontStyle": ""
+        }
+      }
+    ]
+  },
+  "editor.scrollbar.horizontal": "hidden",
+  "editor.scrollbar.vertical": "hidden",
+  "npm.enableRunFromFolder": true,
+  "window.menuBarVisibility": "compact",
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "material-icon-theme.saturation": 1,
+  "material-icon-theme.folders.color": "#7cb342",
+  "material-icon-theme.folders.theme": "specific",
+  "path-intellisense.autoSlashAfterDirectory": true,
+  "path-intellisense.autoTriggerNextSuggestion": true,
+  "path-intellisense.extensionOnImport": true,
+  "path-intellisense.ignoreTsConfigBaseUrl": true,
+  "extensions.ignoreRecommendations": true,
+  "window.commandCenter": true,
+  "markdown.preview.fontSize": 24,
+  "vsintellicode.modify.editor.suggestSelection": "choseToUpdateConfiguration",
+  "security.workspace.trust.untrustedFiles": "open",
+  "explorer.compactFolders": false,
+  "workbench.editorAssociations": {
+    "*.png": "imagePreview.previewEditor",
+    "*.md": "default"
+  },
+  "editor.fontWeight": "normal",
+  "[plaintext]": {
+    "editor.unicodeHighlight.ambiguousCharacters": false,
+    "editor.unicodeHighlight.invisibleCharacters": false
+  },
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "debug.disassemblyView.showSourceCode": false,
+  "prettier.requirePragma": true,
+  "typescript.inlayHints.functionLikeReturnTypes.enabled": false,
+  "typescript.inlayHints.parameterNames.enabled": "none",
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "explorer.confirmDragAndDrop": false,
+  "git.openRepositoryInParentFolders": "never",
+  "editor.inlineSuggest.showToolbar": "onHover",
+  "terminal.integrated.env.linux": {},
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "workbench.list.smoothScrolling": true,
+  "editor.smoothScrolling": true,
+  "editor.cursorSmoothCaretAnimation": "on",
+  "workbench.startupEditor": "none",
+  "terminal.integrated.smoothScrolling": true,
+  "window.titleBarStyle": "custom",
+  "workbench.colorTheme": "Material Theme Palenight High Contrast",
+  "terminal.integrated.windowsUseConptyDll": true,
+  "editor.fontSize": 16,
+  "editor.codeLensFontFamily": "\"Maple Mono\", \"JetBrains Mono\", Fira Code",
+  "editor.inlayHints.fontFamily": "\"Maple Mono\", \"JetBrains Mono\", Fira Code",
+  "editor.inlineSuggest.fontFamily": "\"Maple Mono\", \"JetBrains Mono\", Fira Code",
+  "scm.inputFontFamily": "\"Maple Mono\", \"JetBrains Mono\", Fira Code",
+  "terminal.integrated.fontLigatures.enabled": true,
+  "terminal.integrated.fontFamily": "\"JetBrains Mono\"",
+  "editor.stickyScroll.enabled": false,
+  "git.autofetch": true,
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  "editor.rename.enablePreview": false,
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.empty.hint": "hidden",
+  "[vue]": {
+    "editor.defaultFormatter": "Vue.volar"
+  },
+  "git.blame.statusBarItem.enabled": false,
+  "terminal.integrated.suggest.enabled": true,
 }
