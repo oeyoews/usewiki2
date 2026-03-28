@@ -9,92 +9,8 @@
 @source '../entrypoints/**/*.{html,vue}';
 @source '../components/**/*.vue';
 
-/* —— 设计令牌：供 Tailwind 工具类与 Element Plus 共用 —— */
+/* 色板取自 @import 的 tailwindcss/theme；此处仅保留暗色 UI 阴影深度（非自订 palette） */
 @theme {
-  /* 历史 palette（dimmed） */
-  --color-dimmed-100: #cdd9e5;
-  --color-dimmed-200: #d0d7de;
-  --color-dimmed-700: #444c56;
-  --color-dimmed-800: #2d333b;
-  --color-dimmed-900: #1c2128;
-
-  /* Element Plus 主色阶梯（命名与 EP 语义对齐，便于映射） */
-  --color-ep-primary: #5b9bc6;
-  --color-ep-primary-strong: #4a85ad;
-  --color-ep-primary-l3: #467799;
-  --color-ep-primary-l5: #385d7a;
-  --color-ep-primary-l7: #2a455c;
-  --color-ep-primary-l8: #243848;
-  --color-ep-primary-l9: #1c2d3a;
-  --color-ep-primary-d2: #7eb0d4;
-
-  --color-ep-success: #52b788;
-  --color-ep-success-l3: #3e8a68;
-  --color-ep-success-l5: #326a52;
-  --color-ep-success-l7: #264a3c;
-  --color-ep-success-l8: #1f3b31;
-  --color-ep-success-l9: #182b26;
-  --color-ep-success-d2: #74c9a0;
-
-  --color-ep-warning: #c49a62;
-  --color-ep-warning-l3: #92764c;
-  --color-ep-warning-l5: #705b3c;
-  --color-ep-warning-l7: #4e402c;
-  --color-ep-warning-l8: #3b321f;
-  --color-ep-warning-l9: #292416;
-  --color-ep-warning-d2: #d4b07a;
-
-  --color-ep-danger: #c46886;
-  --color-ep-danger-l3: #945066;
-  --color-ep-danger-l5: #713e50;
-  --color-ep-danger-l7: #4e2c3a;
-  --color-ep-danger-l8: #3b242e;
-  --color-ep-danger-l9: #281b20;
-  --color-ep-danger-d2: #d489a2;
-
-  --color-ep-info: #7698bc;
-  --color-ep-info-l3: #5a7390;
-  --color-ep-info-l5: #475970;
-  --color-ep-info-l7: #343f50;
-  --color-ep-info-l8: #2a333f;
-  --color-ep-info-l9: #202830;
-  --color-ep-info-d2: #94b0cc;
-
-  /* 表面与文字 */
-  --color-ui-bg-page: #06080c;
-  --color-ui-bg: #0b0e14;
-  --color-ui-bg-overlay: #12161e;
-  --color-ui-text-primary: #e4e9f0;
-  --color-ui-text-regular: #b8c2d0;
-  --color-ui-text-secondary: #8b96a8;
-  --color-ui-text-placeholder: #5c6678;
-  --color-ui-text-disabled: #4a5362;
-
-  /* 边框（冷灰） */
-  --color-ui-border-darker: rgb(148 163 184 / 38%);
-  --color-ui-border-dark: rgb(148 163 184 / 28%);
-  --color-ui-border: rgb(148 163 184 / 20%);
-  --color-ui-border-light: rgb(148 163 184 / 12%);
-  --color-ui-border-lighter: rgb(148 163 184 / 8%);
-  --color-ui-border-extra-light: rgb(148 163 184 / 4%);
-  --color-ui-border-hover: rgb(148 163 184 / 35%);
-
-  /* 填充 */
-  --color-ui-fill-darker: #1a1f28;
-  --color-ui-fill-dark: #151920;
-  --color-ui-fill: #12161c;
-  --color-ui-fill-light: #0f1218;
-  --color-ui-fill-lighter: #0c0e13;
-  --color-ui-fill-extra-light: #090b0f;
-
-  /* 遮罩 */
-  --color-ui-mask: rgb(4 6 10 / 78%);
-  --color-ui-mask-soft: rgb(4 6 10 / 50%);
-
-  /* 开关 */
-  --color-ui-switch-off: #2a3038;
-
-  /* 阴影（仅深度） */
   --shadow-ep: 0 1px 2px rgb(0 0 0 / 45%), 0 8px 24px rgb(0 0 0 / 40%);
   --shadow-ep-light: 0 1px 2px rgb(0 0 0 / 40%), 0 6px 18px rgb(0 0 0 / 35%);
   --shadow-ep-lighter: 0 1px 2px rgb(0 0 0 / 35%), 0 4px 12px rgb(0 0 0 / 28%);
@@ -126,45 +42,47 @@
 html.dark {
   color-scheme: dark;
 
-  --el-color-primary-rgb: 91, 155, 198;
-  --el-color-success-rgb: 82, 183, 136;
-  --el-color-warning-rgb: 196, 154, 98;
-  --el-color-danger-rgb: 196, 104, 134;
-  --el-color-error-rgb: 196, 104, 134;
-  --el-color-info-rgb: 118, 152, 188;
-  --el-border-color-hover: var(--color-ui-border-hover);
+  /* 与下列 --el-color-* 所用 Tailwind 默认色阶对应的 sRGB（供 EP rgba(var(...), α)） */
+  --el-color-primary-rgb: 14, 165, 233;
+  --el-color-success-rgb: 34, 197, 94;
+  --el-color-warning-rgb: 245, 158, 11;
+  --el-color-danger-rgb: 244, 63, 94;
+  --el-color-error-rgb: 244, 63, 94;
+  --el-color-info-rgb: 100, 116, 139;
 
-  --el-color-primary: var(--color-ep-primary);
-  --el-color-primary-light-3: var(--color-ep-primary-l3);
-  --el-color-primary-light-5: var(--color-ep-primary-l5);
-  --el-color-primary-light-7: var(--color-ep-primary-l7);
-  --el-color-primary-light-8: var(--color-ep-primary-l8);
-  --el-color-primary-light-9: var(--color-ep-primary-l9);
-  --el-color-primary-dark-2: var(--color-ep-primary-d2);
+  --el-border-color-hover: rgb(from var(--color-slate-400) r g b / 35%);
 
-  --el-color-success: var(--color-ep-success);
-  --el-color-success-light-3: var(--color-ep-success-l3);
-  --el-color-success-light-5: var(--color-ep-success-l5);
-  --el-color-success-light-7: var(--color-ep-success-l7);
-  --el-color-success-light-8: var(--color-ep-success-l8);
-  --el-color-success-light-9: var(--color-ep-success-l9);
-  --el-color-success-dark-2: var(--color-ep-success-d2);
+  --el-color-primary: var(--color-sky-500);
+  --el-color-primary-light-3: var(--color-sky-600);
+  --el-color-primary-light-5: var(--color-sky-700);
+  --el-color-primary-light-7: var(--color-sky-800);
+  --el-color-primary-light-8: var(--color-sky-900);
+  --el-color-primary-light-9: var(--color-sky-950);
+  --el-color-primary-dark-2: var(--color-sky-300);
 
-  --el-color-warning: var(--color-ep-warning);
-  --el-color-warning-light-3: var(--color-ep-warning-l3);
-  --el-color-warning-light-5: var(--color-ep-warning-l5);
-  --el-color-warning-light-7: var(--color-ep-warning-l7);
-  --el-color-warning-light-8: var(--color-ep-warning-l8);
-  --el-color-warning-light-9: var(--color-ep-warning-l9);
-  --el-color-warning-dark-2: var(--color-ep-warning-d2);
+  --el-color-success: var(--color-green-500);
+  --el-color-success-light-3: var(--color-green-600);
+  --el-color-success-light-5: var(--color-green-700);
+  --el-color-success-light-7: var(--color-green-800);
+  --el-color-success-light-8: var(--color-green-900);
+  --el-color-success-light-9: var(--color-green-950);
+  --el-color-success-dark-2: var(--color-green-300);
 
-  --el-color-danger: var(--color-ep-danger);
-  --el-color-danger-light-3: var(--color-ep-danger-l3);
-  --el-color-danger-light-5: var(--color-ep-danger-l5);
-  --el-color-danger-light-7: var(--color-ep-danger-l7);
-  --el-color-danger-light-8: var(--color-ep-danger-l8);
-  --el-color-danger-light-9: var(--color-ep-danger-l9);
-  --el-color-danger-dark-2: var(--color-ep-danger-d2);
+  --el-color-warning: var(--color-amber-500);
+  --el-color-warning-light-3: var(--color-amber-600);
+  --el-color-warning-light-5: var(--color-amber-700);
+  --el-color-warning-light-7: var(--color-amber-800);
+  --el-color-warning-light-8: var(--color-amber-900);
+  --el-color-warning-light-9: var(--color-amber-950);
+  --el-color-warning-dark-2: var(--color-amber-300);
+
+  --el-color-danger: var(--color-rose-500);
+  --el-color-danger-light-3: var(--color-rose-600);
+  --el-color-danger-light-5: var(--color-rose-700);
+  --el-color-danger-light-7: var(--color-rose-800);
+  --el-color-danger-light-8: var(--color-rose-900);
+  --el-color-danger-light-9: var(--color-rose-950);
+  --el-color-danger-dark-2: var(--color-rose-300);
 
   --el-color-error: var(--el-color-danger);
   --el-color-error-light-3: var(--el-color-danger-light-3);
@@ -174,37 +92,37 @@ html.dark {
   --el-color-error-light-9: var(--el-color-danger-light-9);
   --el-color-error-dark-2: var(--el-color-danger-dark-2);
 
-  --el-color-info: var(--color-ep-info);
-  --el-color-info-light-3: var(--color-ep-info-l3);
-  --el-color-info-light-5: var(--color-ep-info-l5);
-  --el-color-info-light-7: var(--color-ep-info-l7);
-  --el-color-info-light-8: var(--color-ep-info-l8);
-  --el-color-info-light-9: var(--color-ep-info-l9);
-  --el-color-info-dark-2: var(--color-ep-info-d2);
+  --el-color-info: var(--color-slate-500);
+  --el-color-info-light-3: var(--color-slate-600);
+  --el-color-info-light-5: var(--color-slate-700);
+  --el-color-info-light-7: var(--color-slate-800);
+  --el-color-info-light-8: var(--color-slate-900);
+  --el-color-info-light-9: var(--color-slate-950);
+  --el-color-info-dark-2: var(--color-slate-300);
 
-  --el-bg-color-page: var(--color-ui-bg-page);
-  --el-bg-color: var(--color-ui-bg);
-  --el-bg-color-overlay: var(--color-ui-bg-overlay);
+  --el-bg-color-page: var(--color-slate-950);
+  --el-bg-color: var(--color-slate-900);
+  --el-bg-color-overlay: var(--color-slate-800);
 
-  --el-text-color-primary: var(--color-ui-text-primary);
-  --el-text-color-regular: var(--color-ui-text-regular);
-  --el-text-color-secondary: var(--color-ui-text-secondary);
-  --el-text-color-placeholder: var(--color-ui-text-placeholder);
-  --el-text-color-disabled: var(--color-ui-text-disabled);
+  --el-text-color-primary: var(--color-slate-50);
+  --el-text-color-regular: var(--color-slate-300);
+  --el-text-color-secondary: var(--color-slate-400);
+  --el-text-color-placeholder: var(--color-slate-500);
+  --el-text-color-disabled: var(--color-slate-600);
 
-  --el-border-color-darker: var(--color-ui-border-darker);
-  --el-border-color-dark: var(--color-ui-border-dark);
-  --el-border-color: var(--color-ui-border);
-  --el-border-color-light: var(--color-ui-border-light);
-  --el-border-color-lighter: var(--color-ui-border-lighter);
-  --el-border-color-extra-light: var(--color-ui-border-extra-light);
+  --el-border-color-darker: rgb(from var(--color-slate-400) r g b / 38%);
+  --el-border-color-dark: rgb(from var(--color-slate-400) r g b / 28%);
+  --el-border-color: rgb(from var(--color-slate-400) r g b / 20%);
+  --el-border-color-light: rgb(from var(--color-slate-400) r g b / 12%);
+  --el-border-color-lighter: rgb(from var(--color-slate-400) r g b / 8%);
+  --el-border-color-extra-light: rgb(from var(--color-slate-400) r g b / 4%);
 
-  --el-fill-color-darker: var(--color-ui-fill-darker);
-  --el-fill-color-dark: var(--color-ui-fill-dark);
-  --el-fill-color: var(--color-ui-fill);
-  --el-fill-color-light: var(--color-ui-fill-light);
-  --el-fill-color-lighter: var(--color-ui-fill-lighter);
-  --el-fill-color-extra-light: var(--color-ui-fill-extra-light);
+  --el-fill-color-darker: var(--color-slate-800);
+  --el-fill-color-dark: var(--color-slate-900);
+  --el-fill-color: var(--color-slate-900);
+  --el-fill-color-light: var(--color-slate-950);
+  --el-fill-color-lighter: color-mix(in oklch, var(--color-slate-950) 88%, var(--color-slate-900));
+  --el-fill-color-extra-light: var(--color-slate-950);
   --el-fill-color-blank: transparent;
 
   --el-box-shadow: var(--shadow-ep);
@@ -212,18 +130,18 @@ html.dark {
   --el-box-shadow-lighter: var(--shadow-ep-lighter);
   --el-box-shadow-dark: var(--shadow-ep-dark);
 
-  --el-mask-color: var(--color-ui-mask);
-  --el-mask-color-extra-light: var(--color-ui-mask-soft);
+  --el-mask-color: rgb(from var(--color-slate-950) r g b / 78%);
+  --el-mask-color-extra-light: rgb(from var(--color-slate-950) r g b / 50%);
 
-  --el-disabled-bg-color: rgb(15 18 24 / 75%);
-  --el-disabled-border-color: rgb(148 163 184 / 10%);
+  --el-disabled-bg-color: color-mix(in oklch, var(--color-slate-900) 75%, transparent);
+  --el-disabled-border-color: rgb(from var(--color-slate-400) r g b / 10%);
 
-  --el-switch-on-color: var(--color-ep-primary);
-  --el-switch-off-color: var(--color-ui-switch-off);
+  --el-switch-on-color: var(--color-sky-500);
+  --el-switch-off-color: var(--color-slate-700);
 }
 
 html.dark .el-button {
-  --el-button-disabled-text-color: rgb(139 150 168 / 45%);
+  --el-button-disabled-text-color: rgb(from var(--color-slate-400) r g b / 45%);
   font-weight: 600;
   letter-spacing: 0.02em;
   transition:
@@ -233,7 +151,7 @@ html.dark .el-button {
 }
 
 html.dark .el-button--default {
-  background: rgb(18 22 30 / 95%);
+  background: color-mix(in oklch, var(--color-slate-800) 95%, transparent);
   border-color: var(--el-border-color);
   color: var(--el-text-color-regular);
 }
@@ -241,29 +159,29 @@ html.dark .el-button--default {
 html.dark .el-button--default:hover {
   border-color: var(--el-border-color-dark);
   color: var(--el-text-color-primary);
-  background: rgb(22 26 34 / 98%);
+  background: color-mix(in oklch, var(--color-slate-800) 98%, transparent);
 }
 
 html.dark .el-button--primary {
-  border-color: var(--color-ep-primary-strong);
-  background: var(--color-ep-primary-strong);
-  color: #0c1014;
+  border-color: var(--color-sky-600);
+  background: var(--color-sky-600);
+  color: var(--color-slate-950);
 }
 
 html.dark .el-button--primary:hover {
-  background: var(--color-ep-primary);
-  border-color: var(--color-ep-primary);
+  background: var(--color-sky-500);
+  border-color: var(--color-sky-500);
 }
 
 html.dark .el-button.is-plain {
-  background: color-mix(in srgb, var(--color-ep-primary) 8%, transparent);
-  border-color: color-mix(in srgb, var(--color-ep-primary) 35%, transparent);
+  background: color-mix(in oklch, var(--color-sky-500) 8%, transparent);
+  border-color: color-mix(in oklch, var(--color-sky-500) 35%, transparent);
   color: var(--el-color-primary-dark-2);
 }
 
 html.dark .el-button.is-plain:hover {
-  background: color-mix(in srgb, var(--color-ep-primary) 14%, transparent);
-  border-color: color-mix(in srgb, var(--color-ep-primary) 45%, transparent);
+  background: color-mix(in oklch, var(--color-sky-500) 14%, transparent);
+  border-color: color-mix(in oklch, var(--color-sky-500) 45%, transparent);
 }
 
 html.dark .el-button.is-text,
@@ -277,15 +195,15 @@ html.dark .el-button.is-link:hover {
 }
 
 html.dark .el-dropdown .el-button-group .el-button--primary:first-child {
-  border-right-color: rgb(12 16 20 / 35%);
+  border-right-color: rgb(from var(--color-slate-950) r g b / 35%);
 }
 
 html.dark .el-dropdown .el-button-group .el-button--primary:last-child {
-  border-left-color: rgb(12 16 20 / 25%);
+  border-left-color: rgb(from var(--color-slate-950) r g b / 25%);
 }
 
 html.dark .el-input__wrapper {
-  background-color: rgb(12 14 20 / 92%);
+  background-color: color-mix(in oklch, var(--color-slate-950) 92%, transparent);
   box-shadow: 0 0 0 1px var(--el-border-color) inset;
   transition:
     box-shadow 0.2s ease,
@@ -306,12 +224,12 @@ html.dark .el-input__inner {
 
 html.dark .el-input-group__prepend,
 html.dark .el-input-group__append {
-  background: color-mix(in srgb, var(--color-ep-primary) 6%, transparent);
+  background: color-mix(in oklch, var(--color-sky-500) 6%, transparent);
   box-shadow: 0 0 0 1px var(--el-border-color-light) inset;
 }
 
 html.dark .el-select__wrapper {
-  background-color: rgb(12 14 20 / 92%);
+  background-color: color-mix(in oklch, var(--color-slate-950) 92%, transparent);
   box-shadow: 0 0 0 1px var(--el-border-color) inset;
 }
 
@@ -334,7 +252,7 @@ html.dark .el-select-dropdown__item {
 }
 
 html.dark .el-select-dropdown__item.is-hovering {
-  background: color-mix(in srgb, var(--color-ep-primary) 10%, transparent);
+  background: color-mix(in oklch, var(--color-sky-500) 10%, transparent);
   color: var(--el-text-color-primary);
 }
 
@@ -376,7 +294,7 @@ html.dark .el-dropdown-menu__item {
 
 html.dark .el-dropdown-menu__item:not(.is-disabled):focus,
 html.dark .el-dropdown-menu__item:not(.is-disabled):hover {
-  background: color-mix(in srgb, var(--color-ep-primary) 10%, transparent);
+  background: color-mix(in oklch, var(--color-sky-500) 10%, transparent);
   color: var(--el-text-color-primary);
 }
 
@@ -435,33 +353,33 @@ html.dark .el-tag {
 }
 
 html.dark .el-tag--primary {
-  background: color-mix(in srgb, var(--color-ep-primary) 12%, transparent);
-  border-color: color-mix(in srgb, var(--color-ep-primary) 35%, transparent);
+  background: color-mix(in oklch, var(--color-sky-500) 12%, transparent);
+  border-color: color-mix(in oklch, var(--color-sky-500) 35%, transparent);
   color: var(--el-color-primary-dark-2);
 }
 
 html.dark .el-tag--success {
-  background: color-mix(in srgb, var(--color-ep-success) 12%, transparent);
-  border-color: color-mix(in srgb, var(--color-ep-success) 32%, transparent);
+  background: color-mix(in oklch, var(--color-green-500) 12%, transparent);
+  border-color: color-mix(in oklch, var(--color-green-500) 32%, transparent);
   color: var(--el-color-success-dark-2);
 }
 
 html.dark .el-tag--warning {
-  background: color-mix(in srgb, var(--color-ep-warning) 12%, transparent);
-  border-color: color-mix(in srgb, var(--color-ep-warning) 32%, transparent);
+  background: color-mix(in oklch, var(--color-amber-500) 12%, transparent);
+  border-color: color-mix(in oklch, var(--color-amber-500) 32%, transparent);
   color: var(--el-color-warning-dark-2);
 }
 
 html.dark .el-tag--danger,
 html.dark .el-tag--error {
-  background: color-mix(in srgb, var(--color-ep-danger) 12%, transparent);
-  border-color: color-mix(in srgb, var(--color-ep-danger) 32%, transparent);
+  background: color-mix(in oklch, var(--color-rose-500) 12%, transparent);
+  border-color: color-mix(in oklch, var(--color-rose-500) 32%, transparent);
   color: var(--el-color-danger-dark-2);
 }
 
 html.dark .el-tag--info {
-  background: color-mix(in srgb, var(--color-ep-info) 12%, transparent);
-  border-color: color-mix(in srgb, var(--color-ep-info) 32%, transparent);
+  background: color-mix(in oklch, var(--color-slate-500) 12%, transparent);
+  border-color: color-mix(in oklch, var(--color-slate-500) 32%, transparent);
   color: var(--el-color-info-dark-2);
 }
 
@@ -474,12 +392,12 @@ html.dark .el-switch.is-checked .el-switch__core {
 }
 
 html.dark .el-scrollbar__thumb {
-  background: color-mix(in srgb, var(--color-slate-400) 28%, transparent);
+  background: color-mix(in oklch, var(--color-slate-400) 28%, transparent);
   border-radius: 6px;
 }
 
 html.dark .el-scrollbar__thumb:hover {
-  background: color-mix(in srgb, var(--color-slate-400) 42%, transparent);
+  background: color-mix(in oklch, var(--color-slate-400) 42%, transparent);
 }
 
 html.dark .el-skeleton__item {
@@ -515,15 +433,15 @@ html.dark .el-message {
 }
 
 html.dark .el-message--success {
-  border-color: color-mix(in srgb, var(--color-ep-success) 35%, transparent);
+  border-color: color-mix(in oklch, var(--color-green-500) 35%, transparent);
 }
 
 html.dark .el-message--warning {
-  border-color: color-mix(in srgb, var(--color-ep-warning) 35%, transparent);
+  border-color: color-mix(in oklch, var(--color-amber-500) 35%, transparent);
 }
 
 html.dark .el-message--error {
-  border-color: color-mix(in srgb, var(--color-ep-danger) 35%, transparent);
+  border-color: color-mix(in oklch, var(--color-rose-500) 35%, transparent);
 }
 
 html.dark .el-notification {
@@ -570,7 +488,7 @@ html.dark .el-popconfirm__main {
 
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background-color: rgb(0 0 0 / 25%);
+  background-color: rgb(from var(--color-slate-950) r g b / 25%);
 }
 
 ::-webkit-scrollbar-thumb,
